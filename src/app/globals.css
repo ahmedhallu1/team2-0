@@ -1,26 +1,179 @@
 @import "tailwindcss";
 
+/* ------------------------------------------------------------------ */
+/*  2.0 — brand design tokens                                          */
+/*  Palette from the official brand sheet:                            */
+/*    black #000  ·  lime #C6FF34  ·  purple #7E3BED  ·  white #FFF    */
+/*  Token names are kept generic so they read with the design:        */
+/*    base-*  = black / dark surfaces                                  */
+/*    lime-*  = primary accent (energy, "elevate")                     */
+/*    purple-*= secondary accent                                       */
+/* ------------------------------------------------------------------ */
+@theme {
+  /* Dark canvas */
+  --color-base-950: #000000;
+  --color-base-900: #08080a;
+  --color-base-850: #0e0e12;
+  --color-base-800: #16161c;
+  --color-base-700: #232330;
+
+  /* Lime (primary accent) */
+  --color-lime-600: #8fbe15;
+  --color-lime-500: #aee81c;
+  --color-lime-400: #c6ff34;
+  --color-lime-300: #d9ff77;
+
+  /* Purple (secondary accent) */
+  --color-purple-600: #6a23d9;
+  --color-purple-500: #7e3bed;
+  --color-purple-400: #9a6cf0;
+  --color-purple-300: #b79bf5;
+
+  /* Text */
+  --color-ink: #f5f5f6;
+  --color-muted: #a3a3ad;
+  --color-faint: #6c6c78;
+
+  /* Fonts (wired up in layout.tsx via next/font) */
+  --font-sans: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-display-face), var(--font-body), system-ui, sans-serif;
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: var(--color-base-950);
+  --foreground: var(--color-ink);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem; /* clears the sticky header on anchor jumps */
+  /* never allow horizontal scroll / extra space on mobile */
+  overflow-x: hidden;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
   }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+/* Selection */
+::selection {
+  background: var(--color-lime-400);
+  color: #000;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 11px;
+  height: 11px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-base-950);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-base-700);
+  border-radius: 999px;
+  border: 3px solid var(--color-base-950);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-lime-500);
+}
+
+/* ------------------------------------------------------------------ */
+/*  Reusable visual utilities                                          */
+/* ------------------------------------------------------------------ */
+
+/* Lime gradient text */
+.text-gradient-lime {
+  background: linear-gradient(
+    100deg,
+    var(--color-lime-300),
+    var(--color-lime-400) 55%,
+    var(--color-lime-500)
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Lime -> purple gradient text */
+.text-gradient-brand {
+  background: linear-gradient(
+    100deg,
+    var(--color-lime-400),
+    var(--color-lime-300) 35%,
+    var(--color-purple-400)
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Card surface */
+.surface {
+  background: color-mix(in srgb, var(--color-base-850) 90%, transparent);
+  border: 1px solid color-mix(in srgb, #ffffff 8%, transparent);
+}
+
+/* Ambient radial glows for section backgrounds */
+.glow-purple {
+  background: radial-gradient(
+    closest-side,
+    color-mix(in srgb, var(--color-purple-500) 38%, transparent),
+    transparent
+  );
+}
+.glow-lime {
+  background: radial-gradient(
+    closest-side,
+    color-mix(in srgb, var(--color-lime-400) 24%, transparent),
+    transparent
+  );
+}
+
+/* Faint dotted grid backdrop */
+.bg-grid {
+  background-image: radial-gradient(
+    color-mix(in srgb, #ffffff 7%, transparent) 1px,
+    transparent 1px
+  );
+  background-size: 30px 30px;
+}
+
+/* Entrance animation primitives */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes spin-slow {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes float-slow {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-14px);
+  }
 }
