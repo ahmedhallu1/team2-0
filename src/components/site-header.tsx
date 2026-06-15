@@ -3,8 +3,9 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X } from "lucide-react";
+import { ArrowUpRight, Menu, X } from "lucide-react";
 import { BrandMark } from "@/components/brand-mark";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { clsx } from "@/lib/clsx";
 
 const links = [
@@ -27,9 +28,13 @@ export function SiteHeader() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  useEffect(() => {
+  // Close the mobile menu on route change — store-previous-value pattern
+  // (adjust state during render) avoids a setState-in-effect cascade.
+  const [prevPath, setPrevPath] = useState(pathname);
+  if (pathname !== prevPath) {
+    setPrevPath(pathname);
     setOpen(false);
-  }, [pathname]);
+  }
 
   // Lock body scroll while the mobile menu is open.
   useEffect(() => {
@@ -45,13 +50,13 @@ export function SiteHeader() {
   return (
     <header
       className={clsx(
-        "fixed inset-x-0 top-0 z-50 transition-colors duration-300",
+        "fixed inset-x-0 top-0 z-50 transition-all duration-300",
         scrolled || open
-          ? "border-b border-white/10 bg-base-950"
+          ? "border-b border-line bg-bg/80 backdrop-blur-xl"
           : "border-b border-transparent bg-transparent",
       )}
     >
-      <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5 sm:px-8">
+      <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5 sm:h-18 sm:px-8">
         <Link
           href="/"
           aria-label="2.0 — home"
@@ -61,49 +66,61 @@ export function SiteHeader() {
         </Link>
 
         {/* Desktop nav */}
-        <div className="hidden items-center gap-7 md:flex">
+        <div className="hidden items-center gap-1 md:flex">
           {links.map((link) => (
             <Link
               key={link.href}
               href={link.href}
+              aria-current={isActive(link.href) ? "page" : undefined}
               className={clsx(
-                "text-sm font-medium transition-colors",
+                "relative rounded-full px-3.5 py-2 text-sm font-medium transition-colors",
                 isActive(link.href)
-                  ? "text-lime-400"
+                  ? "text-ink"
                   : "text-muted hover:text-ink",
               )}
             >
               {link.label}
+              {isActive(link.href) && (
+                <span className="absolute inset-x-3.5 -bottom-px h-px bg-accent" />
+              )}
             </Link>
           ))}
-          <Link
-            href="/contact"
-            className="rounded-full bg-lime-400 px-5 py-2 text-sm font-bold text-base-950 transition-all hover:-translate-y-0.5 hover:bg-lime-300"
-          >
-            Get in touch
-          </Link>
         </div>
 
-        {/* Mobile toggle */}
-        <button
-          type="button"
-          onClick={() => setOpen((v) => !v)}
-          className="flex h-10 w-10 items-center justify-center rounded-lg text-ink ring-1 ring-white/15 transition-colors hover:bg-white/5 md:hidden"
-          aria-label={open ? "Close menu" : "Open menu"}
-          aria-expanded={open}
-          aria-controls="mobile-menu"
-        >
-          {open ? <X size={22} /> : <Menu size={22} />}
-        </button>
+        <div className="flex items-center gap-2">
+          <ThemeToggle />
+          <Link
+            href="/contact"
+            className="group hidden items-center gap-1.5 rounded-full bg-accent px-5 py-2.5 text-sm font-bold text-on-accent transition-transform hover:-translate-y-0.5 md:inline-flex"
+          >
+            Get in touch
+            <ArrowUpRight
+              size={16}
+              className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+            />
+          </Link>
+
+          {/* Mobile toggle */}
+          <button
+            type="button"
+            onClick={() => setOpen((v) => !v)}
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-line text-ink transition-colors hover:border-line-2 md:hidden"
+            aria-label={open ? "Close menu" : "Open menu"}
+            aria-expanded={open}
+            aria-controls="mobile-menu"
+          >
+            {open ? <X size={20} /> : <Menu size={20} />}
+          </button>
+        </div>
       </nav>
 
       {/* Mobile menu */}
       <div
         id="mobile-menu"
         className={clsx(
-          "overflow-hidden border-white/10 bg-base-950 transition-[max-height,opacity] duration-300 md:hidden",
+          "overflow-hidden bg-bg transition-[max-height,opacity] duration-300 md:hidden",
           open
-            ? "max-h-[28rem] border-t opacity-100"
+            ? "max-h-[30rem] border-t border-line opacity-100"
             : "max-h-0 border-transparent opacity-0",
         )}
       >
@@ -112,11 +129,12 @@ export function SiteHeader() {
             <Link
               key={link.href}
               href={link.href}
+              aria-current={isActive(link.href) ? "page" : undefined}
               className={clsx(
                 "rounded-xl px-4 py-3.5 text-base font-medium transition-colors",
                 isActive(link.href)
-                  ? "bg-white/5 text-lime-400"
-                  : "text-muted hover:bg-white/5 hover:text-ink",
+                  ? "bg-surface-2 text-ink"
+                  : "text-muted hover:bg-surface-2 hover:text-ink",
               )}
             >
               {link.label}
@@ -124,9 +142,10 @@ export function SiteHeader() {
           ))}
           <Link
             href="/contact"
-            className="mt-2 rounded-full bg-lime-400 px-5 py-3.5 text-center text-base font-bold text-base-950"
+            className="mt-2 flex items-center justify-center gap-1.5 rounded-full bg-accent px-5 py-3.5 text-base font-bold text-on-accent"
           >
             Get in touch
+            <ArrowUpRight size={18} />
           </Link>
         </div>
       </div>

@@ -24,22 +24,22 @@ export function AboutSection() {
     <section className="relative overflow-hidden px-5 py-20 sm:px-8 sm:py-28">
       <div
         aria-hidden
-        className="glow-lime absolute bottom-0 -left-24 -z-10 h-80 w-80 rounded-full opacity-25 blur-3xl"
+        className="glow-lime absolute bottom-0 -left-24 -z-10 h-80 w-80 rounded-full blur-3xl"
       />
-      <div className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-2 lg:items-center lg:gap-14">
+      <div className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-2 lg:items-center lg:gap-16">
         <Reveal>
-          <p className="text-xs font-semibold tracking-[0.25em] text-lime-400 uppercase">
+          <p className="text-xs font-semibold tracking-[0.25em] text-brand uppercase">
             Who we are
           </p>
-          <h2 className="mt-4 font-display text-3xl font-bold tracking-tight text-ink sm:text-5xl">
+          <h2 className="mt-4 font-display text-3xl font-bold tracking-tight text-balance text-ink sm:text-5xl">
             Five people. One standard.
           </h2>
           <div className="mt-6 space-y-4 text-base leading-relaxed text-muted">
             <p>
               2.0 began as a group of five who first came together at{" "}
-              <span className="text-ink">AIESEC</span> — where we learned how
-              business really crosses borders. We took that experience and built
-              an independent B2B services team of our own.
+              <span className="font-medium text-ink">AIESEC</span> — where we
+              learned how business really crosses borders. We took that
+              experience and built an independent B2B services team of our own.
             </p>
             <p>
               Today we help companies promote, sell and expand: generating
@@ -60,8 +60,8 @@ export function AboutSection() {
             const Icon = v.icon;
             return (
               <Reveal key={v.title} delay={i * 0.1}>
-                <div className="surface flex items-start gap-4 rounded-2xl p-6">
-                  <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-lime-400/10 text-lime-400 ring-1 ring-lime-400/20">
+                <div className="group surface flex items-start gap-4 rounded-2xl p-6 transition-colors hover:border-accent/40">
+                  <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-surface-2 text-brand ring-1 ring-line transition-colors group-hover:bg-accent group-hover:text-on-accent">
                     <Icon size={20} strokeWidth={2} />
                   </span>
                   <div>

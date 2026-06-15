@@ -1,75 +1,206 @@
 @import "tailwindcss";
 
+/* ================================================================== */
+/*  2.0 — "Midnight Editorial" design system                          */
+/*  Premium dark canvas + a polished light theme, one token layer.    */
+/*                                                                    */
+/*  Brand palette (from the official sheet):                          */
+/*    black #000 · lime #C6FF34 · purple #7E3BED · white #FFF         */
+/*                                                                    */
+/*  Token layers:                                                     */
+/*    1. Primitive  — raw brand ramps (never themed)                  */
+/*    2. Semantic   — bg / surface / ink / line… (flip per theme)     */
+/*    3. Tailwind   — @theme inline maps semantics → utilities        */
+/* ================================================================== */
+
+/* Manual theme control: `.light` / `.dark` on <html> beat the OS pref. */
+@custom-variant light (&:where(.light, .light *));
+
 /* ------------------------------------------------------------------ */
-/*  2.0 — brand design tokens                                          */
-/*  Palette from the official brand sheet:                            */
-/*    black #000  ·  lime #C6FF34  ·  purple #7E3BED  ·  white #FFF    */
-/*  Token names are kept generic so they read with the design:        */
-/*    base-*  = black / dark surfaces                                  */
-/*    lime-*  = primary accent (energy, "elevate")                     */
-/*    purple-*= secondary accent                                       */
+/*  1. Primitive brand ramps (theme-independent)                      */
 /* ------------------------------------------------------------------ */
-@theme {
-  /* Dark canvas */
-  --color-base-950: #000000;
-  --color-base-900: #08080a;
-  --color-base-850: #0e0e12;
-  --color-base-800: #16161c;
-  --color-base-700: #232330;
-
-  /* Lime (primary accent) */
-  --color-lime-600: #8fbe15;
-  --color-lime-500: #aee81c;
-  --color-lime-400: #c6ff34;
-  --color-lime-300: #d9ff77;
-
-  /* Purple (secondary accent) */
-  --color-purple-600: #6a23d9;
-  --color-purple-500: #7e3bed;
-  --color-purple-400: #9a6cf0;
-  --color-purple-300: #b79bf5;
-
-  /* Text */
-  --color-ink: #f5f5f6;
-  --color-muted: #a3a3ad;
-  --color-faint: #6c6c78;
-
-  /* Fonts (wired up in layout.tsx via next/font) */
-  --font-sans: var(--font-body), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-display-face), var(--font-body), system-ui, sans-serif;
-}
-
 :root {
-  --background: var(--color-base-950);
-  --foreground: var(--color-ink);
+  --lime-300: #d9ff77;
+  --lime-400: #c6ff34; /* brand lime */
+  --lime-500: #aee81c;
+  --lime-600: #8fbe15;
+  --lime-700: #5f8a0a;
+  --lime-800: #3f6212;
+
+  --violet-300: #b79bf5;
+  --violet-400: #9a6cf0;
+  --violet-500: #7e3bed; /* brand purple */
+  --violet-600: #6a23d9;
+  --violet-700: #531bb0;
+
+  /* Radius scale */
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+  --radius-2xl: 2rem;
+
+  /* Shadow scale (used mostly in the light theme) */
+  --shadow-sm: 0 1px 2px rgba(12, 12, 16, 0.06);
+  --shadow-md: 0 8px 24px -8px rgba(12, 12, 16, 0.12);
+  --shadow-lg: 0 24px 60px -20px rgba(12, 12, 16, 0.22);
+
+  /* Ambient flourish intensity (glows / grid) */
+  --ambient: 1;
 }
 
-html {
-  scroll-behavior: smooth;
-  scroll-padding-top: 5rem; /* clears the sticky header on anchor jumps */
-  /* never allow horizontal scroll / extra space on mobile */
-  overflow-x: hidden;
+/* ------------------------------------------------------------------ */
+/*  2. Semantic tokens — DARK is the brand-first default              */
+/* ------------------------------------------------------------------ */
+:root {
+  --bg: #0a0a0b;
+  --surface: #141417;
+  --surface-2: #1b1b20;
+  --surface-3: #232329;
+
+  --line: rgba(255, 255, 255, 0.1);
+  --line-2: rgba(255, 255, 255, 0.18);
+
+  --ink: #f5f5f6;
+  --muted: #a1a1aa;
+  --faint: #8a8a93; /* tertiary — kept ≥ AA (≈5.4:1 on bg) */
+
+  --accent: var(--lime-400); /* lime fills */
+  --on-accent: #0a0a0b; /* text on lime */
+  --brand: var(--lime-400); /* readable lime text/links */
+  --violet: var(--violet-500);
+  --violet-ink: var(--violet-300);
+
+  --ring: var(--lime-400);
+  --selection-bg: var(--lime-400);
+  --selection-fg: #000;
+
+  color-scheme: dark;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
+/* Light overrides — explicit class wins over everything. */
+.light {
+  --bg: #faf9f6;
+  --surface: #ffffff;
+  --surface-2: #f3f2ec;
+  --surface-3: #ebeae3;
+
+  --line: rgba(12, 12, 16, 0.1);
+  --line-2: rgba(12, 12, 16, 0.16);
+
+  --ink: #0e0e10;
+  --muted: #54545c;
+  --faint: #6b6b73; /* tertiary — kept ≥ AA (≈5.4:1 on paper) */
+
+  --accent: var(--lime-400);
+  --on-accent: #0a0a0b;
+  --brand: var(--lime-800); /* deep lime for AA text on paper */
+  --violet: var(--violet-500);
+  --violet-ink: var(--violet-600);
+
+  --ring: var(--violet-600);
+  --selection-bg: var(--lime-400);
+  --selection-fg: #000;
+
+  --shadow-sm: 0 1px 2px rgba(12, 12, 16, 0.05);
+  --shadow-md: 0 8px 24px -8px rgba(12, 12, 16, 0.1);
+  --shadow-lg: 0 24px 60px -20px rgba(12, 12, 16, 0.16);
+
+  --ambient: 0.45;
+  color-scheme: light;
+}
+
+/* No-JS / no stored preference: honour the OS, but never beat a class. */
+@media (prefers-color-scheme: light) {
+  :root:not(.dark) {
+    --bg: #faf9f6;
+    --surface: #ffffff;
+    --surface-2: #f3f2ec;
+    --surface-3: #ebeae3;
+    --line: rgba(12, 12, 16, 0.1);
+    --line-2: rgba(12, 12, 16, 0.16);
+    --ink: #0e0e10;
+    --muted: #54545c;
+    --faint: #6b6b73;
+    --brand: var(--lime-800);
+    --violet-ink: var(--violet-600);
+    --ring: var(--violet-600);
+    --ambient: 0.45;
+    color-scheme: light;
   }
 }
 
+/* ------------------------------------------------------------------ */
+/*  3. Tailwind theme mapping (semantic → utilities)                  */
+/* ------------------------------------------------------------------ */
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+
+  --color-line: var(--line);
+  --color-line-2: var(--line-2);
+
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+
+  --color-accent: var(--accent);
+  --color-on-accent: var(--on-accent);
+  --color-brand: var(--brand);
+  --color-violet: var(--violet);
+  --color-violet-ink: var(--violet-ink);
+
+  /* expose raw ramps for gradients / glows */
+  --color-lime-300: var(--lime-300);
+  --color-lime-400: var(--lime-400);
+  --color-lime-500: var(--lime-500);
+  --color-violet-400: var(--violet-400);
+  --color-violet-500: var(--violet-500);
+
+  --font-sans: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-display-face), var(--font-body), system-ui, sans-serif;
+
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
+  --radius-2xl: var(--radius-2xl);
+}
+
+/* ------------------------------------------------------------------ */
+/*  Base elements                                                     */
+/* ------------------------------------------------------------------ */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5.5rem; /* clears the sticky header on anchor jumps */
+  overflow-x: hidden;
+  -webkit-text-size-adjust: 100%;
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--bg);
+  color: var(--ink);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   overflow-x: hidden;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
 }
 
-/* Selection */
 ::selection {
-  background: var(--color-lime-400);
-  color: #000;
+  background: var(--selection-bg);
+  color: var(--selection-fg);
+}
+
+/* Visible, on-brand focus ring for keyboard users only */
+:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+  border-radius: 4px;
 }
 
 /* Custom scrollbar */
@@ -78,41 +209,65 @@ body {
   height: 11px;
 }
 ::-webkit-scrollbar-track {
-  background: var(--color-base-950);
+  background: var(--bg);
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--color-base-700);
+  background: var(--surface-3);
   border-radius: 999px;
-  border: 3px solid var(--color-base-950);
+  border: 3px solid var(--bg);
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-lime-500);
+  background: var(--lime-500);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
 }
 
 /* ------------------------------------------------------------------ */
-/*  Reusable visual utilities                                          */
+/*  Reusable visual utilities                                         */
 /* ------------------------------------------------------------------ */
 
 /* Lime gradient text */
 .text-gradient-lime {
   background: linear-gradient(
     100deg,
-    var(--color-lime-300),
-    var(--color-lime-400) 55%,
-    var(--color-lime-500)
+    var(--lime-300),
+    var(--lime-400) 55%,
+    var(--lime-500)
   );
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
 
-/* Lime -> purple gradient text */
+/* Lime → purple brand gradient text */
 .text-gradient-brand {
   background: linear-gradient(
     100deg,
-    var(--color-lime-400),
-    var(--color-lime-300) 35%,
-    var(--color-purple-400)
+    var(--lime-400),
+    var(--lime-300) 35%,
+    var(--violet-400)
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.light .text-gradient-brand {
+  background: linear-gradient(
+    100deg,
+    var(--lime-700),
+    var(--lime-800) 30%,
+    var(--violet-600)
   );
   -webkit-background-clip: text;
   background-clip: text;
@@ -121,51 +276,67 @@ body {
 
 /* Card surface */
 .surface {
-  background: color-mix(in srgb, var(--color-base-850) 90%, transparent);
-  border: 1px solid color-mix(in srgb, #ffffff 8%, transparent);
+  background: var(--surface);
+  border: 1px solid var(--line);
 }
 
-/* Ambient radial glows for section backgrounds */
-.glow-purple {
+/* Ambient radial glows (dialed down automatically in light) */
+.glow-violet {
   background: radial-gradient(
     closest-side,
-    color-mix(in srgb, var(--color-purple-500) 38%, transparent),
+    color-mix(in srgb, var(--violet-500) 38%, transparent),
     transparent
   );
+  opacity: var(--ambient);
 }
 .glow-lime {
   background: radial-gradient(
     closest-side,
-    color-mix(in srgb, var(--color-lime-400) 24%, transparent),
+    color-mix(in srgb, var(--lime-400) 26%, transparent),
     transparent
   );
+  opacity: var(--ambient);
 }
 
 /* Faint dotted grid backdrop */
 .bg-grid {
   background-image: radial-gradient(
-    color-mix(in srgb, #ffffff 7%, transparent) 1px,
+    color-mix(in srgb, var(--ink) 9%, transparent) 1px,
     transparent 1px
   );
   background-size: 30px 30px;
+  opacity: var(--ambient);
 }
 
-/* Entrance animation primitives */
-@keyframes fade-up {
-  from {
-    opacity: 0;
-    transform: translateY(24px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+/* Thin hairline gradient divider */
+.hairline {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--line-2) 20%,
+    var(--line-2) 80%,
+    transparent
+  );
 }
 
-@keyframes spin-slow {
-  to {
-    transform: rotate(360deg);
-  }
+/* ------------------------------------------------------------------ */
+/*  Motion primitives (CSS only, transform/opacity)                   */
+/* ------------------------------------------------------------------ */
+
+/* Scroll reveal — hidden only when JS is present; no-JS shows content */
+.js .reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition:
+    opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+.js .reveal[data-visible="true"] {
+  opacity: 1;
+  transform: none;
 }
 
 @keyframes float-slow {
@@ -175,5 +346,36 @@ body {
   }
   50% {
     transform: translateY(-14px);
+  }
+}
+@keyframes spin-slow {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes hero-in {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Hero entrance — pure CSS stagger via inline --i delay */
+.hero-rise {
+  animation: hero-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(var(--i, 0) * 90ms);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .js .reveal {
+    opacity: 1;
+    transform: none;
+  }
+  .hero-rise {
+    animation: none;
   }
 }

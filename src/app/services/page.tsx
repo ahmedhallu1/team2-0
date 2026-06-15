@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 export default function ServicesPage() {
   return (
     <>
-      <div className="h-6 sm:h-10" aria-hidden />
+      <div className="h-16 sm:h-20" aria-hidden />
       <ServicesSection />
       <CtaBand
         title="Not sure where to start?"

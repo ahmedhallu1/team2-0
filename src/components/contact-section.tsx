@@ -49,21 +49,22 @@ export function ContactSection() {
   }
 
   return (
-    <section className="relative overflow-hidden bg-base-900/50 px-5 py-20 sm:px-8 sm:py-28">
+    <section className="relative overflow-hidden bg-surface-2/40 px-5 py-20 sm:px-8 sm:py-28">
       <div
         aria-hidden
-        className="glow-purple absolute top-0 left-1/2 -z-10 h-72 w-[40rem] max-w-[90vw] -translate-x-1/2 rounded-full opacity-30 blur-3xl"
+        className="glow-violet absolute top-0 left-1/2 -z-10 h-72 w-[40rem] max-w-[90vw] -translate-x-1/2 rounded-full blur-3xl"
       />
       <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
         {/* Left: pitch */}
         <div>
-          <p className="text-xs font-semibold tracking-[0.25em] text-lime-400 uppercase">
+          <p className="text-xs font-semibold tracking-[0.25em] text-brand uppercase">
             Contact us
           </p>
-          <h2 className="mt-4 font-display text-3xl font-bold tracking-tight text-ink sm:text-5xl">
-            Let&apos;s build your <span className="text-gradient-lime">2.0</span>
+          <h2 className="mt-4 font-display text-3xl font-bold tracking-tight text-balance text-ink sm:text-5xl">
+            Let&apos;s build your{" "}
+            <span className="text-gradient-brand">2.0</span>
           </h2>
-          <p className="mt-5 max-w-md text-base leading-relaxed text-muted">
+          <p className="mt-5 max-w-md text-base leading-relaxed text-pretty text-muted">
             Tell us where you want to grow. We&apos;ll get back to you with how
             we can help — usually within one business day.
           </p>
@@ -77,7 +78,8 @@ export function ContactSection() {
               <li key={line} className="flex items-start gap-3">
                 <CheckCircle2
                   size={18}
-                  className="mt-0.5 shrink-0 text-lime-400"
+                  className="mt-0.5 shrink-0 text-brand"
+                  aria-hidden
                 />
                 {line}
               </li>
@@ -89,18 +91,18 @@ export function ContactSection() {
               {contactEmail && (
                 <a
                   href={`mailto:${contactEmail}`}
-                  className="inline-flex items-center gap-2 text-sm font-medium text-lime-400 transition-colors hover:text-lime-300"
+                  className="inline-flex items-center gap-2 text-sm font-medium text-brand transition-opacity hover:opacity-80"
                 >
-                  <Mail size={16} />
+                  <Mail size={16} aria-hidden />
                   {contactEmail}
                 </a>
               )}
               {contactPhone && (
                 <a
                   href={phoneHref}
-                  className="inline-flex items-center gap-2 text-sm font-medium text-lime-400 transition-colors hover:text-lime-300"
+                  className="inline-flex items-center gap-2 text-sm font-medium text-brand transition-opacity hover:opacity-80"
                 >
-                  <Phone size={16} />
+                  <Phone size={16} aria-hidden />
                   {contactPhone}
                 </a>
               )}
@@ -113,10 +115,10 @@ export function ContactSection() {
         </div>
 
         {/* Right: form */}
-        <div className="surface rounded-3xl p-5 sm:p-8">
+        <div className="surface rounded-3xl p-5 shadow-[var(--shadow-md)] sm:p-8">
           {status === "success" ? (
             <div className="flex h-full min-h-80 flex-col items-center justify-center text-center">
-              <CheckCircle2 size={48} className="text-lime-400" />
+              <CheckCircle2 size={48} className="text-brand" aria-hidden />
               <h3 className="mt-5 font-display text-2xl font-bold text-ink">
                 Message sent
               </h3>
@@ -127,7 +129,7 @@ export function ContactSection() {
               <button
                 type="button"
                 onClick={() => setStatus("idle")}
-                className="mt-6 text-sm font-semibold text-lime-400 hover:text-lime-300"
+                className="mt-6 text-sm font-semibold text-brand hover:opacity-80"
               >
                 Send another message
               </button>
@@ -202,17 +204,17 @@ export function ContactSection() {
                   className={`${inputClass} appearance-none bg-[length:1rem] bg-[right_0.9rem_center] bg-no-repeat pr-10`}
                   style={{
                     backgroundImage:
-                      "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23a3a3ad' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E\")",
+                      "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%238a8a92' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E\")",
                   }}
                 >
-                  <option value="" disabled className="bg-base-900">
+                  <option value="" disabled className="bg-surface">
                     Select a service…
                   </option>
-                  <option value="Not sure yet" className="bg-base-900">
+                  <option value="Not sure yet" className="bg-surface">
                     Not sure yet — help me choose
                   </option>
                   {serviceOptions.map((s) => (
-                    <option key={s} value={s} className="bg-base-900">
+                    <option key={s} value={s} className="bg-surface">
                       {s}
                     </option>
                   ))}
@@ -231,7 +233,10 @@ export function ContactSection() {
               </Field>
 
               {status === "error" && (
-                <p className="rounded-lg border border-red-400/30 bg-red-500/10 px-4 py-3 text-sm text-red-200">
+                <p
+                  role="alert"
+                  className="rounded-lg border border-red-400/30 bg-red-500/10 px-4 py-3 text-sm text-red-500 dark:text-red-200"
+                >
                   {errorMsg}
                 </p>
               )}
@@ -239,11 +244,11 @@ export function ContactSection() {
               <button
                 type="submit"
                 disabled={status === "submitting"}
-                className="group inline-flex w-full items-center justify-center gap-2 rounded-full bg-lime-400 px-7 py-3.5 text-sm font-bold text-base-950 transition-all hover:-translate-y-0.5 hover:bg-lime-300 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0"
+                className="group inline-flex w-full items-center justify-center gap-2 rounded-full bg-accent px-7 py-3.5 text-sm font-bold text-on-accent transition-transform hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0"
               >
                 {status === "submitting" ? (
                   <>
-                    <Loader2 size={17} className="animate-spin" />
+                    <Loader2 size={17} className="animate-spin" aria-hidden />
                     Sending…
                   </>
                 ) : (
@@ -269,7 +274,7 @@ export function ContactSection() {
 }
 
 const inputClass =
-  "w-full rounded-xl border border-white/10 bg-base-950/60 px-4 py-3 text-sm text-ink placeholder:text-faint transition-colors focus:border-lime-400/60 focus:ring-2 focus:ring-lime-400/25 focus:outline-none";
+  "w-full rounded-xl border border-line bg-bg/60 px-4 py-3 text-sm text-ink placeholder:text-faint transition-colors focus:border-accent focus:ring-2 focus:ring-accent/25 focus:outline-none";
 
 function Field({
   label,
@@ -289,7 +294,11 @@ function Field({
         className="mb-1.5 block text-xs font-medium tracking-wide text-muted"
       >
         {label}
-        {required && <span className="ml-0.5 text-lime-400">*</span>}
+        {required && (
+          <span className="ml-0.5 text-brand" aria-hidden>
+            *
+          </span>
+        )}
       </label>
       {children}
     </div>
