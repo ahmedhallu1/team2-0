@@ -38,7 +38,7 @@ export function ServicesPreview() {
               <Reveal key={pillar.id} delay={(i % 2) * 0.08} variant="scale" className={spans[i]}>
                 <Tilt className="h-full rounded-2xl">
                 <Link
-                  href={`/services#${pillar.id}`}
+                  href={`/services?p=${pillar.id}`}
                   className="group surface relative flex h-full flex-col gap-4 rounded-2xl p-6 transition-colors duration-300 hover:border-accent/40 sm:p-7"
                 >
                   <div className="flex items-start justify-between gap-3">

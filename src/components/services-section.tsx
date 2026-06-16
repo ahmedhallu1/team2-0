@@ -1,6 +1,7 @@
 import { pillars, totalServices } from "@/lib/services";
 import { Reveal } from "@/components/reveal";
 import { Tilt } from "@/components/fx/tilt";
+import { PillarNav } from "@/components/pillar-nav";
 
 export function ServicesSection() {
   return (
@@ -26,22 +27,8 @@ export function ServicesSection() {
           </p>
         </Reveal>
 
-        {/* Sticky pillar quick-nav */}
-        <nav
-          aria-label="Service pillars"
-          className="sticky top-16 z-30 mx-auto mt-10 -mb-2 flex max-w-full snap-x gap-2 overflow-x-auto rounded-full border border-line bg-bg/80 p-1.5 backdrop-blur-xl sm:top-18 sm:w-fit"
-        >
-          {pillars.map((pillar, i) => (
-            <a
-              key={pillar.id}
-              href={`#${pillar.id}`}
-              className="snap-start rounded-full px-4 py-2 text-sm font-medium whitespace-nowrap text-muted transition-colors hover:bg-surface-2 hover:text-ink"
-            >
-              <span className="text-faint">0{i + 1}</span>{" "}
-              <span className="ml-0.5">{pillar.name}</span>
-            </a>
-          ))}
-        </nav>
+        {/* Sticky pillar quick-nav (smooth-scrolls, no URL hash) */}
+        <PillarNav />
 
         {/* Pillars */}
         <div className="mt-16 space-y-16 sm:mt-20 sm:space-y-24">

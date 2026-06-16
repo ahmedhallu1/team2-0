@@ -130,6 +130,7 @@ export async function POST(req: Request) {
   }
 
   const to = CONTACT_TO || "info@elevate2point0.com";
+  const brandEmail = "info@elevate2point0.com";
 
   const rows: Array<[string, string]> = [
     ["Name", name],
@@ -139,72 +140,92 @@ export async function POST(req: Request) {
     ["Service", service || "—"],
   ];
 
-  const html = `
-    <div style="font-family:Inter,Arial,sans-serif;max-width:600px;margin:auto;background:#081427;color:#eaf0fb;border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,0.08)">
-      <div style="padding:24px 28px;background:linear-gradient(100deg,#1e4fd1,#0b1a33)">
-        <div style="font-size:22px;font-weight:800;font-family:Georgia,serif">
-          <span style="color:#4f7bf0">2</span><span style="color:#d4a437">.0</span>
-        </div>
-        <div style="font-size:11px;letter-spacing:3px;color:#93a4c0;text-transform:uppercase;margin-top:4px">New website inquiry</div>
-      </div>
-      <div style="padding:24px 28px">
-        <table style="width:100%;border-collapse:collapse;font-size:14px">
-          ${rows
-            .map(
-              ([k, v]) => `
-            <tr>
-              <td style="padding:8px 0;color:#93a4c0;width:120px;vertical-align:top">${k}</td>
-              <td style="padding:8px 0;color:#eaf0fb">${escapeHtml(v)}</td>
-            </tr>`,
-            )
-            .join("")}
-        </table>
-        <div style="margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.08)">
-          <div style="color:#93a4c0;font-size:14px;margin-bottom:8px">Message</div>
-          <div style="white-space:pre-wrap;line-height:1.6;color:#eaf0fb;font-size:14px">${escapeHtml(
-            message,
-          )}</div>
-        </div>
-      </div>
+  // --- Internal notification (to the 2.0 inbox) -------------------------
+  const notifyBody = `
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;font-size:14px">
+      ${rows
+        .map(
+          ([k, v]) => `
+        <tr>
+          <td style="padding:8px 0;color:#8a8a93;width:120px;vertical-align:top">${k}</td>
+          <td style="padding:8px 0;color:#f5f5f6">${escapeHtml(v)}</td>
+        </tr>`,
+        )
+        .join("")}
+    </table>
+    <div style="margin-top:18px;padding:16px 18px;background:#141417;border:1px solid rgba(255,255,255,0.06);border-radius:12px">
+      <div style="color:#8a8a93;font-size:11px;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px">Message</div>
+      <div style="white-space:pre-wrap;line-height:1.6;color:#e7e7ea;font-size:14px">${escapeHtml(message)}</div>
     </div>`;
+  const notifyHtml = emailShell({
+    eyebrow: "New website inquiry",
+    heading: `New inquiry from ${escapeHtml(name)}`,
+    bodyHtml: notifyBody,
+  });
 
-  // Build a raw RFC 2822 message for the Gmail API.
-  const subject = `New inquiry from ${name}${company ? ` · ${company}` : ""}`;
-  const mime = [
-    `From: "2.0 Website" <${GMAIL_SENDER}>`,
-    `To: ${to}`,
-    `Reply-To: ${email}`,
-    `Subject: ${encodeSubject(subject)}`,
-    "MIME-Version: 1.0",
-    'Content-Type: text/html; charset="UTF-8"',
-    "Content-Transfer-Encoding: base64",
-    "",
-    Buffer.from(html, "utf8").toString("base64"),
-  ].join("\r\n");
+  // --- Confirmation (to the person who reached out) ---------------------
+  const confirmBody = `
+    <p style="margin:0 0 16px;color:#a1a1aa;font-size:15px;line-height:1.7">
+      Hi ${escapeHtml(name.split(" ")[0] || name)}, thanks for reaching out to 2.0 — we&rsquo;ve received your message and a member of our team will get back to you, usually within one business day.
+    </p>
+    <div style="margin-top:8px;padding:16px 18px;background:#141417;border:1px solid rgba(255,255,255,0.06);border-radius:12px">
+      <div style="color:#8a8a93;font-size:11px;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px">Your message</div>
+      ${
+        service
+          ? `<div style="color:#c6ff34;font-size:13px;font-weight:600;margin-bottom:10px">Interested in: ${escapeHtml(service)}</div>`
+          : ""
+      }
+      <div style="white-space:pre-wrap;line-height:1.6;color:#e7e7ea;font-size:14px">${escapeHtml(message)}</div>
+    </div>
+    <p style="margin:22px 0 0;color:#a1a1aa;font-size:14px;line-height:1.7">
+      In the meantime, explore what we do at
+      <a href="https://elevate2point0.com/services" style="color:#c6ff34;text-decoration:none;font-weight:600">our services</a>.
+    </p>
+    <p style="margin:16px 0 0;color:#71717a;font-size:13px">— The 2.0 team</p>`;
+  const confirmHtml = emailShell({
+    eyebrow: "We&rsquo;ve got your message",
+    heading: "Thanks for reaching out 👋",
+    bodyHtml: confirmBody,
+  });
+
+  const notifyMime = buildMime({
+    from: `"2.0 — Elevate your vision" <${GMAIL_SENDER}>`,
+    to,
+    replyTo: email,
+    subject: `New inquiry from ${name}${company ? ` · ${company}` : ""}`,
+    html: notifyHtml,
+  });
+  const confirmMime = buildMime({
+    from: `"2.0 — Elevate your vision" <${GMAIL_SENDER}>`,
+    to: email,
+    replyTo: brandEmail,
+    subject: "Thanks for reaching out to 2.0",
+    html: confirmHtml,
+  });
 
   try {
     const accessToken = await getAccessToken();
-    const res = await fetch(
-      "https://gmail.googleapis.com/gmail/v1/users/me/messages/send",
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ raw: base64url(mime) }),
-      },
-    );
 
-    if (!res.ok) {
-      const detail = await res.text();
-      console.error("[contact] Gmail API send failed:", res.status, detail);
+    // The internal notification is the critical one — fail the request if it
+    // doesn't send. The confirmation to the visitor is best-effort.
+    const sent = await sendGmail(accessToken, notifyMime);
+    if (!sent.ok) {
+      console.error("[contact] Gmail API send failed:", sent.status, sent.detail);
       return NextResponse.json(
         {
           ok: false,
           error: "We couldn't send your message right now. Please try again.",
         },
         { status: 502 },
+      );
+    }
+
+    const confirm = await sendGmail(accessToken, confirmMime);
+    if (!confirm.ok) {
+      console.error(
+        "[contact] Confirmation email failed (non-fatal):",
+        confirm.status,
+        confirm.detail,
       );
     }
 
@@ -219,4 +240,87 @@ export async function POST(req: Request) {
       { status: 500 },
     );
   }
+}
+
+/** Shared dark, on-brand email shell (lime / violet / near-black). */
+function emailShell({
+  eyebrow,
+  heading,
+  bodyHtml,
+}: {
+  eyebrow: string;
+  heading: string;
+  bodyHtml: string;
+}): string {
+  return `
+  <div style="margin:0;padding:24px;background:#050506;font-family:'Helvetica Neue',Arial,sans-serif">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;margin:0 auto;border-collapse:collapse">
+      <tr><td style="height:4px;background:linear-gradient(90deg,#c6ff34,#7e3bed);border-radius:16px 16px 0 0;font-size:0;line-height:0">&nbsp;</td></tr>
+      <tr><td style="background:#0f0f12;border:1px solid rgba(255,255,255,0.08);border-top:0;border-radius:0 0 16px 16px">
+        <div style="padding:28px 32px;border-bottom:1px solid rgba(255,255,255,0.06)">
+          <div style="font-size:26px;font-weight:800;color:#f5f5f6;letter-spacing:-0.5px">2<span style="color:#c6ff34">.</span>0</div>
+          <div style="margin-top:6px;font-size:11px;letter-spacing:3px;color:#71717a;text-transform:uppercase">${eyebrow}</div>
+        </div>
+        <div style="padding:28px 32px">
+          <h1 style="margin:0 0 4px;font-size:22px;line-height:1.3;color:#f5f5f6;font-weight:700">${heading}</h1>
+          <div style="margin-top:14px">${bodyHtml}</div>
+        </div>
+        <div style="padding:20px 32px;border-top:1px solid rgba(255,255,255,0.06);background:#0a0a0b;border-radius:0 0 16px 16px">
+          <div style="font-size:12px;color:#71717a">
+            <a href="https://elevate2point0.com" style="color:#c6ff34;text-decoration:none;font-weight:600">elevate2point0.com</a>
+            &nbsp;·&nbsp; Elevate your vision
+          </div>
+        </div>
+      </td></tr>
+    </table>
+  </div>`;
+}
+
+/** Build a base64url-encoded RFC 2822 message for the Gmail API. */
+function buildMime({
+  from,
+  to,
+  replyTo,
+  subject,
+  html,
+}: {
+  from: string;
+  to: string;
+  replyTo: string;
+  subject: string;
+  html: string;
+}): string {
+  const mime = [
+    `From: ${from}`,
+    `To: ${to}`,
+    `Reply-To: ${replyTo}`,
+    `Subject: ${encodeSubject(subject)}`,
+    "MIME-Version: 1.0",
+    'Content-Type: text/html; charset="UTF-8"',
+    "Content-Transfer-Encoding: base64",
+    "",
+    Buffer.from(html, "utf8").toString("base64"),
+  ].join("\r\n");
+  return base64url(mime);
+}
+
+async function sendGmail(
+  accessToken: string,
+  raw: string,
+): Promise<{ ok: boolean; status?: number; detail?: string }> {
+  const res = await fetch(
+    "https://gmail.googleapis.com/gmail/v1/users/me/messages/send",
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ raw }),
+    },
+  );
+  if (!res.ok) {
+    return { ok: false, status: res.status, detail: await res.text() };
+  }
+  return { ok: true };
 }

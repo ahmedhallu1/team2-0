@@ -308,6 +308,15 @@ body {
   opacity: var(--ambient);
 }
 
+/* Hide scrollbars but keep scrollability (e.g. the mobile pillar capsule) */
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 /* Thin hairline gradient divider */
 .hairline {
   height: 1px;

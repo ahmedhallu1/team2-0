@@ -10,8 +10,7 @@ const nav = [
   { href: "/contact", label: "Contact" },
 ];
 
-const contactEmail =
-  process.env.NEXT_PUBLIC_CONTACT_EMAIL || "info@elevate2point0.com";
+const contactEmail = "info@elevate2point0.com";
 const contactPhone = process.env.NEXT_PUBLIC_CONTACT_PHONE;
 const phoneHref = contactPhone
   ? `tel:${contactPhone.replace(/\s+/g, "").replace(/^0/, "+20")}`
