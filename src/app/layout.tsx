@@ -4,6 +4,7 @@ import "./globals.css";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { CursorFx } from "@/components/fx/cursor-fx";
+import { Preloader } from "@/components/preloader";
 
 const inter = Inter({
   variable: "--font-body",
@@ -129,6 +130,7 @@ export default function RootLayout({
     >
       <body className="grain flex min-h-full flex-col overflow-x-hidden bg-bg font-sans text-ink">
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+        <Preloader />
         <CursorFx />
         <script
           type="application/ld+json"

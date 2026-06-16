@@ -6,6 +6,7 @@ import {
   Sparkles,
   Search,
   Target,
+  CalendarDays,
   MonitorSmartphone,
   Share2,
   FileText,
@@ -75,6 +76,12 @@ export const pillars: ServicePillar[] = [
         description:
           "Google Ads and Facebook/Meta campaigns managed for reach, ROAS and qualified pipeline.",
         icon: Target,
+      },
+      {
+        title: "Event Creation & Planning",
+        description:
+          "Launches, activations and conferences planned and run end to end — putting your brand in the room.",
+        icon: CalendarDays,
       },
     ],
   },

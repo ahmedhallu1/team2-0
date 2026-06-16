@@ -362,6 +362,94 @@ body {
     transform: rotate(360deg);
   }
 }
+
+/* Spinning burst (the flower) — rotates around the SVG centre */
+.spin-burst {
+  transform-box: view-box;
+  transform-origin: 50% 50%;
+  animation: spin-slow 2.6s linear infinite;
+}
+
+/* ------------------------------------------------------------------ */
+/*  Brand loading splash                                              */
+/* ------------------------------------------------------------------ */
+.preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+  animation: splash-out 1.5s cubic-bezier(0.7, 0, 0.84, 0) forwards;
+}
+.preloader__mark {
+  position: relative;
+  width: 88px;
+  height: 88px;
+  animation: splash-mark 1.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.preloader__glow {
+  position: absolute;
+  width: 30rem;
+  height: 30rem;
+  max-width: 80vw;
+  max-height: 80vw;
+  border-radius: 50%;
+  background: radial-gradient(
+    closest-side,
+    color-mix(in srgb, var(--lime-400) 22%, transparent),
+    color-mix(in srgb, var(--violet-500) 14%, transparent) 55%,
+    transparent
+  );
+  filter: blur(40px);
+  opacity: 0.7;
+  animation: splash-pulse 1.5s ease-in-out forwards;
+}
+@keyframes splash-out {
+  0%,
+  60% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+@keyframes splash-mark {
+  0% {
+    transform: scale(0.82);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  70% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.12);
+    opacity: 0;
+  }
+}
+@keyframes splash-pulse {
+  0%,
+  60% {
+    opacity: 0.7;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .preloader,
+  .preloader__mark,
+  .preloader__glow {
+    animation: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+  }
+}
 @keyframes hero-in {
   from {
     opacity: 0;

@@ -31,9 +31,20 @@ function base64url(input: Buffer | string): string {
     .replace(/=+$/, "");
 }
 
-/** RFC 2047 encoded-word so non-ASCII subjects survive. */
-function encodeSubject(subject: string): string {
-  return `=?UTF-8?B?${Buffer.from(subject, "utf8").toString("base64")}?=`;
+/** RFC 2047 encoded-word so non-ASCII text survives in headers. */
+function encodeWord(text: string): string {
+  return `=?UTF-8?B?${Buffer.from(text, "utf8").toString("base64")}?=`;
+}
+
+/**
+ * Build a valid From header. Non-ASCII display names (e.g. the em dash in
+ * "2.0 — Elevate your vision") must be RFC 2047 encoded, otherwise the
+ * sender name renders as mojibake in mail clients.
+ */
+function formatFrom(name: string, email: string): string {
+  const isAscii = /^[\x20-\x7E]*$/.test(name);
+  const display = isAscii ? `"${name.replace(/"/g, "")}"` : encodeWord(name);
+  return `${display} <${email}>`;
 }
 
 async function getAccessToken(): Promise<string> {
@@ -189,14 +200,14 @@ export async function POST(req: Request) {
   });
 
   const notifyMime = buildMime({
-    from: `"2.0 — Elevate your vision" <${GMAIL_SENDER}>`,
+    from: formatFrom("2.0 — Elevate your vision", GMAIL_SENDER),
     to,
     replyTo: email,
     subject: `New inquiry from ${name}${company ? ` · ${company}` : ""}`,
     html: notifyHtml,
   });
   const confirmMime = buildMime({
-    from: `"2.0 — Elevate your vision" <${GMAIL_SENDER}>`,
+    from: formatFrom("2.0 — Elevate your vision", GMAIL_SENDER),
     to: email,
     replyTo: brandEmail,
     subject: "Thanks for reaching out to 2.0",
@@ -294,7 +305,7 @@ function buildMime({
     `From: ${from}`,
     `To: ${to}`,
     `Reply-To: ${replyTo}`,
-    `Subject: ${encodeSubject(subject)}`,
+    `Subject: ${encodeWord(subject)}`,
     "MIME-Version: 1.0",
     'Content-Type: text/html; charset="UTF-8"',
     "Content-Transfer-Encoding: base64",
