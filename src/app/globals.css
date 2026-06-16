@@ -379,3 +379,319 @@ body {
     animation: none;
   }
 }
+
+/* ================================================================== */
+/*  Artistic FX layer (maximal direction)                             */
+/*  All transform/opacity; desktop-only flourishes gated by pointer.  */
+/* ================================================================== */
+
+/* --- Reveal direction variants ----------------------------------- */
+.js .reveal[data-variant="scale"] {
+  transform: translateY(22px) scale(0.96);
+}
+.js .reveal[data-variant="left"] {
+  transform: translateX(-40px);
+}
+.js .reveal[data-variant="right"] {
+  transform: translateX(40px);
+}
+.js .reveal[data-variant="blur"] {
+  filter: blur(14px);
+  transition:
+    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.js .reveal[data-variant="blur"][data-visible="true"] {
+  filter: blur(0);
+}
+.js .reveal[data-variant="left"][data-visible="true"],
+.js .reveal[data-variant="right"][data-visible="true"],
+.js .reveal[data-variant="scale"][data-visible="true"] {
+  transform: none;
+}
+
+/* --- Film grain overlay ------------------------------------------ */
+.grain::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: var(--grain, 0.06);
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+:root {
+  --grain: 0.06;
+}
+.light {
+  --grain: 0.035;
+}
+@media (prefers-color-scheme: light) {
+  :root:not(.dark) {
+    --grain: 0.035;
+  }
+}
+
+/* --- Aurora blobs ------------------------------------------------- */
+.aurora {
+  position: absolute;
+  inset: -20% -10% auto -10%;
+  height: 130%;
+  z-index: -10;
+  pointer-events: none;
+  filter: blur(60px);
+  opacity: var(--ambient);
+}
+.aurora .blob {
+  position: absolute;
+  border-radius: 50%;
+  will-change: transform;
+}
+.aurora .b1 {
+  top: 0;
+  left: 8%;
+  width: 36rem;
+  height: 36rem;
+  background: radial-gradient(
+    circle at 30% 30%,
+    color-mix(in srgb, var(--violet-500) 60%, transparent),
+    transparent 70%
+  );
+  animation: drift-1 22s ease-in-out infinite;
+}
+.aurora .b2 {
+  top: 4%;
+  right: 4%;
+  width: 30rem;
+  height: 30rem;
+  background: radial-gradient(
+    circle at 60% 40%,
+    color-mix(in srgb, var(--lime-400) 55%, transparent),
+    transparent 70%
+  );
+  animation: drift-2 26s ease-in-out infinite;
+}
+.aurora .b3 {
+  top: 30%;
+  left: 40%;
+  width: 26rem;
+  height: 26rem;
+  background: radial-gradient(
+    circle at 50% 50%,
+    color-mix(in srgb, var(--violet-400) 45%, transparent),
+    transparent 70%
+  );
+  animation: drift-3 30s ease-in-out infinite;
+}
+@keyframes drift-1 {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(8%, 12%, 0) scale(1.12); }
+}
+@keyframes drift-2 {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1.05); }
+  50% { transform: translate3d(-10%, 8%, 0) scale(0.92); }
+}
+@keyframes drift-3 {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(6%, -10%, 0) scale(1.15); }
+}
+
+/* --- Kinetic headline (per-word rise + gradient sheen) ----------- */
+.kinetic-word {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(0.5em) rotate(2deg);
+  animation: word-in 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: calc(var(--w, 0) * 90ms + 120ms);
+}
+@keyframes word-in {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.sheen {
+  background-size: 200% auto;
+  animation: sheen 6s linear infinite;
+}
+/* When a word is both kinetic and sheened, run both animations (the single
+   `animation` shorthand on each class would otherwise clobber the other). */
+.kinetic-word.sheen {
+  animation:
+    word-in 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards,
+    sheen 6s linear infinite;
+  animation-delay: calc(var(--w, 0) * 90ms + 120ms), 0s;
+}
+@keyframes sheen {
+  to {
+    background-position: 200% center;
+  }
+}
+
+/* --- Marquee ticker ---------------------------------------------- */
+.marquee {
+  display: flex;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    transparent,
+    #000 8%,
+    #000 92%,
+    transparent
+  );
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+.marquee__track {
+  display: flex;
+  flex-shrink: 0;
+  gap: 1rem;
+  padding-right: 1rem;
+  min-width: 100%;
+  animation: marquee var(--marquee-dur, 40s) linear infinite;
+  will-change: transform;
+}
+.marquee:hover .marquee__track {
+  animation-play-state: paused;
+}
+@keyframes marquee {
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+/* --- 3D tilt cards ------------------------------------------------ */
+.tilt {
+  transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+  transform-style: preserve-3d;
+}
+.tilt__shine {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  background: radial-gradient(
+    18rem 18rem at var(--mx, 50%) var(--my, 0%),
+    color-mix(in srgb, var(--lime-400) 22%, transparent),
+    transparent 60%
+  );
+}
+.group:hover .tilt__shine,
+.tilt:hover .tilt__shine {
+  opacity: 1;
+}
+
+/* --- Magnetic buttons -------------------------------------------- */
+.magnetic {
+  transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+/* --- Custom cursor + scroll progress ----------------------------- */
+.cursor-dot,
+.cursor-glow {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 60;
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.cursor-dot {
+  width: 8px;
+  height: 8px;
+  margin: -4px 0 0 -4px;
+  background: var(--lime-400);
+  mix-blend-mode: difference;
+}
+.cursor-glow {
+  width: 26rem;
+  height: 26rem;
+  margin: -13rem 0 0 -13rem;
+  z-index: 0;
+  background: radial-gradient(
+    closest-side,
+    color-mix(in srgb, var(--lime-400) 16%, transparent),
+    transparent
+  );
+  mix-blend-mode: screen;
+}
+.cursor-ready .cursor-dot {
+  opacity: 1;
+}
+.cursor-ready .cursor-glow {
+  opacity: var(--ambient);
+}
+.light .cursor-glow {
+  background: radial-gradient(
+    closest-side,
+    color-mix(in srgb, var(--violet-500) 14%, transparent),
+    transparent
+  );
+  mix-blend-mode: multiply;
+}
+
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  width: 100%;
+  transform: scaleX(var(--sp, 0));
+  transform-origin: 0 50%;
+  z-index: 60;
+  background: linear-gradient(90deg, var(--lime-400), var(--violet-500));
+}
+
+/* --- Scroll-driven process rail fill ----------------------------- */
+.process-rail-fill {
+  transform: scaleX(1);
+  transform-origin: left center;
+}
+@supports (animation-timeline: view()) {
+  .process-rail-fill {
+    transform: scaleX(0);
+    animation: rail-grow linear both;
+    animation-timeline: view();
+    animation-range: cover 0% cover 55%;
+  }
+}
+@keyframes rail-grow {
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* Touch / coarse pointers: no custom cursor or magnetism */
+@media (hover: none), (pointer: coarse) {
+  .cursor-dot,
+  .cursor-glow {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aurora .blob,
+  .sheen,
+  .marquee__track {
+    animation: none !important;
+  }
+  .kinetic-word {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+  .tilt {
+    transform: none !important;
+  }
+  .process-rail-fill {
+    transform: scaleX(1) !important;
+    animation: none !important;
+  }
+}

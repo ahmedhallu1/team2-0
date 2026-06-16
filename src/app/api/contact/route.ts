@@ -129,7 +129,7 @@ export async function POST(req: Request) {
     );
   }
 
-  const to = CONTACT_TO || GMAIL_SENDER;
+  const to = CONTACT_TO || "info@elevate2point0.com";
 
   const rows: Array<[string, string]> = [
     ["Name", name],

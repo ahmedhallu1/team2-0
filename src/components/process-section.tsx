@@ -37,10 +37,14 @@ export function ProcessSection() {
         </Reveal>
 
         <div className="relative mt-14 sm:mt-16">
-          {/* Desktop connecting rail */}
+          {/* Desktop connecting rail + scroll-driven accent fill */}
           <span
             aria-hidden
             className="absolute top-7 right-7 left-7 hidden h-px bg-line-2 lg:block"
+          />
+          <span
+            aria-hidden
+            className="process-rail-fill absolute top-7 right-7 left-7 hidden h-px bg-gradient-to-r from-lime-400 to-violet-500 lg:block"
           />
 
           <ol className="grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">

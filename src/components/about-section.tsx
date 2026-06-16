@@ -27,7 +27,7 @@ export function AboutSection() {
         className="glow-lime absolute bottom-0 -left-24 -z-10 h-80 w-80 rounded-full blur-3xl"
       />
       <div className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-2 lg:items-center lg:gap-16">
-        <Reveal>
+        <Reveal variant="left">
           <p className="text-xs font-semibold tracking-[0.25em] text-brand uppercase">
             Who we are
           </p>
@@ -59,7 +59,7 @@ export function AboutSection() {
           {values.map((v, i) => {
             const Icon = v.icon;
             return (
-              <Reveal key={v.title} delay={i * 0.1}>
+              <Reveal key={v.title} delay={i * 0.1} variant="right">
                 <div className="group surface flex items-start gap-4 rounded-2xl p-6 transition-colors hover:border-accent/40">
                   <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-surface-2 text-brand ring-1 ring-line transition-colors group-hover:bg-accent group-hover:text-on-accent">
                     <Icon size={20} strokeWidth={2} />

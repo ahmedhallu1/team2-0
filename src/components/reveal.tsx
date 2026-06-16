@@ -14,12 +14,15 @@ export function Reveal({
   delay = 0,
   className,
   as,
+  variant,
 }: {
   children: ReactNode;
   /** stagger delay in seconds */
   delay?: number;
   className?: string;
   as?: ElementType;
+  /** entrance direction/style; defaults to a simple rise */
+  variant?: "up" | "scale" | "left" | "right" | "blur";
 }) {
   const Tag = (as ?? "div") as ElementType;
   const ref = useRef<HTMLElement | null>(null);
@@ -48,6 +51,7 @@ export function Reveal({
       ref={ref}
       className={clsx("reveal", className)}
       data-visible={visible ? "true" : "false"}
+      data-variant={variant && variant !== "up" ? variant : undefined}
       style={delay ? { ["--reveal-delay" as string]: `${delay * 1000}ms` } : undefined}
     >
       {children}

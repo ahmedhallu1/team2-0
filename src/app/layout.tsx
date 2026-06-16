@@ -3,6 +3,7 @@ import { Inter, Bricolage_Grotesque } from "next/font/google";
 import "./globals.css";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
+import { CursorFx } from "@/components/fx/cursor-fx";
 
 const inter = Inter({
   variable: "--font-body",
@@ -28,7 +29,7 @@ function resolveSiteUrl(): URL {
       // fall through to default if the env value is malformed
     }
   }
-  return new URL("http://localhost:3000");
+  return new URL("https://elevate2point0.com");
 }
 
 const siteUrl = resolveSiteUrl();
@@ -98,7 +99,7 @@ const jsonLd = {
   url: siteUrl.toString(),
   logo: new URL("/brand/2.0logo.png", siteUrl).toString(),
   image: new URL("/brand/2.0logo.png", siteUrl).toString(),
-  email: "ahmedthalool0@gmail.com",
+  email: "info@elevate2point0.com",
   telephone: "+201204538936",
   areaServed: "Worldwide",
   knowsAbout: [
@@ -126,8 +127,9 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`${inter.variable} ${bricolage.variable} h-full antialiased`}
     >
-      <body className="flex min-h-full flex-col overflow-x-hidden bg-bg font-sans text-ink">
+      <body className="grain flex min-h-full flex-col overflow-x-hidden bg-bg font-sans text-ink">
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+        <CursorFx />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

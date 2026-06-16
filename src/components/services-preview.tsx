@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { pillars, totalServices } from "@/lib/services";
 import { Reveal } from "@/components/reveal";
+import { Tilt } from "@/components/fx/tilt";
 import { clsx } from "@/lib/clsx";
 
 /** Bento spans — two wide feature cells, two compact cells. */
@@ -34,10 +35,11 @@ export function ServicesPreview() {
             const Icon = pillar.services[0].icon;
             const wide = spans[i] === "lg:col-span-4";
             return (
-              <Reveal key={pillar.id} delay={(i % 2) * 0.08} className={spans[i]}>
+              <Reveal key={pillar.id} delay={(i % 2) * 0.08} variant="scale" className={spans[i]}>
+                <Tilt className="h-full rounded-2xl">
                 <Link
                   href={`/services#${pillar.id}`}
-                  className="group surface flex h-full flex-col gap-4 rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:border-accent/40 sm:p-7"
+                  className="group surface relative flex h-full flex-col gap-4 rounded-2xl p-6 transition-colors duration-300 hover:border-accent/40 sm:p-7"
                 >
                   <div className="flex items-start justify-between gap-3">
                     <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-surface-2 text-brand ring-1 ring-line transition-colors group-hover:bg-accent group-hover:text-on-accent">
@@ -92,6 +94,7 @@ export function ServicesPreview() {
                     />
                   </span>
                 </Link>
+                </Tilt>
               </Reveal>
             );
           })}

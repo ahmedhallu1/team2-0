@@ -1,5 +1,6 @@
 import { pillars, totalServices } from "@/lib/services";
 import { Reveal } from "@/components/reveal";
+import { Tilt } from "@/components/fx/tilt";
 
 export function ServicesSection() {
   return (
@@ -69,7 +70,8 @@ export function ServicesSection() {
                       delay={(i % 3) * 0.07}
                       className="group h-full"
                     >
-                      <article className="surface flex h-full flex-col gap-4 rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:border-accent/40">
+                      <Tilt className="h-full rounded-2xl">
+                      <article className="surface relative flex h-full flex-col gap-4 rounded-2xl p-6 transition-colors duration-300 hover:border-accent/40">
                         <div className="flex items-center justify-between">
                           <span className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-surface-2 text-brand ring-1 ring-line transition-colors group-hover:bg-accent group-hover:text-on-accent">
                             <Icon size={22} strokeWidth={2} />
@@ -87,6 +89,7 @@ export function ServicesSection() {
                           {service.description}
                         </p>
                       </article>
+                      </Tilt>
                     </Reveal>
                   );
                 })}

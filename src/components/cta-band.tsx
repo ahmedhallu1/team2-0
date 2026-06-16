@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Reveal } from "@/components/reveal";
 import { BrandIcon } from "@/components/brand-icon";
+import { Magnetic } from "@/components/fx/magnetic";
 
 export function CtaBand({
   title = "Ready to elevate your vision?",
@@ -30,16 +31,18 @@ export function CtaBand({
         <p className="mx-auto mt-4 max-w-xl text-base leading-relaxed text-pretty text-muted">
           {subtitle}
         </p>
-        <Link
-          href="/contact"
-          className="group mt-8 inline-flex items-center gap-2 rounded-full bg-accent px-7 py-3.5 text-sm font-bold text-on-accent transition-transform hover:-translate-y-0.5"
-        >
-          Get in touch
-          <ArrowRight
-            size={17}
-            className="transition-transform group-hover:translate-x-1"
-          />
-        </Link>
+        <Magnetic className="mt-8">
+          <Link
+            href="/contact"
+            className="group inline-flex items-center gap-2 rounded-full bg-accent px-7 py-3.5 text-sm font-bold text-on-accent transition-transform hover:-translate-y-0.5"
+          >
+            Get in touch
+            <ArrowRight
+              size={17}
+              className="transition-transform group-hover:translate-x-1"
+            />
+          </Link>
+        </Magnetic>
       </Reveal>
     </section>
   );
