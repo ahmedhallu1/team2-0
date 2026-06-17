@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ArrowUpRight, Mail, Phone } from "lucide-react";
-import { BrandMark } from "@/components/brand-mark";
+import { BrandLogo } from "@/components/brand-logo";
 
 const nav = [
   { href: "/", label: "Home" },
@@ -24,7 +24,7 @@ export function SiteFooter() {
         <div className="grid gap-10 md:grid-cols-[1.4fr_1fr_1fr]">
           {/* Brand */}
           <div className="max-w-sm">
-            <BrandMark className="text-2xl" />
+            <BrandLogo className="h-8" />
             <p className="mt-4 text-sm leading-relaxed text-muted">
               A B2B growth partner helping ambitious businesses promote, sell
               and expand — at home and across borders.

@@ -317,6 +317,26 @@ body {
   display: none;
 }
 
+/* Official logo — show the white+lime mark on dark, black+purple on light.
+   Mirrors the theme-token logic so it works via class OR system preference. */
+.brand-logo .logo-light {
+  display: none;
+}
+.light .brand-logo .logo-dark {
+  display: none;
+}
+.light .brand-logo .logo-light {
+  display: inline-block;
+}
+@media (prefers-color-scheme: light) {
+  :root:not(.dark) .brand-logo .logo-dark {
+    display: none;
+  }
+  :root:not(.dark) .brand-logo .logo-light {
+    display: inline-block;
+  }
+}
+
 /* Thin hairline gradient divider */
 .hairline {
   height: 1px;

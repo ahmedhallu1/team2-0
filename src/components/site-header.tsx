@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ArrowUpRight, Menu, X } from "lucide-react";
-import { BrandMark } from "@/components/brand-mark";
+import { BrandLogo } from "@/components/brand-logo";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { clsx } from "@/lib/clsx";
 
@@ -62,7 +62,7 @@ export function SiteHeader() {
           aria-label="2.0 — home"
           className="flex items-center transition-opacity hover:opacity-90"
         >
-          <BrandMark className="text-2xl" />
+          <BrandLogo className="h-7 sm:h-8" priority />
         </Link>
 
         {/* Desktop nav */}

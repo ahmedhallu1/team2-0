@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { ArrowRight, CheckCircle2, Loader2, Mail, Phone } from "lucide-react";
 import { serviceOptions } from "@/lib/services";
-import { BrandMark } from "@/components/brand-mark";
+import { BrandLogo } from "@/components/brand-logo";
 
 type Status = "idle" | "submitting" | "success" | "error";
 
@@ -110,7 +110,7 @@ export function ContactSection() {
           )}
 
           <div className="mt-10 hidden items-center gap-3 lg:flex">
-            <BrandMark className="text-3xl" />
+            <BrandLogo className="h-11" />
           </div>
         </div>
 
