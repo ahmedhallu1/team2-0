@@ -8,6 +8,7 @@ import {
   Target,
   CalendarDays,
   MonitorSmartphone,
+  AppWindow,
   Share2,
   FileText,
   MessagesSquare,
@@ -90,6 +91,12 @@ export const pillars: ServicePillar[] = [
     name: "Digital Presence",
     tagline: "Own every touchpoint, end to end.",
     services: [
+      {
+        title: "Website Creation & Management",
+        description:
+          "Custom websites designed, built and maintained — fast, modern and on-brand, from first launch to day-to-day upkeep.",
+        icon: AppWindow,
+      },
       {
         title: "Managing Digital Platforms",
         description:
