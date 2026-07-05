@@ -1,17 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowRight, CheckCircle2, Loader2, Mail, Phone } from "lucide-react";
+import { ArrowRight, CheckCircle2, Loader2, Mail } from "lucide-react";
 import { serviceOptions } from "@/lib/services";
 import { BrandLogo } from "@/components/brand-logo";
+import { WhatsAppIcon } from "@/components/whatsapp-icon";
+import { contactEmail, contactPhone, whatsappHref } from "@/lib/contact";
 
 type Status = "idle" | "submitting" | "success" | "error";
-
-const contactEmail = "info@elevate2point0.com";
-const contactPhone = process.env.NEXT_PUBLIC_CONTACT_PHONE;
-const phoneHref = contactPhone
-  ? `tel:${contactPhone.replace(/\s+/g, "").replace(/^0/, "+20")}`
-  : undefined;
 
 export function ContactSection() {
   const [status, setStatus] = useState<Status>("idle");
@@ -86,28 +82,36 @@ export function ContactSection() {
             ))}
           </ul>
 
-          {(contactEmail || contactPhone) && (
-            <div className="mt-8 flex flex-col gap-3">
-              {contactEmail && (
-                <a
-                  href={`mailto:${contactEmail}`}
-                  className="inline-flex items-center gap-2 text-sm font-medium text-brand transition-opacity hover:opacity-80"
-                >
-                  <Mail size={16} aria-hidden />
-                  {contactEmail}
-                </a>
-              )}
-              {contactPhone && (
-                <a
-                  href={phoneHref}
-                  className="inline-flex items-center gap-2 text-sm font-medium text-brand transition-opacity hover:opacity-80"
-                >
-                  <Phone size={16} aria-hidden />
-                  {contactPhone}
-                </a>
-              )}
-            </div>
-          )}
+          <div className="mt-8 flex flex-col items-start gap-3">
+            <a
+              href={`mailto:${contactEmail}`}
+              className="inline-flex items-center gap-2 text-sm font-medium text-brand transition-opacity hover:opacity-80"
+            >
+              <Mail size={16} aria-hidden />
+              {contactEmail}
+            </a>
+            <a
+              href={whatsappHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`Chat with 2.0 on WhatsApp at ${contactPhone}`}
+              className="group relative inline-flex items-center gap-2.5 text-sm font-medium text-brand transition-colors hover:text-[#25D366]"
+            >
+              <span className="relative flex h-6 w-6 shrink-0 items-center justify-center">
+                <span
+                  aria-hidden
+                  className="absolute inset-0 scale-50 rounded-full bg-[#25D366]/20 opacity-0 transition-all duration-300 group-hover:scale-100 group-hover:opacity-100 group-hover:motion-safe:animate-ping"
+                />
+                <WhatsAppIcon className="relative h-4 w-4 transition-transform duration-300 group-hover:scale-110" />
+              </span>
+              <span className="tabular-nums">{contactPhone}</span>
+              <span className="inline-flex max-w-0 -translate-x-1 items-center gap-1 overflow-hidden whitespace-nowrap text-xs font-semibold text-[#25D366] opacity-0 transition-all duration-300 group-hover:max-w-[12rem] group-hover:translate-x-0 group-hover:opacity-100 motion-reduce:transition-none">
+                <span aria-hidden>·</span>
+                Chat on WhatsApp
+                <ArrowRight size={13} aria-hidden />
+              </span>
+            </a>
+          </div>
 
           <div className="mt-10 hidden items-center gap-3 lg:flex">
             <BrandLogo className="h-11" />

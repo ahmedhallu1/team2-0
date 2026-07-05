@@ -5,6 +5,7 @@ import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { CursorFx } from "@/components/fx/cursor-fx";
 import { Preloader } from "@/components/preloader";
+import { contactPhoneE164 } from "@/lib/contact";
 
 const inter = Inter({
   variable: "--font-body",
@@ -101,7 +102,7 @@ const jsonLd = {
   logo: new URL("/brand/2.0logo.png", siteUrl).toString(),
   image: new URL("/brand/2.0logo.png", siteUrl).toString(),
   email: "info@elevate2point0.com",
-  telephone: "+201204538936",
+  telephone: contactPhoneE164,
   areaServed: "Worldwide",
   knowsAbout: [
     "B2B lead generation",

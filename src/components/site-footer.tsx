@@ -1,6 +1,8 @@
 import Link from "next/link";
-import { ArrowUpRight, Mail, Phone } from "lucide-react";
+import { ArrowUpRight, Mail } from "lucide-react";
 import { BrandLogo } from "@/components/brand-logo";
+import { WhatsAppIcon } from "@/components/whatsapp-icon";
+import { contactEmail, contactPhone, whatsappHref } from "@/lib/contact";
 
 const nav = [
   { href: "/", label: "Home" },
@@ -9,12 +11,6 @@ const nav = [
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },
 ];
-
-const contactEmail = "info@elevate2point0.com";
-const contactPhone = process.env.NEXT_PUBLIC_CONTACT_PHONE;
-const phoneHref = contactPhone
-  ? `tel:${contactPhone.replace(/\s+/g, "").replace(/^0/, "+20")}`
-  : undefined;
 
 export function SiteFooter() {
   const year = new Date().getFullYear();
@@ -59,28 +55,37 @@ export function SiteFooter() {
               Get in touch
             </h2>
             <ul className="mt-4 space-y-2.5">
-              {contactEmail && (
-                <li>
-                  <a
-                    href={`mailto:${contactEmail}`}
-                    className="inline-flex items-center gap-2 text-sm text-muted transition-colors hover:text-brand"
-                  >
-                    <Mail size={15} aria-hidden />
-                    {contactEmail}
-                  </a>
-                </li>
-              )}
-              {contactPhone && (
-                <li>
-                  <a
-                    href={phoneHref}
-                    className="inline-flex items-center gap-2 text-sm text-muted transition-colors hover:text-brand"
-                  >
-                    <Phone size={15} aria-hidden />
-                    {contactPhone}
-                  </a>
-                </li>
-              )}
+              <li>
+                <a
+                  href={`mailto:${contactEmail}`}
+                  className="inline-flex items-center gap-2 text-sm text-muted transition-colors hover:text-brand"
+                >
+                  <Mail size={15} aria-hidden />
+                  {contactEmail}
+                </a>
+              </li>
+              <li>
+                <a
+                  href={whatsappHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`Chat with 2.0 on WhatsApp at ${contactPhone}`}
+                  className="group inline-flex items-center gap-2 text-sm text-muted transition-colors hover:text-[#25D366]"
+                >
+                  <span className="relative flex h-5 w-5 shrink-0 items-center justify-center">
+                    <span
+                      aria-hidden
+                      className="absolute inset-0 scale-50 rounded-full bg-[#25D366]/20 opacity-0 transition-all duration-300 group-hover:scale-100 group-hover:opacity-100 group-hover:motion-safe:animate-ping"
+                    />
+                    <WhatsAppIcon className="relative h-3.5 w-3.5 transition-transform duration-300 group-hover:scale-110" />
+                  </span>
+                  <span className="tabular-nums">{contactPhone}</span>
+                  <span className="inline-flex max-w-0 -translate-x-1 items-center gap-1 overflow-hidden whitespace-nowrap text-xs font-semibold text-[#25D366] opacity-0 transition-all duration-300 group-hover:max-w-[10rem] group-hover:translate-x-0 group-hover:opacity-100 motion-reduce:transition-none">
+                    <span aria-hidden>·</span>
+                    WhatsApp
+                  </span>
+                </a>
+              </li>
               <li className="pt-1">
                 <Link
                   href="/contact"
