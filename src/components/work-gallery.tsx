@@ -59,11 +59,8 @@ export function WorkGallery() {
             const Icon = p.icon;
             const flip = i % 2 === 1;
             return (
-              <article
-                key={p.slug}
-                id={p.slug}
-                className="scroll-mt-28 grid items-center gap-8 lg:grid-cols-2 lg:gap-14"
-              >
+              <article key={p.slug} id={p.slug} className="scroll-mt-28">
+                <div className="grid items-center gap-8 lg:grid-cols-2 lg:gap-14">
                 {/* Visual */}
                 <Reveal
                   variant={flip ? "right" : "left"}
@@ -190,7 +187,7 @@ export function WorkGallery() {
                           rel="noopener noreferrer"
                           className="group inline-flex items-center gap-1.5 text-sm font-semibold text-brand"
                         >
-                          Visit {p.name}
+                          {p.hrefLabel ?? `Visit ${p.name}`}
                           <ArrowUpRight
                             size={15}
                             className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
@@ -224,6 +221,41 @@ export function WorkGallery() {
                     </span>
                   </div>
                 </Reveal>
+                </div>
+
+                {p.gallery && (
+                  <Reveal delay={0.06} className="mt-10">
+                    <p className="text-[11px] font-semibold tracking-[0.18em] text-faint uppercase">
+                      What we designed for it
+                    </p>
+                    <ul
+                      role="region"
+                      aria-label={`${p.name} — design collateral`}
+                      tabIndex={0}
+                      className="no-scrollbar mt-4 flex snap-x gap-4 overflow-x-auto pb-1 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
+                    >
+                      {p.gallery.map((g) => (
+                        <li key={g.src} className="w-56 shrink-0 snap-start sm:w-auto">
+                          <figure className="surface h-full overflow-hidden rounded-xl">
+                            <div className="flex h-44 items-center justify-center bg-surface-2 sm:h-64">
+                              <Image
+                                src={g.src}
+                                alt={g.alt}
+                                width={g.width}
+                                height={g.height}
+                                sizes="(min-width: 640px) 24rem, 14rem"
+                                className="h-full w-auto object-contain"
+                              />
+                            </div>
+                            <figcaption className="border-t border-line px-3.5 py-3 text-xs leading-snug text-muted">
+                              {g.caption}
+                            </figcaption>
+                          </figure>
+                        </li>
+                      ))}
+                    </ul>
+                  </Reveal>
+                )}
               </article>
             );
           })}

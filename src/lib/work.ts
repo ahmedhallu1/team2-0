@@ -32,6 +32,8 @@ export type Project = {
   icon: LucideIcon;
   /** Live URL, when there is a public one. */
   href?: string;
+  /** Overrides the default "Visit {name}" link text. */
+  hrefLabel?: string;
   /** Caveat shown next to the link (e.g. sign-in required). */
   hrefNote?: string;
   /** Shown instead of a link when nothing is public. */
@@ -41,6 +43,14 @@ export type Project = {
   imageAlt?: string;
   imageWidth?: number;
   imageHeight?: number;
+  /** Design pieces made for this project, shown as a gallery under it. */
+  gallery?: {
+    src: string;
+    alt: string;
+    caption: string;
+    width: number;
+    height: number;
+  }[];
   /** Secondary artwork for the featured card. */
   aside?: string;
   asideAlt?: string;
@@ -89,6 +99,43 @@ export const projects: Project[] = [
       "The Yacht Pilates registration site — 'Own your world at sea' over an aerial shot of a pilates class on a yacht deck",
     imageWidth: 1600,
     imageHeight: 1000,
+    gallery: [
+      {
+        src: "/work/yacht/vip-invitation.jpg",
+        alt: "A wax-sealed red envelope holding the Yacht Pilates VIP guest invitation",
+        caption: "VIP guest invitation — wax-sealed, hand-delivered",
+        width: 880,
+        height: 1100,
+      },
+      {
+        src: "/work/yacht/coach-julie.jpg",
+        alt: "Coach announcement poster for Julie Grosu on the deck of a yacht",
+        caption: "Coach announcement — one per instructor",
+        width: 880,
+        height: 1100,
+      },
+      {
+        src: "/work/yacht/vip-membership.jpg",
+        alt: "The World Fit VIP annual membership invitation and card on a red envelope",
+        caption: "The guest gift — a year of VIP membership",
+        width: 1400,
+        height: 933,
+      },
+      {
+        src: "/work/yacht/welcome-qr.jpg",
+        alt: "A sealed red envelope printed with a QR code that opens the World Fit Instagram",
+        caption: "Welcome envelope — a QR that opens the brand",
+        width: 1400,
+        height: 1120,
+      },
+      {
+        src: "/work/yacht/sponsor-wall.jpg",
+        alt: "The Yacht Pilates sponsor wall — the event lockup ringed by partner brand logos",
+        caption: "Sponsor wall — every partner in one frame",
+        width: 1200,
+        height: 799,
+      },
+    ],
     aside: "/work/yacht-pilates-poster.jpg",
     asideAlt:
       "The Yacht Pilates sponsor wall we designed — the event lockup surrounded by partner brand logos",
@@ -118,7 +165,7 @@ export const projects: Project[] = [
       { label: "Countries", value: "11" },
       { label: "Membership tiers", value: "3" },
     ],
-    tags: ["Websites & Platforms", "Brand & Content", "Market & Trade"],
+    tags: ["Websites & Platforms", "Brand & Content"],
     icon: Globe2,
     href: "https://elect-i-global.com",
     image: "/work/elect-i-global.jpg",
@@ -254,7 +301,9 @@ export const projects: Project[] = [
     ],
     tags: ["Brand & Content", "Websites & Platforms", "Growth Marketing"],
     icon: Dumbbell,
-    status: "Client properties — some are private",
+    href: "https://careers.worldfitgym.info",
+    hrefLabel: "Visit the careers portal",
+    hrefNote: "Other World Fit properties are private",
     logo: "/work/world-fit.png",
     logoWidth: 600,
     logoHeight: 198,

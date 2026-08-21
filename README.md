@@ -31,9 +31,11 @@ src/
     globals.css           # design tokens + utilities
     api/contact/route.ts  # POST handler — sends mail via Gmail OAuth2
   components/             # sections + fx/ (tilt, magnetic, marquee, cursor)
-  lib/services.ts         # the six services and what each one includes
+  lib/services.ts         # the five services and what each one includes
   lib/work.ts             # the portfolio: what each project is, does and proves
+  lib/design.ts           # the curated campaign/design pieces on /work
 public/work/              # project screenshots + artwork used by /work
+docs/EMAIL-SETUP.md       # free custom-domain email (ImprovMX + Brevo)
 scripts/
   get-gmail-refresh-token.mjs  # one-time helper to mint a Gmail refresh token
 ```
@@ -46,11 +48,17 @@ npm run dev      # http://localhost:3000
 npm run build    # production build
 ```
 
-## Configuring the contact form (Gmail)
+## Configuring the contact form
 
-The form posts to `/api/contact`, which emails inquiries to you via the Gmail
-account you authorize. Until the env vars below are set, the form responds with
-a friendly "try again later" message instead of crashing.
+The form posts to `/api/contact`, which sends through **Brevo** when
+`BREVO_API_KEY` is set, and otherwise falls back to the Gmail OAuth transport
+below. With neither configured it responds with a friendly "try again later"
+message instead of crashing.
+
+Brevo is the recommended path — see **[docs/EMAIL-SETUP.md](docs/EMAIL-SETUP.md)**,
+which also covers receiving mail at `contact@elevate2point0.com` for free.
+
+### Gmail OAuth (fallback)
 
 ### 1. Google Cloud Console (one-time)
 

@@ -1,7 +1,6 @@
 import type { LucideIcon } from "lucide-react";
 import {
   CalendarDays,
-  Globe2,
   Layers,
   MonitorSmartphone,
   Sparkles,
@@ -21,7 +20,7 @@ export type Service = {
 };
 
 /**
- * Six services, deliberately. Everything we do fits in one of these — the
+ * Five services, deliberately. Everything we do fits in one of these — the
  * specifics live in `includes` so the page stays readable instead of
  * reading like a menu of twenty line items.
  */
@@ -81,20 +80,6 @@ export const services: Service[] = [
       "Sales team support & materials",
     ],
     icon: Layers,
-  },
-  {
-    id: "trade",
-    title: "Market & Trade",
-    summary: "Expand on evidence, not instinct.",
-    description:
-      "Before you commit money to a new market, we tell you what's really there: demand, competitors, pricing, the suppliers worth talking to. Then we stay on the ground with you — vetting partners, running your trade-show presence, and representing you locally where you can't be.",
-    includes: [
-      "Market & competitor research",
-      "Supplier sourcing & vetting",
-      "Trade shows & exhibitions",
-      "Local agent representation",
-    ],
-    icon: Globe2,
   },
   {
     id: "events",

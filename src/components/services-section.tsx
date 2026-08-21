@@ -23,7 +23,7 @@ export function ServicesSection() {
             {`${totalServices} services. That\u2019s the whole list.`}
           </h1>
           <p className="mt-6 text-base leading-relaxed text-pretty text-muted sm:text-lg">
-            We kept it to six things we do properly, rather than a menu you have
+            We kept it to five things we do properly, rather than a menu you have
             to decode. Take one of them, or hand us the whole engine — most
             clients start with one and grow into the rest.
           </p>

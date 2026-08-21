@@ -5,7 +5,7 @@ import { CtaBand } from "@/components/cta-band";
 export const metadata: Metadata = {
   title: "Services",
   description:
-    "Six services, end to end — brand & content, websites & platforms, growth marketing, lead generation, market & trade, and events. Take one or hand us the whole engine.",
+    "Five services, end to end — brand & content, websites & platforms, growth marketing, lead generation and events. Take one or hand us the whole engine.",
   alternates: { canonical: "/services" },
 };
 

@@ -5,7 +5,7 @@ import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { CursorFx } from "@/components/fx/cursor-fx";
 import { Preloader } from "@/components/preloader";
-import { contactPhoneE164 } from "@/lib/contact";
+import { contactPhonesE164 } from "@/lib/contact";
 
 const inter = Inter({
   variable: "--font-body",
@@ -43,15 +43,13 @@ export const metadata: Metadata = {
     template: "%s · 2.0 - Elevate your vision",
   },
   description:
-    "2.0 is a B2B team that helps businesses grow at home and abroad — brand & content, websites & platforms, growth marketing, lead generation, market & trade, and events. See the products and platforms we've shipped.",
+    "2.0 is a B2B team that helps businesses grow at home and abroad — brand & content, websites & platforms, growth marketing, lead generation and events. See the products and platforms we've shipped.",
   keywords: [
     "B2B services",
     "international lead generation",
     "digital marketing",
     "SEO",
     "media buying",
-    "market research",
-    "supplier sourcing",
     "social media management",
     "brand building",
   ],
@@ -97,12 +95,12 @@ const jsonLd = {
   alternateName: "2.0 — Elevate your vision",
   slogan: "Elevate your vision",
   description:
-    "B2B growth partner offering international lead generation, digital platform management, content creation, SEO, media buying, market research and supplier sourcing.",
+    "B2B growth partner offering brand and content, custom websites and platforms, growth marketing, lead generation and events.",
   url: siteUrl.toString(),
   logo: new URL("/brand/2.0logo.png", siteUrl).toString(),
   image: new URL("/brand/2.0logo.png", siteUrl).toString(),
   email: "info@elevate2point0.com",
-  telephone: contactPhoneE164,
+  telephone: contactPhonesE164,
   areaServed: "Worldwide",
   knowsAbout: [
     "B2B lead generation",
@@ -111,10 +109,9 @@ const jsonLd = {
     "Media buying",
     "Content creation",
     "Social media management",
-    "Market research",
-    "Supplier sourcing",
     "Brand building",
-    "Trade show support",
+    "Web development",
+    "Event management",
   ],
 };
 

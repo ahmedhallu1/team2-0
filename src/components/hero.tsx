@@ -59,10 +59,10 @@ export function Hero() {
           className="hero-rise mx-auto mt-7 max-w-2xl text-base leading-relaxed text-pretty text-muted sm:text-lg"
           style={{ ["--i" as string]: 3 }}
         >
-          We help businesses grow — at home and across borders. Six services,
+          We help businesses grow — at home and across borders. Five services,
           one team: brand and content, websites and platforms, growth
-          marketing, lead generation, market and trade, and events. 2.0 is the
-          partner behind the scenes of your next chapter.
+          marketing, lead generation and events. 2.0 is the partner behind the
+          scenes of your next chapter.
         </p>
 
         <div

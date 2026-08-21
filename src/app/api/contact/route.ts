@@ -14,6 +14,20 @@ type Payload = {
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+const BRAND_NAME = "2.0 — Elevate your vision";
+
+/** The address we present as ours on the site and in replies. */
+const brandInbox = process.env.CONTACT_FROM || "contact@elevate2point0.com";
+
+type OutgoingMail = {
+  to: string;
+  replyTo: string;
+  subject: string;
+  html: string;
+};
+
+type SendResult = { ok: boolean; status?: number; detail?: string };
+
 function escapeHtml(value: string): string {
   return value
     .replace(/&/g, "&amp;")
@@ -114,6 +128,8 @@ export async function POST(req: Request) {
   }
 
   const {
+    BREVO_API_KEY,
+    BREVO_SENDER,
     GMAIL_CLIENT_ID,
     GMAIL_CLIENT_SECRET,
     GMAIL_REFRESH_TOKEN,
@@ -121,14 +137,16 @@ export async function POST(req: Request) {
     CONTACT_TO,
   } = process.env;
 
-  if (
-    !GMAIL_CLIENT_ID ||
-    !GMAIL_CLIENT_SECRET ||
-    !GMAIL_REFRESH_TOKEN ||
-    !GMAIL_SENDER
-  ) {
+  // Brevo (domain-authenticated, sends as contact@) is preferred; the Gmail
+  // OAuth path stays as a fallback for environments that still have it wired.
+  const useBrevo = Boolean(BREVO_API_KEY);
+  const gmailReady = Boolean(
+    GMAIL_CLIENT_ID && GMAIL_CLIENT_SECRET && GMAIL_REFRESH_TOKEN && GMAIL_SENDER,
+  );
+
+  if (!useBrevo && !gmailReady) {
     console.error(
-      "[contact] Missing Gmail env vars. See .env.example and scripts/get-gmail-refresh-token.mjs",
+      "[contact] No mail transport configured. Set BREVO_API_KEY, or the GMAIL_* vars. See .env.example.",
     );
     return NextResponse.json(
       {
@@ -140,8 +158,11 @@ export async function POST(req: Request) {
     );
   }
 
-  const to = CONTACT_TO || "info@elevate2point0.com";
-  const brandEmail = "info@elevate2point0.com";
+  const brandEmail = brandInbox;
+  const to = CONTACT_TO || brandEmail;
+  const senderEmail = useBrevo
+    ? BREVO_SENDER || brandEmail
+    : (GMAIL_SENDER as string);
 
   const rows: Array<[string, string]> = [
     ["Name", name],
@@ -199,29 +220,34 @@ export async function POST(req: Request) {
     bodyHtml: confirmBody,
   });
 
-  const notifyMime = buildMime({
-    from: formatFrom("2.0 — Elevate your vision", GMAIL_SENDER),
+  const notify: OutgoingMail = {
     to,
     replyTo: email,
     subject: `New inquiry from ${name}${company ? ` · ${company}` : ""}`,
     html: notifyHtml,
-  });
-  const confirmMime = buildMime({
-    from: formatFrom("2.0 — Elevate your vision", GMAIL_SENDER),
+  };
+  const confirm: OutgoingMail = {
     to: email,
     replyTo: brandEmail,
     subject: "Thanks for reaching out to 2.0",
     html: confirmHtml,
-  });
+  };
 
   try {
-    const accessToken = await getAccessToken();
+    const send = useBrevo
+      ? (mail: OutgoingMail) =>
+          sendViaBrevo(BREVO_API_KEY as string, senderEmail, mail)
+      : await (async () => {
+          const accessToken = await getAccessToken();
+          return (mail: OutgoingMail) =>
+            sendViaGmail(accessToken, senderEmail, mail);
+        })();
 
     // The internal notification is the critical one — fail the request if it
     // doesn't send. The confirmation to the visitor is best-effort.
-    const sent = await sendGmail(accessToken, notifyMime);
+    const sent = await send(notify);
     if (!sent.ok) {
-      console.error("[contact] Gmail API send failed:", sent.status, sent.detail);
+      console.error("[contact] Send failed:", sent.status, sent.detail);
       return NextResponse.json(
         {
           ok: false,
@@ -231,12 +257,12 @@ export async function POST(req: Request) {
       );
     }
 
-    const confirm = await sendGmail(accessToken, confirmMime);
-    if (!confirm.ok) {
+    const confirmed = await send(confirm);
+    if (!confirmed.ok) {
       console.error(
         "[contact] Confirmation email failed (non-fatal):",
-        confirm.status,
-        confirm.detail,
+        confirmed.status,
+        confirmed.detail,
       );
     }
 
@@ -315,10 +341,18 @@ function buildMime({
   return base64url(mime);
 }
 
-async function sendGmail(
+async function sendViaGmail(
   accessToken: string,
-  raw: string,
-): Promise<{ ok: boolean; status?: number; detail?: string }> {
+  sender: string,
+  mail: OutgoingMail,
+): Promise<SendResult> {
+  const raw = buildMime({
+    from: formatFrom(BRAND_NAME, sender),
+    to: mail.to,
+    replyTo: mail.replyTo,
+    subject: mail.subject,
+    html: mail.html,
+  });
   const res = await fetch(
     "https://gmail.googleapis.com/gmail/v1/users/me/messages/send",
     {
@@ -330,6 +364,37 @@ async function sendGmail(
       body: JSON.stringify({ raw }),
     },
   );
+  if (!res.ok) {
+    return { ok: false, status: res.status, detail: await res.text() };
+  }
+  return { ok: true };
+}
+
+/**
+ * Brevo's transactional HTTP API. Preferred over SMTP here: no socket to keep
+ * open from a serverless function, and mail is DKIM-signed as the domain once
+ * elevate2point0.com is authenticated in Brevo.
+ */
+async function sendViaBrevo(
+  apiKey: string,
+  sender: string,
+  mail: OutgoingMail,
+): Promise<SendResult> {
+  const res = await fetch("https://api.brevo.com/v3/smtp/email", {
+    method: "POST",
+    headers: {
+      "api-key": apiKey,
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    body: JSON.stringify({
+      sender: { name: BRAND_NAME, email: sender },
+      to: [{ email: mail.to }],
+      replyTo: { email: mail.replyTo },
+      subject: mail.subject,
+      htmlContent: mail.html,
+    }),
+  });
   if (!res.ok) {
     return { ok: false, status: res.status, detail: await res.text() };
   }
