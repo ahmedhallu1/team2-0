@@ -1,123 +1,95 @@
-# Free email on elevate2point0.com
+# Email on elevate2point0.com
 
 Goal: receive mail at `contact@`, `info@`, `sales@` … in the normal Gmail
-inbox, and **reply from those addresses** — on free tiers only, with DNS
-staying where it is (Squarespace).
+inbox, reply **from** those addresses, and let the website's contact form send
+as the domain — on free tiers, with DNS staying at Squarespace.
 
-> **Why this is needed now.** The domain's `MX` still points at
-> `smtp.google.com`, but the **Google Workspace Business Starter subscription
-> for elevate2point0.com was cancelled on 12 Aug 2026**. Nothing is delivered
-> to `info@elevate2point0.com` today, and the contact form's Gmail OAuth token
-> (minted for that Workspace user) is dead with it. Until step 1 is done, mail
-> to the domain bounces.
+Background: Google Workspace for this domain was cancelled on **12 Aug 2026**,
+which killed `info@` and the contact form's Gmail OAuth token with it.
 
-| | Service | Free tier |
-|---|---|---|
-| **Receiving** | [ImprovMX](https://improvmx.com) | 1 domain, 25 aliases, 500 forwards/day |
-| **Sending** | [Brevo](https://brevo.com) | 300 emails/day, DKIM-signed as the domain |
-
-Brevo is already in use for ELECT-I, so the account exists — this only adds a
-second domain to it.
-
-*Alternative:* Cloudflare Email Routing is free with unlimited aliases and no
-daily cap, but it requires moving the domain's nameservers off Squarespace.
-ImprovMX is chosen here because it needs nothing but a few DNS records, so the
-live site can't be affected.
+| | Service | Free tier | Status |
+|---|---|---|---|
+| **Receiving** | [ImprovMX](https://improvmx.com) | 1 domain, 25 aliases, 500 forwards/day | ✅ done |
+| **Replying from Gmail** | Gmail "Send mail as" over Brevo SMTP | — | ✅ done |
+| **Website form sending** | [Brevo](https://brevo.com) API | 300 emails/day | ⛔ needs a sender + API key |
 
 ---
 
-## 1. Receiving — ImprovMX
+## ✅ 1. Receiving — ImprovMX
 
-1. Sign up at improvmx.com and add the domain `elevate2point0.com`.
-2. Add the aliases, all forwarding to the personal Gmail:
-   `contact@`, `info@`, `sales@` (+ a `*` catch-all if you want everything).
-3. In **Squarespace → Domains → elevate2point0.com → DNS Settings**:
+Live since 21 Aug. DNS at Squarespace now reads:
 
-   **Delete** the existing record:
+| Host | Type | Priority | Data |
+|---|---|---|---|
+| `@` | MX | 10 | `mx1.improvmx.com` |
+| `@` | MX | 20 | `mx2.improvmx.com` |
+| `@` | TXT | — | `v=spf1 include:spf.improvmx.com include:spf.brevo.com ~all` |
 
-   | Host | Type | Priority | Data |
-   |---|---|---|---|
-   | `@` | MX | 1 | `smtp.google.com` |
+The old `MX 1 smtp.google.com` is gone. One SPF record only — both `include:`
+values live on that single line; two separate SPF records is a hard failure.
 
-   **Add:**
+## ✅ 2. Replying from Gmail
 
-   | Host | Type | Priority | Data |
-   |---|---|---|---|
-   | `@` | MX | 10 | `mx1.improvmx.com` |
-   | `@` | MX | 20 | `mx2.improvmx.com` |
-   | `@` | TXT | — | `v=spf1 include:spf.improvmx.com include:spf.brevo.com ~all` |
+Gmail → Settings → Accounts and Import → **Send mail as**, relaying through
+`smtp-relay.brevo.com:587` with the Brevo SMTP login and an SMTP key.
 
-   One SPF record only — the `include:` for both services goes in that single
-   line. Two separate SPF records is a hard failure, not a merge.
+## ⛔ 3. The contact form
 
-4. Wait for ImprovMX to show the domain as **Active**, then email
-   `contact@elevate2point0.com` from another account and confirm it lands.
+`src/app/api/contact/route.ts` picks its transport at runtime: **Brevo when
+`BREVO_API_KEY` is set**, otherwise the legacy Gmail OAuth path. That Gmail
+path now fails with `access_not_configured Account Restricted` — the OAuth
+token belonged to the deleted Workspace user — so the form is down until Brevo
+is wired up.
 
-## 2. Sending — Brevo
+Two things are needed, both only doable from the Brevo dashboard:
 
-1. Brevo → **Senders, Domains & Dedicated IPs → Domains → Add a domain** →
-   `elevate2point0.com`.
-2. Brevo shows two records; add both at Squarespace (values are
-   account-specific, copy them from Brevo):
+**a. Register the sender.** Brevo → **Senders, Domains & Dedicated IPs →
+Senders → Add a sender** → `contact@elevate2point0.com`. Brevo emails a
+confirmation; ImprovMX forwards it to the Gmail inbox; click it. Brevo rejects
+sends from unregistered addresses, so this cannot be skipped.
 
-   | Host | Type | Data |
-   |---|---|---|
-   | `brevo-code` | TXT | the verification string Brevo shows |
-   | `brevo._domainkey` | TXT | the DKIM key Brevo shows |
+**b. Create an API key.** Brevo → **SMTP & API → API Keys → Generate a new API
+key**. Add it on Vercel as `BREVO_API_KEY` (Project → Settings → Environment
+Variables → Production), then redeploy.
 
-3. Recommended, so replies aren't treated as spoofing:
+Everything else is already set on Vercel:
 
-   | Host | Type | Data |
-   |---|---|---|
-   | `_dmarc` | TXT | `v=DMARC1; p=none; rua=mailto:contact@elevate2point0.com` |
+| Variable | Value |
+|---|---|
+| `BREVO_SENDER` | `contact@elevate2point0.com` |
+| `CONTACT_TO` | `contact@elevate2point0.com` |
+| `CONTACT_FROM` | `contact@elevate2point0.com` |
 
-4. Hit **Authenticate** in Brevo until every row is green.
+Once the form works, the stale `GMAIL_CLIENT_ID` / `GMAIL_CLIENT_SECRET` /
+`GMAIL_REFRESH_TOKEN` / `GMAIL_SENDER` variables can be deleted — they point
+at the deleted Workspace user and will only ever fail.
 
-## 3. Replying from Gmail
+## Recommended follow-up — authenticate the domain in Brevo
 
-Gmail → **Settings → Accounts and Import → Send mail as → Add another email
-address**:
+Sender verification (3a) is enough to send, but mail is signed with Brevo's
+domain rather than yours, which costs some deliverability. To fix that: Brevo →
+**Domains → Add a domain** → `elevate2point0.com`, then add the two TXT records
+it shows (a `brevo-code` verification string and a `brevo._domainkey` DKIM key)
+at Squarespace and hit **Authenticate**. Worth adding a DMARC record at the
+same time:
 
-- Name: `2.0` · Email: `contact@elevate2point0.com`
-- **Uncheck** "Treat as an alias"
-- SMTP Server: `smtp-relay.brevo.com` · Port: `587` · TLS
-- Username: the Brevo SMTP login (Brevo → **SMTP & API → SMTP**, looks like
-  `…@smtp-brevo.com`) · Password: an **SMTP key** generated on the same page
+| Host | Type | Data |
+|---|---|---|
+| `_dmarc` | TXT | `v=DMARC1; p=none; rua=mailto:contact@elevate2point0.com` |
 
-Gmail emails a confirmation code to the address — ImprovMX forwards it to the
-inbox. Paste it in. Repeat for `info@` and `sales@`, and set `contact@` as the
-default "send from" if you want replies to default to it.
+## Verify
 
-## 4. Point the contact form at the new setup
+- Mail **to** `contact@elevate2point0.com` arrives in Gmail. ✅
+- A reply **from** `contact@elevate2point0.com` reaches the other end showing
+  the domain, and passes SPF + DKIM (Gmail → *Show original*).
+- A real submission at <https://elevate2point0.com/contact> produces both the
+  internal notification and the visitor confirmation.
 
-`src/app/api/contact/route.ts` sends through **Brevo when `BREVO_API_KEY` is
-set**, and falls back to the old Gmail OAuth path otherwise. Once step 2 is
-green, set these on Vercel (Production) and redeploy:
-
-```bash
-vercel env add BREVO_API_KEY production      # Brevo → SMTP & API → API Keys
-vercel env add BREVO_SENDER production       # contact@elevate2point0.com
-vercel env add CONTACT_TO production         # contact@elevate2point0.com
-vercel env add CONTACT_FROM production       # contact@elevate2point0.com
-```
-
-The stale `GMAIL_*` variables can then be removed — they point at the deleted
-Workspace user and will only ever fail.
-
-## 5. Verify
-
-- Mail sent **to** `contact@elevate2point0.com` arrives in Gmail.
-- A reply **from** `contact@elevate2point0.com` arrives at the other end
-  showing the domain, and passes SPF + DKIM (Gmail → *Show original*).
-- A real submission through <https://elevate2point0.com/contact> produces both
-  the internal notification and the visitor confirmation.
-
-Then flip the address shown on the site from `info@` to `contact@`
-(`contactEmail` in `src/lib/contact.ts`).
+Until then, failed submissions are written to the Vercel runtime logs under
+`[contact] UNDELIVERED INQUIRY:` — so nothing is silently lost.
 
 ## Limits worth knowing
 
-- Brevo free: **300 emails/day** — replies and form mail sit far under it.
+- Brevo free: **300 emails/day**.
 - ImprovMX free: **25 aliases, 500 forwards/day**, 7 days of logs.
-- Neither stores mail. Forwarding is delivery-only: if Gmail is deleted, the
-  history goes with it.
+- Neither stores mail. Forwarding is delivery-only.
