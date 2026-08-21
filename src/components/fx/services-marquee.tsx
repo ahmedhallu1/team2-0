@@ -1,8 +1,8 @@
-import { serviceOptions } from "@/lib/services";
+import { capabilities } from "@/lib/services";
 import { BrandIcon } from "@/components/brand-icon";
 
 function items() {
-  return serviceOptions.map((s) => (
+  return capabilities.map((s) => (
     <span
       key={s}
       className="inline-flex items-center gap-3 text-2xl font-bold whitespace-nowrap text-faint sm:text-3xl"
@@ -18,11 +18,11 @@ function items() {
   ));
 }
 
-/** Infinite, seamless ticker of every service. CSS-only; pauses on hover. */
+/** Infinite, seamless ticker of what we deliver. CSS-only; pauses on hover. */
 export function ServicesMarquee() {
   return (
     <section
-      aria-label="Our services"
+      aria-label="What we deliver"
       className="relative border-y border-line bg-surface/40 py-6 sm:py-8"
     >
       <div className="marquee">

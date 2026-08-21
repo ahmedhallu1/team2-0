@@ -3,11 +3,12 @@ import { ArrowRight } from "lucide-react";
 import { BrandIcon } from "@/components/brand-icon";
 import { Magnetic } from "@/components/fx/magnetic";
 import { totalServices } from "@/lib/services";
+import { totalProjects } from "@/lib/work";
 
 const stats = [
   { value: "5", label: "Founders, one team" },
-  { value: `${totalServices}`, label: "Services on offer" },
-  { value: "B2B", label: "Built for business" },
+  { value: `${totalServices}`, label: "Services, end to end" },
+  { value: `${totalProjects}`, label: "Projects shipped" },
   { value: "Global", label: "Local & international reach" },
 ];
 
@@ -58,9 +59,9 @@ export function Hero() {
           className="hero-rise mx-auto mt-7 max-w-2xl text-base leading-relaxed text-pretty text-muted sm:text-lg"
           style={{ ["--i" as string]: 3 }}
         >
-          We help businesses grow — at home and across borders. From
-          international lead generation and digital platforms to content, SEO,
-          media buying, market research and supplier sourcing, 2.0 is the
+          We help businesses grow — at home and across borders. Six services,
+          one team: brand and content, websites and platforms, growth
+          marketing, lead generation, market and trade, and events. 2.0 is the
           partner behind the scenes of your next chapter.
         </p>
 
@@ -82,10 +83,10 @@ export function Hero() {
           </Magnetic>
           <Magnetic>
             <Link
-              href="/services"
+              href="/work"
               className="inline-flex items-center justify-center gap-2 rounded-full border border-line-2 px-7 py-3.5 text-sm font-semibold text-ink transition-colors hover:border-accent hover:text-brand"
             >
-              Explore our services
+              See what we&apos;ve built
             </Link>
           </Magnetic>
         </div>

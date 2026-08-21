@@ -43,7 +43,7 @@ export const metadata: Metadata = {
     template: "%s · 2.0 - Elevate your vision",
   },
   description:
-    "2.0 is a B2B team that helps businesses grow at home and abroad — international lead generation, digital platform management, content, SEO, media buying, market research, supplier sourcing and more.",
+    "2.0 is a B2B team that helps businesses grow at home and abroad — brand & content, websites & platforms, growth marketing, lead generation, market & trade, and events. See the products and platforms we've shipped.",
   keywords: [
     "B2B services",
     "international lead generation",

@@ -6,6 +6,7 @@ import { contactEmail, contactPhone, whatsappHref } from "@/lib/contact";
 
 const nav = [
   { href: "/", label: "Home" },
+  { href: "/work", label: "Work" },
   { href: "/services", label: "Services" },
   { href: "/process", label: "How we work" },
   { href: "/about", label: "About" },

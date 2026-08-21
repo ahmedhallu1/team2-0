@@ -1,190 +1,121 @@
 import type { LucideIcon } from "lucide-react";
 import {
-  Megaphone,
-  PenLine,
-  Layers,
-  Sparkles,
-  Search,
-  Target,
   CalendarDays,
-  MonitorSmartphone,
-  AppWindow,
-  Share2,
-  FileText,
-  MessagesSquare,
   Globe2,
-  Network,
-  HeartHandshake,
-  LineChart,
-  PackageSearch,
-  Presentation,
-  MapPin,
+  Layers,
+  MonitorSmartphone,
+  Sparkles,
+  Target,
 } from "lucide-react";
 
 export type Service = {
-  title: string;
-  description: string;
-  icon: LucideIcon;
-  /** Optional badge, e.g. the "full management" note from the brief. */
-  badge?: string;
-};
-
-export type ServicePillar = {
   id: string;
-  name: string;
-  tagline: string;
-  services: Service[];
+  title: string;
+  /** One-line promise — used in cards and the services list. */
+  summary: string;
+  /** The fuller "what you actually get" paragraph. */
+  description: string;
+  /** Concrete deliverables inside this service — shown as chips. */
+  includes: string[];
+  icon: LucideIcon;
 };
 
-export const pillars: ServicePillar[] = [
+/**
+ * Six services, deliberately. Everything we do fits in one of these — the
+ * specifics live in `includes` so the page stays readable instead of
+ * reading like a menu of twenty line items.
+ */
+export const services: Service[] = [
+  {
+    id: "brand",
+    title: "Brand & Content",
+    summary: "Look like the company you're trying to become.",
+    description:
+      "We shape how your business is seen and understood — a clear identity and voice, then the words, visuals and video that carry it. Everything ships as assets your team can actually use: a deck for the meeting, a catalogue for the buyer, product copy that sells on its own.",
+    includes: [
+      "Brand identity & positioning",
+      "Copy, photography & video",
+      "Decks, brochures & catalogues",
+      "Product descriptions",
+    ],
+    icon: Sparkles,
+  },
+  {
+    id: "web",
+    title: "Websites & Platforms",
+    summary: "Custom-built, then kept running.",
+    description:
+      "Marketing sites, online stores and the internal systems that run behind them — designed and built from scratch, fast and on-brand. We don't hand over a folder and disappear: hosting, updates and day-to-day changes stay with us for as long as you want them to.",
+    includes: [
+      "Custom websites",
+      "Online stores & ordering",
+      "Internal tools & dashboards",
+      "Hosting, upkeep & support",
+    ],
+    icon: MonitorSmartphone,
+  },
   {
     id: "marketing",
-    name: "Marketing & Brand",
-    tagline: "Make the market notice — and remember — you.",
-    services: [
-      {
-        title: "Online Promotions",
-        description:
-          "Campaigns and offers engineered to spark demand and turn attention into action.",
-        icon: Megaphone,
-      },
-      {
-        title: "Content Creation",
-        description:
-          "Copy, visuals and video that tell your story and earn trust across every channel.",
-        icon: PenLine,
-      },
-      {
-        title: "Marketing Materials",
-        description:
-          "Decks, brochures, catalogues and one-pagers — polished assets your team can sell with.",
-        icon: Layers,
-      },
-      {
-        title: "Brand Building",
-        description:
-          "A clear identity, voice and positioning that set you apart and scale with you.",
-        icon: Sparkles,
-      },
-      {
-        title: "SEO",
-        description:
-          "Technical and content optimisation that lifts you up the rankings and keeps you there.",
-        icon: Search,
-      },
-      {
-        title: "Media Buying & Paid Ads",
-        description:
-          "Google Ads and Facebook/Meta campaigns managed for reach, ROAS and qualified pipeline.",
-        icon: Target,
-      },
-      {
-        title: "Event Creation & Planning",
-        description:
-          "Launches, activations and conferences planned and run end to end — putting your brand in the room.",
-        icon: CalendarDays,
-      },
+    title: "Growth Marketing",
+    summary: "Get found, get remembered, get replies.",
+    description:
+      "The demand side, run end to end: search rankings, paid campaigns on Google and Meta, promotions with a reason to act, and the daily work of keeping your channels alive. We also answer the inbox — because a lead nobody replies to is a lead you paid for twice.",
+    includes: [
+      "SEO",
+      "Google & Meta ads",
+      "Promotions & campaigns",
+      "Social media management",
+      "Customer communication",
     ],
+    icon: Target,
   },
   {
-    id: "digital",
-    name: "Digital Presence",
-    tagline: "Own every touchpoint, end to end.",
-    services: [
-      {
-        title: "Website Creation & Management",
-        description:
-          "Custom websites designed, built and maintained — fast, modern and on-brand, from first launch to day-to-day upkeep.",
-        icon: AppWindow,
-      },
-      {
-        title: "Managing Digital Platforms",
-        description:
-          "We run your channels day to day so they stay active, on-brand and on-strategy.",
-        icon: MonitorSmartphone,
-      },
-      {
-        title: "Social Media & Website",
-        description:
-          "Full management of your social presence and website — strategy, publishing and upkeep.",
-        icon: Share2,
-        badge: "Full management",
-      },
-      {
-        title: "Product Descriptions",
-        description:
-          "Persuasive, search-friendly product copy for your website and catalogues.",
-        icon: FileText,
-      },
-      {
-        title: "Customer Communication",
-        description:
-          "Responsive handling of inbound messages, inquiries and support across platforms.",
-        icon: MessagesSquare,
-      },
+    id: "leads",
+    title: "Lead Generation",
+    summary: "Qualified buyers, not lists.",
+    description:
+      "We find the companies that should be buying from you — at home and in markets you haven't entered yet — reach the person who actually decides, and hand your sales team a warm conversation with the research already done.",
+    includes: [
+      "B2B prospecting",
+      "International outreach",
+      "Sales team support & materials",
     ],
-  },
-  {
-    id: "growth",
-    name: "Growth & Sales",
-    tagline: "Fill the pipeline, then help close it.",
-    services: [
-      {
-        title: "International Lead Generation",
-        description:
-          "Reach decision-makers in new markets and open doors beyond your home turf.",
-        icon: Globe2,
-      },
-      {
-        title: "B2B Lead Generation",
-        description:
-          "Targeted prospecting and outreach that surfaces qualified business buyers.",
-        icon: Network,
-      },
-      {
-        title: "Sales Team Support",
-        description:
-          "We back your reps with research, materials and warm leads so they sell more.",
-        icon: HeartHandshake,
-      },
-    ],
+    icon: Layers,
   },
   {
     id: "trade",
-    name: "Market & Trade",
-    tagline: "Expand with intelligence on the ground.",
-    services: [
-      {
-        title: "Market Research",
-        description:
-          "Actionable insight on demand, competitors and pricing before you commit resources.",
-        icon: LineChart,
-      },
-      {
-        title: "Supplier Sourcing",
-        description:
-          "We find, vet and connect you with reliable suppliers that fit your specs and budget.",
-        icon: PackageSearch,
-      },
-      {
-        title: "Trade Show & Exhibition Support",
-        description:
-          "End-to-end help preparing for, attending and following up after key industry events.",
-        icon: Presentation,
-      },
-      {
-        title: "International Local Agent",
-        description:
-          "Your representative on the ground — bridging language, culture and logistics abroad.",
-        icon: MapPin,
-      },
+    title: "Market & Trade",
+    summary: "Expand on evidence, not instinct.",
+    description:
+      "Before you commit money to a new market, we tell you what's really there: demand, competitors, pricing, the suppliers worth talking to. Then we stay on the ground with you — vetting partners, running your trade-show presence, and representing you locally where you can't be.",
+    includes: [
+      "Market & competitor research",
+      "Supplier sourcing & vetting",
+      "Trade shows & exhibitions",
+      "Local agent representation",
     ],
+    icon: Globe2,
+  },
+  {
+    id: "events",
+    title: "Events",
+    summary: "Put your brand in the room.",
+    description:
+      "Launches, activations and conferences built as brand moments — concept and identity, the sponsors and partners who fund them, the production on the day, and the site people register through. We run it end to end and hand you the audience afterwards.",
+    includes: [
+      "Concept & event branding",
+      "Sponsors & partnerships",
+      "Production & on-site delivery",
+      "Registration platforms",
+    ],
+    icon: CalendarDays,
   },
 ];
 
-/** Flat list of service titles — handy for the contact form dropdown. */
-export const serviceOptions: string[] = pillars.flatMap((p) =>
-  p.services.map((s) => s.title),
-);
+/** Service titles — used by the contact form dropdown. */
+export const serviceOptions: string[] = services.map((s) => s.title);
 
-export const totalServices = serviceOptions.length;
+export const totalServices = services.length;
+
+/** Every concrete deliverable, flattened — feeds the home-page ticker. */
+export const capabilities: string[] = services.flatMap((s) => s.includes);

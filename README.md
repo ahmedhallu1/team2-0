@@ -1,17 +1,20 @@
 # 2.0 — Elevate Your Vision
 
-A one-page showcase site for **2.0**, a B2B services team. Built with
-Next.js 16 (App Router), React 19, Tailwind CSS v4 and framer-motion, with a
-working contact form that sends inquiries over Gmail (OAuth2).
+The marketing site for **2.0**, a B2B growth team — services, portfolio,
+process, about and a working contact form that sends inquiries over Gmail
+(OAuth2). Built with Next.js 16 (App Router), React 19 and Tailwind CSS v4.
 
-**Live:** https://website20-green.vercel.app
+**Live:** https://elevate2point0.com
 
 ## Tech stack
 
 - **Next.js 16** (App Router) + **React 19**
-- **Tailwind CSS v4** — palette tokens (navy / royal blue / gold) live in
+- **Tailwind CSS v4** — the three-layer "Midnight Editorial" token system
+  (black / lime `#C6FF34` / purple `#7E3BED`) lives in
   [`src/app/globals.css`](src/app/globals.css)
-- **framer-motion** — scroll reveals (`src/components/reveal.tsx`)
+- **No animation library** — scroll reveals are an IntersectionObserver plus
+  CSS transforms (`src/components/reveal.tsx`); everything respects
+  `prefers-reduced-motion`
 - **lucide-react** — icons
 - **nodemailer** — contact form email via Gmail OAuth2
 
@@ -20,12 +23,17 @@ working contact form that sends inquiries over Gmail (OAuth2).
 ```
 src/
   app/
-    layout.tsx            # fonts (Inter + Playfair), metadata
-    page.tsx              # composes the sections
+    layout.tsx            # fonts (Inter + Bricolage Grotesque), metadata, chrome
+    page.tsx              # home — hero, services, portfolio, process, CTA
+    work/page.tsx         # portfolio — one case study per project
+    services/page.tsx     # the six services in full
+    process|about|contact # supporting pages
     globals.css           # design tokens + utilities
     api/contact/route.ts  # POST handler — sends mail via Gmail OAuth2
-  components/              # hero, services, process, about, contact, header, footer
-  lib/services.ts         # all 17 services, grouped into 4 pillars
+  components/             # sections + fx/ (tilt, magnetic, marquee, cursor)
+  lib/services.ts         # the six services and what each one includes
+  lib/work.ts             # the portfolio: what each project is, does and proves
+public/work/              # project screenshots + artwork used by /work
 scripts/
   get-gmail-refresh-token.mjs  # one-time helper to mint a Gmail refresh token
 ```

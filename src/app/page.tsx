@@ -1,8 +1,8 @@
 import { Hero } from "@/components/hero";
 import { ServicesMarquee } from "@/components/fx/services-marquee";
 import { ServicesPreview } from "@/components/services-preview";
+import { WorkPreview } from "@/components/work-preview";
 import { ProcessSection } from "@/components/process-section";
-import { PartnersSection } from "@/components/partners-section";
 import { CtaBand } from "@/components/cta-band";
 
 export default function Home() {
@@ -11,8 +11,8 @@ export default function Home() {
       <Hero />
       <ServicesMarquee />
       <ServicesPreview />
+      <WorkPreview />
       <ProcessSection />
-      <PartnersSection />
       <CtaBand />
     </>
   );

@@ -10,6 +10,7 @@ import { clsx } from "@/lib/clsx";
 
 const links = [
   { href: "/", label: "Home" },
+  { href: "/work", label: "Work" },
   { href: "/services", label: "Services" },
   { href: "/process", label: "How we work" },
   { href: "/about", label: "About" },

@@ -42,11 +42,12 @@ export function AboutSection() {
               experience and built an independent B2B services team of our own.
             </p>
             <p>
-              Today we help companies promote, sell and expand: generating
-              international leads, running digital platforms, creating content,
-              buying media, researching markets and sourcing suppliers. One
-              partner, the full toolkit — so you can focus on the business while
-              we elevate the vision.
+              Today we help companies promote, sell and expand — and when the
+              thing a client needs doesn&apos;t exist yet, we build it. A
+              wholesale marketplace, a CRM, an AI screening tool, a luxury event
+              and the site people register through: all of it ours, all of it
+              live. One partner, six services — so you can focus on the business
+              while we elevate the vision.
             </p>
             <p className="text-sm text-faint">
               2.0 is an independent team and is not affiliated with or endorsed
