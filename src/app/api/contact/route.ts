@@ -26,7 +26,13 @@ type OutgoingMail = {
   html: string;
 };
 
-type SendResult = { ok: boolean; status?: number; detail?: string };
+type SendResult = {
+  ok: boolean;
+  status?: number;
+  detail?: string;
+  /** Provider-side id, for tracing a message that was accepted but not delivered. */
+  messageId?: string;
+};
 
 function escapeHtml(value: string): string {
   return value
@@ -258,6 +264,10 @@ export async function POST(req: Request) {
       );
     }
 
+    console.log(
+      `[contact] notification accepted via ${useBrevo ? "brevo" : "gmail"} from=${senderEmail} to=${to} id=${sent.messageId ?? "n/a"}`,
+    );
+
     const confirmed = await send(confirm);
     if (!confirmed.ok) {
       console.error(
@@ -397,8 +407,15 @@ async function sendViaBrevo(
       htmlContent: mail.html,
     }),
   });
+  const body = await res.text();
   if (!res.ok) {
-    return { ok: false, status: res.status, detail: await res.text() };
+    return { ok: false, status: res.status, detail: body };
   }
-  return { ok: true };
+  let messageId: string | undefined;
+  try {
+    messageId = (JSON.parse(body) as { messageId?: string }).messageId;
+  } catch {
+    // Brevo returned 2xx with an unexpected body — not worth failing the send.
+  }
+  return { ok: true, messageId };
 }
