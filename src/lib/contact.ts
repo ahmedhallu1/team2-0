@@ -1,6 +1,6 @@
 /** Shared contact details for the site (footer + contact section). */
 
-export const contactEmail = "info@elevate2point0.com";
+export const contactEmail = "contact@elevate2point0.com";
 
 export type PhoneContact = {
   /** Where this line rings — shown next to the number. */

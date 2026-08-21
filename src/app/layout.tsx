@@ -99,7 +99,7 @@ const jsonLd = {
   url: siteUrl.toString(),
   logo: new URL("/brand/2.0logo.png", siteUrl).toString(),
   image: new URL("/brand/2.0logo.png", siteUrl).toString(),
-  email: "info@elevate2point0.com",
+  email: "contact@elevate2point0.com",
   telephone: contactPhonesE164,
   areaServed: "Worldwide",
   knowsAbout: [

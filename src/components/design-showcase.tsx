@@ -1,9 +1,8 @@
-import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { designPieces } from "@/lib/design";
+import { DesignGallery } from "@/components/design-gallery";
 import { Reveal } from "@/components/reveal";
-import { Tilt } from "@/components/fx/tilt";
 
 /**
  * The brand-and-content side of the portfolio: campaign and product creative
@@ -32,38 +31,7 @@ export function DesignShowcase() {
           </p>
         </Reveal>
 
-        <ul className="mt-12 grid grid-cols-2 gap-3 sm:mt-14 sm:gap-5 lg:grid-cols-3">
-          {designPieces.map((piece, i) => (
-            <Reveal
-              key={piece.src}
-              as="li"
-              delay={(i % 3) * 0.06}
-              variant="scale"
-            >
-              <Tilt className="h-full rounded-2xl">
-                <figure className="surface group h-full overflow-hidden rounded-2xl transition-colors duration-300 hover:border-accent/40">
-                  <div className="relative aspect-square overflow-hidden bg-surface-2">
-                    <Image
-                      src={piece.src}
-                      alt={piece.alt}
-                      fill
-                      sizes="(min-width: 1024px) 21rem, (min-width: 640px) 30vw, 45vw"
-                      className="object-cover transition-transform duration-500 group-hover:scale-[1.03] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
-                    />
-                  </div>
-                  <figcaption className="border-t border-line p-3.5 sm:p-4">
-                    <span className="block text-[11px] font-semibold tracking-[0.14em] text-brand uppercase">
-                      {piece.brand}
-                    </span>
-                    <span className="mt-1 block text-sm leading-snug text-muted">
-                      {piece.caption}
-                    </span>
-                  </figcaption>
-                </figure>
-              </Tilt>
-            </Reveal>
-          ))}
-        </ul>
+        <DesignGallery pieces={designPieces} />
 
         <Reveal delay={0.1} className="mt-10 flex justify-center">
           <Link

@@ -248,6 +248,7 @@ export async function POST(req: Request) {
     const sent = await send(notify);
     if (!sent.ok) {
       console.error("[contact] Send failed:", sent.status, sent.detail);
+      console.error("[contact] UNDELIVERED INQUIRY:", JSON.stringify({ name, email, company, phone, service, message }));
       return NextResponse.json(
         {
           ok: false,
@@ -269,6 +270,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: true });
   } catch (err) {
     console.error("[contact] Failed to send email:", err);
+    console.error("[contact] UNDELIVERED INQUIRY:", JSON.stringify({ name, email, company, phone, service, message }));
     return NextResponse.json(
       {
         ok: false,
