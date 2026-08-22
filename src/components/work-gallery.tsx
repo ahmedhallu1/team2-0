@@ -281,7 +281,6 @@ export function WorkGallery() {
                   <WorkCollateral
                     items={project.gallery}
                     projectName={project.name}
-                    tint={project.tint}
                   />
                 )}
               </article>

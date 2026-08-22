@@ -46,7 +46,6 @@ export function DesignGallery({ pieces }: { pieces: DesignPiece[] }) {
                   <button
                     type="button"
                     onClick={() => setOpen(i)}
-                    aria-label={`View ${piece.brand} — ${piece.caption} full size`}
                     className="curtain__media absolute inset-0 h-full w-full cursor-zoom-in"
                   >
                     <Image
@@ -56,6 +55,7 @@ export function DesignGallery({ pieces }: { pieces: DesignPiece[] }) {
                       sizes="(min-width: 1024px) 22rem, (min-width: 640px) 30vw, 45vw"
                       className="object-cover transition-transform duration-700 group-hover:scale-[1.04] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
                     />
+                    <span className="sr-only"> — view full size</span>
                     <span
                       aria-hidden
                       className="absolute right-2.5 bottom-2.5 flex h-8 w-8 items-center justify-center rounded-full bg-black/55 text-white opacity-0 backdrop-blur-sm transition-opacity duration-300 group-hover:opacity-100 group-focus-within:opacity-100 motion-reduce:transition-none"

@@ -136,11 +136,7 @@ export function WorkPreview() {
         <ul className="mt-10 grid gap-6 sm:grid-cols-2 lg:mt-14 lg:grid-cols-3">
           {tiles.map((p, i) => (
             <li key={p.slug}>
-              <Link
-                href={`/work#${p.slug}`}
-                aria-label={`${p.name} — read the full case study`}
-                className="group block"
-              >
+              <Link href={`/work#${p.slug}`} className="group block">
                 <Curtain
                   className="frame relative aspect-[16/11]"
                   delay={i * 0.06}
@@ -175,6 +171,9 @@ export function WorkPreview() {
                   <p className="mt-1.5 text-sm leading-relaxed text-muted">
                     {p.tagline}
                   </p>
+                  {/* Names the link from its own visible content rather than
+                      replacing it with an aria-label (WCAG 2.5.3). */}
+                  <span className="sr-only"> — read the full case study</span>
                 </div>
               </Link>
             </li>

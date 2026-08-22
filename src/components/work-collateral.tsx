@@ -24,11 +24,9 @@ export type CollateralItem = {
 export function WorkCollateral({
   items,
   projectName,
-  tint,
 }: {
   items: CollateralItem[];
   projectName: string;
-  tint?: string;
 }) {
   const [open, setOpen] = useState<number | null>(null);
 
@@ -68,7 +66,6 @@ export function WorkCollateral({
                   <button
                     type="button"
                     onClick={() => setOpen(i)}
-                    aria-label={`View ${item.caption} full size`}
                     className="frame relative flex h-52 w-full cursor-zoom-in items-center justify-center bg-surface-2 transition-colors duration-500 sm:h-72"
                   >
                     <Image
@@ -79,10 +76,14 @@ export function WorkCollateral({
                       sizes="(min-width: 640px) 18rem, 15rem"
                       className="h-full w-auto object-contain transition-transform duration-700 group-hover:scale-[1.03] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
                     />
+                    {/* The artwork's own alt names this button — an aria-label
+                        that replaced it would break WCAG 2.5.3. */}
+                    <span className="sr-only"> — view full size</span>
+                    {/* Lime, not the project tint: these numbers sit on
+                        --surface-2, where the tints fall under 4.5:1 at 12px. */}
                     <span
                       aria-hidden
-                      className="absolute top-2.5 left-3 font-display text-xs font-bold tracking-widest tabular-nums"
-                      style={{ color: tint ?? "var(--accent)" }}
+                      className="absolute top-2.5 left-3 font-display text-xs font-bold tracking-widest text-brand tabular-nums"
                     >
                       {String(i + 1).padStart(2, "0")}
                     </span>
