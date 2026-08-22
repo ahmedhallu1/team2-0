@@ -21,6 +21,7 @@ export function BrandLogo({
         width={720}
         height={362}
         priority={priority}
+        sizes="(min-width: 640px) 72px, 64px"
         className="logo-dark h-full w-auto"
       />
       <Image
@@ -29,6 +30,7 @@ export function BrandLogo({
         width={720}
         height={362}
         priority={priority}
+        sizes="(min-width: 640px) 72px, 64px"
         className="logo-light h-full w-auto"
       />
     </span>

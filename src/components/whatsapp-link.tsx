@@ -22,12 +22,14 @@ export function WhatsAppLink({
       href={phone.whatsappHref}
       target="_blank"
       rel="noopener noreferrer"
-      aria-label={`Chat with 2.0 on WhatsApp — ${phone.region}, ${phone.display}`}
       className={clsx(
         "group inline-flex items-center text-sm font-medium text-muted transition-colors hover:text-[#25D366]",
         lg ? "relative gap-2.5 text-brand" : "gap-2",
       )}
     >
+      {/* Prefix rather than an aria-label, so the accessible name still
+          contains the visible number verbatim (WCAG 2.5.3 Label in Name). */}
+      <span className="sr-only">Chat with 2.0 on WhatsApp — </span>
       <span
         className={clsx(
           "relative flex shrink-0 items-center justify-center",
@@ -48,6 +50,7 @@ export function WhatsAppLink({
       <span className="tabular-nums">{phone.display}</span>
       <span className="text-xs text-faint">{phone.region}</span>
       <span
+        aria-hidden
         className={clsx(
           "inline-flex max-w-0 -translate-x-1 items-center gap-1 overflow-hidden whitespace-nowrap text-xs font-semibold text-[#25D366] opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100 motion-reduce:transition-none",
           lg ? "group-hover:max-w-[12rem]" : "group-hover:max-w-[10rem]",

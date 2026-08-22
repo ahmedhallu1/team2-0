@@ -1,8 +1,10 @@
 @import "tailwindcss";
 
 /* ================================================================== */
-/*  2.0 — "Midnight Editorial" design system                          */
-/*  Premium dark canvas + a polished light theme, one token layer.    */
+/*  2.0 — "Controlled Ascent"                                         */
+/*  An editorial B2B system built entirely from the logo's geometry:  */
+/*  an eight-arm burst crossed by an upward chevron. Everything rises,*/
+/*  resolves radially, or traces a chevron. Nothing floats at random. */
 /*                                                                    */
 /*  Brand palette (from the official sheet):                          */
 /*    black #000 · lime #C6FF34 · purple #7E3BED · white #FFF         */
@@ -10,7 +12,8 @@
 /*  Token layers:                                                     */
 /*    1. Primitive  — raw brand ramps (never themed)                  */
 /*    2. Semantic   — bg / surface / ink / line… (flip per theme)     */
-/*    3. Tailwind   — @theme inline maps semantics → utilities        */
+/*    3. Motion     — duration / easing / distance / stagger          */
+/*    4. Tailwind   — @theme inline maps semantics → utilities        */
 /* ================================================================== */
 
 /* Manual theme control: `.light` / `.dark` on <html> beat the OS pref. */
@@ -33,17 +36,17 @@
   --violet-600: #6a23d9;
   --violet-700: #531bb0;
 
-  /* Radius scale */
-  --radius-sm: 0.5rem;
-  --radius-md: 0.75rem;
-  --radius-lg: 1rem;
-  --radius-xl: 1.5rem;
-  --radius-2xl: 2rem;
+  /* Radius scale — crisp, editorial. Nothing pill-shaped except actions. */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.625rem;
+  --radius-lg: 0.875rem;
+  --radius-xl: 1.25rem;
+  --radius-2xl: 1.75rem;
 
   /* Shadow scale (used mostly in the light theme) */
   --shadow-sm: 0 1px 2px rgba(12, 12, 16, 0.06);
-  --shadow-md: 0 8px 24px -8px rgba(12, 12, 16, 0.12);
-  --shadow-lg: 0 24px 60px -20px rgba(12, 12, 16, 0.22);
+  --shadow-md: 0 8px 24px -10px rgba(12, 12, 16, 0.14);
+  --shadow-lg: 0 28px 70px -28px rgba(12, 12, 16, 0.26);
 
   /* Ambient flourish intensity (glows / grid) */
   --ambient: 1;
@@ -75,6 +78,9 @@
   --selection-bg: var(--lime-400);
   --selection-fg: #000;
 
+  --grain: 0.05;
+  --grain-blend: overlay;
+
   color-scheme: dark;
 }
 
@@ -103,10 +109,12 @@
   --selection-fg: #000;
 
   --shadow-sm: 0 1px 2px rgba(12, 12, 16, 0.05);
-  --shadow-md: 0 8px 24px -8px rgba(12, 12, 16, 0.1);
-  --shadow-lg: 0 24px 60px -20px rgba(12, 12, 16, 0.16);
+  --shadow-md: 0 8px 24px -10px rgba(12, 12, 16, 0.12);
+  --shadow-lg: 0 28px 70px -28px rgba(12, 12, 16, 0.18);
 
-  --ambient: 0.45;
+  --ambient: 0.5;
+  --grain: 0.03;
+  --grain-blend: soft-light;
   color-scheme: light;
 }
 
@@ -125,13 +133,50 @@
     --brand: var(--lime-800);
     --violet-ink: var(--violet-600);
     --ring: var(--violet-600);
-    --ambient: 0.45;
+    --ambient: 0.5;
+    --grain: 0.03;
+    --grain-blend: soft-light;
     color-scheme: light;
   }
 }
 
+/**
+ * Phones: the same glow that reads as a soft wash at 1440px covers half a
+ * 390px screen and starts eating text contrast. Dial the ambient layer back.
+ */
+@media (max-width: 640px) {
+  :root {
+    --ambient: 0.5;
+  }
+  .light {
+    --ambient: 0.32;
+  }
+}
+
 /* ------------------------------------------------------------------ */
-/*  3. Tailwind theme mapping (semantic → utilities)                  */
+/*  3. Motion tokens — mirrored in src/lib/motion/tokens.ts           */
+/* ------------------------------------------------------------------ */
+:root {
+  --ease-ascent: cubic-bezier(0.16, 1, 0.3, 1); /* entrances */
+  --ease-settle: cubic-bezier(0.22, 1, 0.36, 1); /* secondary settle */
+  --ease-precise: cubic-bezier(0.65, 0, 0.35, 1); /* rails, indicators */
+  --ease-exit: cubic-bezier(0.55, 0, 1, 0.45); /* departures */
+
+  --dur-fast: 240ms;
+  --dur-base: 560ms;
+  --dur-slow: 820ms;
+  --dur-scene: 1200ms;
+
+  --rise-sm: 12px;
+  --rise: 28px;
+  --rise-lg: 64px;
+
+  --stagger-tight: 34ms;
+  --stagger: 70ms;
+}
+
+/* ------------------------------------------------------------------ */
+/*  4. Tailwind theme mapping (semantic → utilities)                  */
 /* ------------------------------------------------------------------ */
 @theme inline {
   --color-bg: var(--bg);
@@ -167,6 +212,10 @@
   --radius-lg: var(--radius-lg);
   --radius-xl: var(--radius-xl);
   --radius-2xl: var(--radius-2xl);
+
+  --ease-ascent: var(--ease-ascent);
+  --ease-settle: var(--ease-settle);
+  --ease-precise: var(--ease-precise);
 }
 
 /* ------------------------------------------------------------------ */
@@ -174,8 +223,10 @@
 /* ------------------------------------------------------------------ */
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 5.5rem; /* clears the sticky header on anchor jumps */
-  overflow-x: hidden;
+  scroll-padding-top: 6rem; /* clears the floating dock on anchor jumps */
+  /* `clip`, not `hidden`: hidden would make this a scroll container and break
+     every `position: sticky` in the stacked-card sequences. */
+  overflow-x: clip;
   -webkit-text-size-adjust: 100%;
 }
 
@@ -185,7 +236,7 @@ body {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-  overflow-x: hidden;
+  overflow-x: clip;
   transition:
     background-color 0.3s ease,
     color 0.3s ease;
@@ -199,7 +250,7 @@ body {
 /* Visible, on-brand focus ring for keyboard users only */
 :focus-visible {
   outline: 2px solid var(--ring);
-  outline-offset: 2px;
+  outline-offset: 3px;
   border-radius: 4px;
 }
 
@@ -220,121 +271,14 @@ body {
   background: var(--lime-500);
 }
 
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.001ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.001ms !important;
-  }
-}
-
 /* ------------------------------------------------------------------ */
-/*  Reusable visual utilities                                         */
+/*  Surfaces, texture and brand atmosphere                            */
 /* ------------------------------------------------------------------ */
-
-/* Lime gradient text */
-.text-gradient-lime {
-  background: linear-gradient(
-    100deg,
-    var(--lime-300),
-    var(--lime-400) 55%,
-    var(--lime-500)
-  );
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-/* Lime → purple brand gradient text */
-.text-gradient-brand {
-  background: linear-gradient(
-    100deg,
-    var(--lime-400),
-    var(--lime-300) 35%,
-    var(--violet-400)
-  );
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-.light .text-gradient-brand {
-  background: linear-gradient(
-    100deg,
-    var(--lime-700),
-    var(--lime-800) 30%,
-    var(--violet-600)
-  );
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
 
 /* Card surface */
 .surface {
   background: var(--surface);
   border: 1px solid var(--line);
-}
-
-/* Ambient radial glows (dialed down automatically in light) */
-.glow-violet {
-  background: radial-gradient(
-    closest-side,
-    color-mix(in srgb, var(--violet-500) 38%, transparent),
-    transparent
-  );
-  opacity: var(--ambient);
-}
-.glow-lime {
-  background: radial-gradient(
-    closest-side,
-    color-mix(in srgb, var(--lime-400) 26%, transparent),
-    transparent
-  );
-  opacity: var(--ambient);
-}
-
-/* Faint dotted grid backdrop */
-.bg-grid {
-  background-image: radial-gradient(
-    color-mix(in srgb, var(--ink) 9%, transparent) 1px,
-    transparent 1px
-  );
-  background-size: 30px 30px;
-  opacity: var(--ambient);
-}
-
-/* Hide scrollbars but keep scrollability (e.g. the mobile pillar capsule) */
-.no-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-
-/* Official logo — show the white+lime mark on dark, black+purple on light.
-   Mirrors the theme-token logic so it works via class OR system preference. */
-.brand-logo .logo-light {
-  display: none;
-}
-.light .brand-logo .logo-dark {
-  display: none;
-}
-.light .brand-logo .logo-light {
-  display: inline-block;
-}
-@media (prefers-color-scheme: light) {
-  :root:not(.dark) .brand-logo .logo-dark {
-    display: none;
-  }
-  :root:not(.dark) .brand-logo .logo-light {
-    display: inline-block;
-  }
 }
 
 /* Thin hairline gradient divider */
@@ -349,412 +293,472 @@ body {
   );
 }
 
-/* ------------------------------------------------------------------ */
-/*  Motion primitives (CSS only, transform/opacity)                   */
-/* ------------------------------------------------------------------ */
-
-/* Scroll reveal — hidden only when JS is present; no-JS shows content */
-.js .reveal {
-  opacity: 0;
-  transform: translateY(22px);
-  transition:
-    opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-  transition-delay: var(--reveal-delay, 0ms);
-  will-change: opacity, transform;
+/* Lime → purple brand gradient text */
+.text-gradient-brand {
+  /* Violet and lime are near-opposite hues, so any long blend between them
+     passes through a desaturated grey-olive that reads as a smudge across the
+     middle of the word. Keep the crossover short and step through a *light*
+     violet, so only about one letter sits in the transition. */
+  background: linear-gradient(
+    105deg,
+    var(--violet-400) 0%,
+    var(--violet-300) 16%,
+    var(--lime-300) 34%,
+    var(--lime-400) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
-.js .reveal[data-visible="true"] {
-  opacity: 1;
-  transform: none;
-}
-
-@keyframes float-slow {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-14px);
-  }
-}
-@keyframes spin-slow {
-  to {
-    transform: rotate(360deg);
-  }
+.light .text-gradient-brand,
+:root:not(.dark) .text-gradient-brand:where(:not(.dark *)) {
+  background: linear-gradient(
+    105deg,
+    var(--violet-600) 0%,
+    var(--violet-600) 16%,
+    var(--lime-800) 34%,
+    var(--lime-700) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
-/* Spinning burst (the flower) — rotates around the SVG centre */
-.spin-burst {
-  transform-box: view-box;
-  transform-origin: 50% 50%;
-  animation: spin-slow 2.6s linear infinite;
-}
-
-/* ------------------------------------------------------------------ */
-/*  Brand loading splash                                              */
-/* ------------------------------------------------------------------ */
-.preloader {
-  position: fixed;
-  inset: 0;
-  z-index: 100;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--bg);
-  animation: splash-out 1.5s cubic-bezier(0.7, 0, 0.84, 0) forwards;
-}
-.preloader__mark {
-  position: relative;
-  width: 88px;
-  height: 88px;
-  animation: splash-mark 1.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-}
-.preloader__glow {
+/**
+ * Ambient illumination. A single radial gradient — never a blurred layer —
+ * so the browser can composite it without a filter pass. Tint with --glow.
+ */
+.glow {
   position: absolute;
-  width: 30rem;
-  height: 30rem;
-  max-width: 80vw;
-  max-height: 80vw;
   border-radius: 50%;
+  pointer-events: none;
   background: radial-gradient(
     closest-side,
-    color-mix(in srgb, var(--lime-400) 22%, transparent),
-    color-mix(in srgb, var(--violet-500) 14%, transparent) 55%,
+    color-mix(in srgb, var(--glow, var(--violet-500)) 34%, transparent),
+    color-mix(in srgb, var(--glow, var(--violet-500)) 9%, transparent) 55%,
     transparent
   );
-  filter: blur(40px);
-  opacity: 0.7;
-  animation: splash-pulse 1.5s ease-in-out forwards;
-}
-@keyframes splash-out {
-  0%,
-  60% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-    visibility: hidden;
-  }
-}
-@keyframes splash-mark {
-  0% {
-    transform: scale(0.82);
-    opacity: 0;
-  }
-  20% {
-    opacity: 1;
-  }
-  70% {
-    transform: scale(1);
-  }
-  100% {
-    transform: scale(1.12);
-    opacity: 0;
-  }
-}
-@keyframes splash-pulse {
-  0%,
-  60% {
-    opacity: 0.7;
-  }
-  100% {
-    opacity: 0;
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .preloader,
-  .preloader__mark,
-  .preloader__glow {
-    animation: none !important;
-    opacity: 0 !important;
-    visibility: hidden !important;
-  }
-}
-@keyframes hero-in {
-  from {
-    opacity: 0;
-    transform: translateY(24px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
+  opacity: var(--ambient);
 }
 
-/* Hero entrance — pure CSS stagger via inline --i delay */
-.hero-rise {
-  animation: hero-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
-  animation-delay: calc(var(--i, 0) * 90ms);
+/**
+ * The editorial grid: rising vertical hairlines with a faint horizontal
+ * rhythm, masked so it never reaches the type. The brand's "progress lines".
+ */
+.ascent-grid {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(
+      to right,
+      color-mix(in srgb, var(--ink) 7%, transparent) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      to bottom,
+      color-mix(in srgb, var(--ink) 4%, transparent) 1px,
+      transparent 1px
+    );
+  background-size:
+    var(--grid-x, 7rem) 100%,
+    100% var(--grid-y, 7rem);
+  -webkit-mask-image: radial-gradient(
+    120% 90% at 50% 0%,
+    #000 10%,
+    rgba(0, 0, 0, 0.55) 55%,
+    transparent 100%
+  );
+  mask-image: radial-gradient(
+    120% 90% at 50% 0%,
+    #000 10%,
+    rgba(0, 0, 0, 0.55) 55%,
+    transparent 100%
+  );
+  opacity: var(--ambient);
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .js .reveal {
-    opacity: 1;
-    transform: none;
-  }
-  .hero-rise {
-    animation: none;
-  }
-}
-
-/* ================================================================== */
-/*  Artistic FX layer (maximal direction)                             */
-/*  All transform/opacity; desktop-only flourishes gated by pointer.  */
-/* ================================================================== */
-
-/* --- Reveal direction variants ----------------------------------- */
-.js .reveal[data-variant="scale"] {
-  transform: translateY(22px) scale(0.96);
-}
-.js .reveal[data-variant="left"] {
-  transform: translateX(-40px);
-}
-.js .reveal[data-variant="right"] {
-  transform: translateX(40px);
-}
-.js .reveal[data-variant="blur"] {
-  filter: blur(14px);
-  transition:
-    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1),
-    filter 0.7s cubic-bezier(0.22, 1, 0.36, 1);
-}
-.js .reveal[data-variant="blur"][data-visible="true"] {
-  filter: blur(0);
-}
-.js .reveal[data-variant="left"][data-visible="true"],
-.js .reveal[data-variant="right"][data-visible="true"],
-.js .reveal[data-variant="scale"][data-visible="true"] {
-  transform: none;
-}
-
-/* --- Film grain overlay ------------------------------------------ */
+/* Film grain — depth without dirtying the type */
 .grain::after {
   content: "";
   position: fixed;
   inset: 0;
   z-index: 1;
   pointer-events: none;
-  opacity: var(--grain, 0.06);
-  mix-blend-mode: overlay;
+  opacity: var(--grain);
+  mix-blend-mode: var(--grain-blend);
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
-:root {
-  --grain: 0.06;
+
+/* Hide scrollbars but keep scrollability (filmstrips, chip rows) */
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
-.light {
-  --grain: 0.035;
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Official logo — white+lime mark on dark, black+purple on light. */
+/* Both variants are laid out and cross-faded rather than display-toggled: a
+   `display: none` image has a 0×0 box, which reads as a broken aspect ratio to
+   auditors and gives the swap nothing to animate. */
+.brand-logo {
+  position: relative;
+  aspect-ratio: 720 / 362;
+}
+.brand-logo img {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  width: 100%;
+  object-fit: contain;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+.brand-logo .logo-dark {
+  opacity: 1;
+}
+.light .brand-logo .logo-dark {
+  opacity: 0;
+}
+.light .brand-logo .logo-light {
+  opacity: 1;
 }
 @media (prefers-color-scheme: light) {
-  :root:not(.dark) {
-    --grain: 0.035;
+  :root:not(.dark) .brand-logo .logo-dark {
+    opacity: 0;
+  }
+  :root:not(.dark) .brand-logo .logo-light {
+    opacity: 1;
   }
 }
 
-/* --- Aurora blobs ------------------------------------------------- */
-.aurora {
-  position: absolute;
-  inset: -20% -10% auto -10%;
-  height: 130%;
-  z-index: -10;
-  pointer-events: none;
-  filter: blur(60px);
-  opacity: var(--ambient);
+/* ================================================================== */
+/*  Motion primitives                                                 */
+/*  Five patterns, all transform/opacity/clip-path, all inert without */
+/*  JS (the hidden state only applies under `.js` on <html>).         */
+/* ================================================================== */
+
+/* --- 1. Line-mask rise — headlines arrive from below their own line */
+.line-mask {
+  display: block;
+  overflow: hidden;
+  /* Give descenders and ascenders room, then take it back from layout. */
+  padding-block: 0.16em 0.2em;
+  margin-block: -0.16em -0.2em;
 }
-.aurora .blob {
-  position: absolute;
-  border-radius: 50%;
+.js .line-mask__inner {
+  display: block;
+  transform: translate3d(0, 115%, 0);
   will-change: transform;
 }
-.aurora .b1 {
-  top: 0;
-  left: 8%;
-  width: 36rem;
-  height: 36rem;
-  background: radial-gradient(
-    circle at 30% 30%,
-    color-mix(in srgb, var(--violet-500) 60%, transparent),
-    transparent 70%
-  );
-  animation: drift-1 22s ease-in-out infinite;
+
+/* --- 2. Restrained rise (single element or staggered group) -------- */
+/* `--rise-d` is written by the component so the CSS start state and the GSAP
+   tween agree exactly — otherwise the first frame jumps. */
+.js .rise {
+  opacity: 0;
+  transform: translate3d(0, var(--rise-d, var(--rise)), 0);
 }
-.aurora .b2 {
-  top: 4%;
-  right: 4%;
-  width: 30rem;
-  height: 30rem;
-  background: radial-gradient(
-    circle at 60% 40%,
-    color-mix(in srgb, var(--lime-400) 55%, transparent),
-    transparent 70%
-  );
-  animation: drift-2 26s ease-in-out infinite;
+.js .rise-group > * {
+  opacity: 0;
+  transform: translate3d(0, var(--rise-d, var(--rise)), 0);
 }
-.aurora .b3 {
-  top: 30%;
-  left: 40%;
-  width: 26rem;
-  height: 26rem;
-  background: radial-gradient(
-    circle at 50% 50%,
-    color-mix(in srgb, var(--violet-400) 45%, transparent),
-    transparent 70%
-  );
-  animation: drift-3 30s ease-in-out infinite;
-}
-@keyframes drift-1 {
-  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
-  50% { transform: translate3d(8%, 12%, 0) scale(1.12); }
-}
-@keyframes drift-2 {
-  0%, 100% { transform: translate3d(0, 0, 0) scale(1.05); }
-  50% { transform: translate3d(-10%, 8%, 0) scale(0.92); }
-}
-@keyframes drift-3 {
-  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
-  50% { transform: translate3d(6%, -10%, 0) scale(1.15); }
+.js .stat-rule {
+  transform: scaleX(0);
 }
 
-/* --- Kinetic headline (per-word rise + gradient sheen) ----------- */
-.kinetic-word {
-  display: inline-block;
-  opacity: 0;
-  transform: translateY(0.5em) rotate(2deg);
-  animation: word-in 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-  animation-delay: calc(var(--w, 0) * 90ms + 120ms);
+/* --- 3. Image curtain — the frame uncovers upward ------------------ */
+.js .curtain {
+  clip-path: inset(0 0 100% 0);
 }
-@keyframes word-in {
+.js .curtain__media {
+  transform: scale(1.07);
+}
+
+/* --- 4. Radial mark resolve — the burst locks into place ----------- */
+.js .mark-resolve {
+  opacity: 0;
+  transform: rotate(-40deg) scale(0.7);
+  transform-origin: 50% 50%;
+}
+
+/* --- 5. Brand-mask reveal — content emerges through the burst ------ */
+.brand-mask {
+  --burst: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg fill='%23fff'%3E%3Crect x='38' y='6' width='24' height='88' rx='1.5'/%3E%3Crect x='38' y='6' width='24' height='88' rx='1.5' transform='rotate(45 50 50)'/%3E%3Crect x='38' y='6' width='24' height='88' rx='1.5' transform='rotate(90 50 50)'/%3E%3Crect x='38' y='6' width='24' height='88' rx='1.5' transform='rotate(135 50 50)'/%3E%3C/g%3E%3C/svg%3E");
+  -webkit-mask-image: var(--burst);
+  mask-image: var(--burst);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: var(--mask-size, 300%);
+  mask-size: var(--mask-size, 300%);
+}
+.js .brand-mask {
+  --mask-size: 0%;
+}
+
+/**
+ * First-paint entrances — CSS, not GSAP, and that is a performance decision.
+ *
+ * Whatever sits above the fold is the page's LCP element. Gating it on a
+ * JavaScript timeline meant it waited for the bundle to download, parse and
+ * hydrate before it could paint: LCP 3.9s on a throttled phone. Run from the
+ * document's own clock it starts immediately, and it still lands inside the
+ * loader's wipe because the two are timed to overlap.
+ *
+ * Everything below the fold uses the GSAP scroll entrances instead — by then
+ * the bundle is long since ready and LCP has been recorded.
+ */
+@keyframes enter-line {
+  from {
+    transform: translate3d(0, 115%, 0);
+  }
+  to {
+    transform: none;
+  }
+}
+/**
+ * Transform only — no opacity — and that is deliberate.
+ *
+ * Whatever is largest above the fold is the LCP element, and an element at
+ * `opacity: 0` is not painted, so LCP cannot be recorded until the fade ends.
+ * Worse, it makes the metric depend on the animation actually ticking: in a
+ * throttled or headless context the paint can lag, and the text was only being
+ * rescued by the 4s fallback guard — LCP 7.5s for copy that was ready at 0.9s.
+ *
+ * Moving only the transform means the text is painted on the very first frame
+ * no matter what, and the rise is pure decoration on top of content that is
+ * already there. The loader covers the opening beat, so nothing pops.
+ */
+@keyframes enter-rise {
+  from {
+    transform: translate3d(0, 26px, 0);
+  }
+  to {
+    transform: none;
+  }
+}
+@keyframes enter-field {
+  from {
+    opacity: 0;
+    transform: rotate(-22deg) scale(0.86);
+  }
+  25% {
+    opacity: 1;
+  }
   to {
     opacity: 1;
     transform: none;
   }
 }
-.sheen {
-  background-size: 200% auto;
-  animation: sheen 6s linear infinite;
+
+.js .enter-lines .line-mask__inner {
+  animation: enter-line 0.8s var(--ease-ascent) both;
+  animation-delay: calc(var(--enter-i, 0) * 80ms + 260ms);
 }
-/* When a word is both kinetic and sheened, run both animations (the single
-   `animation` shorthand on each class would otherwise clobber the other). */
-.kinetic-word.sheen {
-  animation:
-    word-in 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards,
-    sheen 6s linear infinite;
-  animation-delay: calc(var(--w, 0) * 90ms + 120ms), 0s;
+.js .enter-rise {
+  animation: enter-rise 0.68s var(--ease-ascent) both;
+  animation-delay: calc(var(--enter-i, 0) * 65ms + 320ms);
 }
-@keyframes sheen {
-  to {
-    background-position: 200% center;
-  }
+.js .enter-field {
+  animation: enter-field 1.2s var(--ease-ascent) both;
+  animation-delay: 300ms;
+}
+/* A repeat visit has no loader to sync with, so don't sit on the delay. */
+.intro-skip .enter-lines .line-mask__inner {
+  animation-delay: calc(var(--enter-i, 0) * 70ms + 60ms);
+}
+.intro-skip .enter-rise {
+  animation-delay: calc(var(--enter-i, 0) * 60ms + 140ms);
+}
+.intro-skip .enter-field {
+  animation-delay: 90ms;
 }
 
-/* --- Marquee ticker ---------------------------------------------- */
-.marquee {
-  display: flex;
-  overflow: hidden;
-  -webkit-mask-image: linear-gradient(
-    90deg,
-    transparent,
-    #000 8%,
-    #000 92%,
-    transparent
-  );
-  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+/* Safety net: if scripting fails after the `.js` class lands, nothing may
+   stay invisible. The app shell flips this on a timer. */
+.motion-fallback .rise,
+.motion-fallback .rise-group > *,
+.motion-fallback .mark-resolve {
+  opacity: 1 !important;
+  transform: none !important;
 }
-.marquee__track {
+.motion-fallback .line-mask__inner {
+  transform: none !important;
+}
+.motion-fallback .enter-lines .line-mask__inner,
+.motion-fallback .enter-rise,
+.motion-fallback .enter-field {
+  animation: none !important;
+  opacity: 1 !important;
+  transform: none !important;
+}
+.motion-fallback .curtain {
+  clip-path: none !important;
+}
+.motion-fallback .stat-rule {
+  transform: none !important;
+}
+.motion-fallback .curtain__media {
+  transform: none !important;
+}
+.motion-fallback .brand-mask {
+  --mask-size: 300%;
+}
+
+/* ================================================================== */
+/*  Chrome                                                            */
+/* ================================================================== */
+
+/* --- Floating navigation dock ------------------------------------- */
+.dock {
+  position: fixed;
+  inset-inline: 0;
+  top: 0;
+  z-index: 50;
+  padding-block: 0.75rem;
+  transition: padding var(--dur-base) var(--ease-settle);
+}
+.dock__inner {
+  position: relative;
   display: flex;
-  flex-shrink: 0;
+  align-items: center;
+  justify-content: space-between;
   gap: 1rem;
-  padding-right: 1rem;
-  min-width: 100%;
-  animation: marquee var(--marquee-dur, 40s) linear infinite;
-  will-change: transform;
+  margin-inline: auto;
+  width: min(78rem - 0rem, 100% - 2.5rem);
+  padding: 0.5rem 0.5rem 0.5rem 0.25rem;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: transparent;
+  transition:
+    width var(--dur-base) var(--ease-settle),
+    padding var(--dur-base) var(--ease-settle),
+    background-color var(--dur-base) var(--ease-settle),
+    border-color var(--dur-base) var(--ease-settle),
+    box-shadow var(--dur-base) var(--ease-settle),
+    backdrop-filter var(--dur-base) var(--ease-settle);
 }
-.marquee:hover .marquee__track {
-  animation-play-state: paused;
+@media (min-width: 640px) {
+  .dock__inner {
+    width: min(78rem, 100% - 4rem);
+    padding-left: 0.5rem;
+  }
 }
-@keyframes marquee {
-  to {
-    transform: translateX(-100%);
+.dock[data-compact="true"] .dock__inner {
+  width: min(62rem, 100% - 2rem);
+  padding: 0.4rem 0.4rem 0.4rem 0.9rem;
+  border-color: var(--line-2);
+  background: color-mix(in srgb, var(--bg) 78%, transparent);
+  box-shadow: var(--shadow-md);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  backdrop-filter: blur(16px) saturate(140%);
+}
+@media (min-width: 640px) {
+  .dock[data-compact="true"] .dock__inner {
+    padding-left: 1.1rem;
   }
 }
 
-/* --- 3D tilt cards ------------------------------------------------ */
-.tilt {
-  transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
-  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
-  transform-style: preserve-3d;
-}
-.tilt__shine {
+/* The single indicator that glides between links */
+.dock__indicator {
   position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--ink) 8%, transparent);
+  box-shadow: inset 0 0 0 1px var(--line);
+  opacity: 0;
+  pointer-events: none;
+}
+.dock__indicator::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -1px;
+  width: 1.15rem;
+  height: 2px;
+  border-radius: 999px;
+  transform: translateX(-50%);
+  background: var(--accent);
+}
+
+/* --- Full-screen mobile navigation -------------------------------- */
+.nav-sheet {
+  position: fixed;
   inset: 0;
-  border-radius: inherit;
+  z-index: 45;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: var(--bg);
+  clip-path: inset(0 0 100% 0);
+  visibility: hidden;
+}
+.nav-sheet[data-open="true"] {
+  visibility: visible;
+}
+
+/* --- Route transition curtain ------------------------------------- */
+.route-curtain {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
   pointer-events: none;
   opacity: 0;
-  transition: opacity 0.25s ease;
-  background: radial-gradient(
-    18rem 18rem at var(--mx, 50%) var(--my, 0%),
-    color-mix(in srgb, var(--lime-400) 22%, transparent),
-    transparent 60%
-  );
+  visibility: hidden;
+  background:
+    radial-gradient(
+      60% 55% at 50% 62%,
+      color-mix(in srgb, var(--violet-500) 30%, transparent),
+      transparent 70%
+    ),
+    var(--bg);
+  clip-path: inset(0 0 100% 0);
 }
-.group:hover .tilt__shine,
-.tilt:hover .tilt__shine {
-  opacity: 1;
+.route-curtain__mark {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 4.5rem;
+  height: 4.5rem;
+  margin: -2.25rem 0 0 -2.25rem;
 }
 
-/* --- Magnetic buttons -------------------------------------------- */
-.magnetic {
-  transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1);
-  will-change: transform;
-}
-
-/* --- Custom cursor + scroll progress ----------------------------- */
-.cursor-dot,
-.cursor-glow {
+/* --- Cursor halo + scroll rail ------------------------------------ */
+.cursor-ring {
   position: fixed;
   top: 0;
   left: 0;
-  pointer-events: none;
   z-index: 60;
+  width: 2.25rem;
+  height: 2.25rem;
+  margin: -1.125rem 0 0 -1.125rem;
   border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--brand) 70%, transparent);
+  pointer-events: none;
   opacity: 0;
-  transition: opacity 0.3s ease;
+  will-change: transform;
 }
-.cursor-dot {
-  width: 8px;
-  height: 8px;
-  margin: -4px 0 0 -4px;
-  background: var(--lime-400);
-  mix-blend-mode: difference;
+.cursor-ring::after {
+  content: "";
+  position: absolute;
+  inset: 50%;
+  width: 3px;
+  height: 3px;
+  margin: -1.5px 0 0 -1.5px;
+  border-radius: 50%;
+  background: var(--accent);
 }
-.cursor-glow {
-  width: 26rem;
-  height: 26rem;
-  margin: -13rem 0 0 -13rem;
-  z-index: 0;
-  background: radial-gradient(
-    closest-side,
-    color-mix(in srgb, var(--lime-400) 16%, transparent),
-    transparent
-  );
-  mix-blend-mode: screen;
-}
-.cursor-ready .cursor-dot {
+.cursor-ready .cursor-ring {
   opacity: 1;
 }
-.cursor-ready .cursor-glow {
-  opacity: var(--ambient);
-}
-.light .cursor-glow {
-  background: radial-gradient(
-    closest-side,
-    color-mix(in srgb, var(--violet-500) 14%, transparent),
-    transparent
-  );
-  mix-blend-mode: multiply;
-}
 
-.scroll-progress {
+.scroll-rail {
   position: fixed;
   top: 0;
   left: 0;
@@ -766,51 +770,149 @@ body {
   background: linear-gradient(90deg, var(--lime-400), var(--violet-500));
 }
 
-/* --- Scroll-driven process rail fill ----------------------------- */
-.process-rail-fill {
-  transform: scaleX(1);
-  transform-origin: left center;
-}
-@supports (animation-timeline: view()) {
-  .process-rail-fill {
-    transform: scaleX(0);
-    animation: rail-grow linear both;
-    animation-timeline: view();
-    animation-range: cover 0% cover 55%;
-  }
-}
-@keyframes rail-grow {
-  to {
-    transform: scaleX(1);
-  }
-}
-
-/* Touch / coarse pointers: no custom cursor or magnetism */
+/* Touch / coarse pointers: no cursor flourish at all */
 @media (hover: none), (pointer: coarse) {
-  .cursor-dot,
-  .cursor-glow {
+  .cursor-ring {
     display: none;
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .aurora .blob,
-  .sheen,
-  .marquee__track {
-    animation: none !important;
+/* --- Magnetic actions --------------------------------------------- */
+/* No `display` here on purpose: an unlayered rule would outrank Tailwind's
+   `hidden` and leak desktop-only actions onto small screens. */
+.magnetic {
+  will-change: transform;
+}
+
+/* ================================================================== */
+/*  Brand loading splash                                              */
+/* ================================================================== */
+.preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+  clip-path: inset(0 0 0 0);
+}
+.preloader__glow {
+  position: absolute;
+  width: 34rem;
+  height: 34rem;
+  max-width: 88vw;
+  max-height: 88vw;
+  border-radius: 50%;
+  background: radial-gradient(
+    closest-side,
+    color-mix(in srgb, var(--lime-400) 20%, transparent),
+    color-mix(in srgb, var(--violet-500) 15%, transparent) 52%,
+    transparent
+  );
+  opacity: 0;
+}
+.preloader__mark {
+  position: relative;
+  width: 88px;
+  height: 88px;
+}
+/* Repeat visit inside the session, or reduced motion: never render it. */
+.intro-skip .preloader {
+  display: none;
+}
+
+/* ================================================================== */
+/*  Section furniture                                                 */
+/* ================================================================== */
+
+/* Kinetic delivery band */
+.marquee {
+  display: flex;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    transparent,
+    #000 7%,
+    #000 93%,
+    transparent
+  );
+  mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+}
+.marquee__track {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 2.25rem;
+  padding-right: 2.25rem;
+  will-change: transform;
+}
+
+/**
+ * Stacked-card ascent. Each act sticks a header-height lower than the last, so
+ * the sequence builds into a legible stack of tabs — every service's number and
+ * title stays on screen, nothing is ever hidden from keyboard or crawler, and
+ * there is no pinned region to trap the scroll. Below `lg` it is a plain list.
+ */
+.svc-stack {
+  --svc-top: 6.5rem;
+  --svc-step: 3.25rem;
+}
+@media (min-width: 1024px) {
+  .svc-stack__card {
+    position: sticky;
+    top: calc(var(--svc-top) + var(--svc-i, 0) * var(--svc-step));
   }
-  .kinetic-word {
-    opacity: 1;
-    transform: none;
-    animation: none;
+}
+
+/**
+ * The process ascent. Each stage sits higher than the last on wide screens, so
+ * the connecting rail literally climbs; below `lg` the stages stack and the
+ * same rail runs vertically.
+ */
+@media (min-width: 1024px) {
+  .ascent-step {
+    margin-top: calc((3 - var(--step-i, 0)) * 2.75rem);
   }
-  .tilt {
-    transform: none !important;
-  }
-  .process-rail-fill {
-    transform: scaleX(1) !important;
-    animation: none !important;
-  }
+}
+
+/* Dimensional framing for product screenshots */
+.frame {
+  position: relative;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  border: 1px solid var(--line-2);
+  background: var(--surface-2);
+  box-shadow: var(--shadow-lg);
+}
+.frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  box-shadow: inset 0 1px 0 color-mix(in srgb, #fff 14%, transparent);
+}
+
+/* Contact form focus line */
+.field {
+  position: relative;
+}
+.field__line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--lime-400), var(--violet-500));
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform var(--dur-base) var(--ease-ascent);
+  pointer-events: none;
+}
+.field:focus-within .field__line {
+  transform: scaleX(1);
 }
 
 /* ------------------------------------------------------------------ */
@@ -825,7 +927,7 @@ dialog.lightbox {
   overflow: hidden;
 }
 dialog.lightbox[open] {
-  animation: lightbox-in 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+  animation: lightbox-in 0.22s var(--ease-settle);
 }
 dialog.lightbox[open]::backdrop {
   animation: lightbox-fade 0.22s ease-out;
@@ -848,7 +950,95 @@ dialog.lightbox[open]::backdrop {
     opacity: 1;
   }
 }
+
+/* ------------------------------------------------------------------ */
+/*  Theme switch — circular reveal from the control                    */
+/* ------------------------------------------------------------------ */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+::view-transition-old(root) {
+  z-index: 0;
+}
+::view-transition-new(root) {
+  z-index: 1;
+  animation: theme-reveal 520ms var(--ease-precise) forwards;
+}
+@keyframes theme-reveal {
+  from {
+    clip-path: circle(0 at var(--vt-x, 50%) var(--vt-y, 50%));
+  }
+  to {
+    clip-path: circle(var(--vt-r, 150vmax) at var(--vt-x, 50%) var(--vt-y, 50%));
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/*  Reduced motion — remove travel, keep meaning                       */
+/* ------------------------------------------------------------------ */
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-delay: 0s !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    transition-delay: 0s !important;
+  }
+
+  /* Nothing may depend on an animation that will not run. */
+  .js .rise,
+  .js .rise-group > *,
+  .js .mark-resolve {
+    opacity: 1;
+    transform: none;
+  }
+  .js .line-mask__inner {
+    transform: none;
+  }
+  .js .curtain {
+    clip-path: none;
+  }
+  .js .stat-rule {
+    transform: none;
+  }
+  .js .curtain__media {
+    transform: none;
+  }
+  .js .brand-mask {
+    --mask-size: 300%;
+  }
+  .preloader {
+    display: none;
+  }
+  .cursor-ring {
+    display: none;
+  }
+  .field__line {
+    transition: none;
+  }
+  .svc-stack__card {
+    position: static;
+  }
+  .marquee {
+    overflow-x: auto;
+    -webkit-mask-image: none;
+    mask-image: none;
+    padding-inline: 1.25rem;
+  }
+  .marquee [data-marquee-row] > .marquee__track:nth-child(2) {
+    display: none;
+  }
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none !important;
+  }
   dialog.lightbox[open],
   dialog.lightbox[open]::backdrop {
     animation: none;

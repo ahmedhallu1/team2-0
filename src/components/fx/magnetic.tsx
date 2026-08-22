@@ -1,48 +1,60 @@
 "use client";
 
-import { useEffect, useRef, type ReactNode } from "react";
+import { useRef, type ReactNode } from "react";
+import { gsap, useGSAP, hasFinePointer, prefersReducedMotion } from "@/lib/motion/gsap";
+import { EASE } from "@/lib/motion/tokens";
 import { clsx } from "@/lib/clsx";
 
 /**
- * Wraps an element so it eases toward the pointer on hover (desktop only).
+ * A primary action leans toward the pointer — restrained, clamped, and only
+ * where there is a real pointer to lean toward. The displacement is capped so
+ * the button never leaves the spot the eye put it.
  */
 export function Magnetic({
   children,
   className,
-  strength = 0.35,
+  strength = 0.22,
+  max = 7,
 }: {
   children: ReactNode;
   className?: string;
+  /** Fraction of the pointer's offset from centre that is followed. */
   strength?: number;
+  /** Hard ceiling on displacement, in pixels. */
+  max?: number;
 }) {
-  const ref = useRef<HTMLSpanElement | null>(null);
+  const ref = useRef<HTMLSpanElement>(null);
 
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    if (
-      !window.matchMedia("(pointer: fine)").matches ||
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches
-    )
-      return;
+  useGSAP(
+    () => {
+      const el = ref.current;
+      if (!el || !hasFinePointer() || prefersReducedMotion()) return;
 
-    const onMove = (e: PointerEvent) => {
-      const r = el.getBoundingClientRect();
-      const x = e.clientX - (r.left + r.width / 2);
-      const y = e.clientY - (r.top + r.height / 2);
-      el.style.transform = `translate(${x * strength}px, ${y * strength}px)`;
-    };
-    const reset = () => {
-      el.style.transform = "translate(0, 0)";
-    };
+      const xTo = gsap.quickTo(el, "x", { duration: 0.4, ease: EASE.settle });
+      const yTo = gsap.quickTo(el, "y", { duration: 0.4, ease: EASE.settle });
+      const clamp = gsap.utils.clamp(-max, max);
 
-    el.addEventListener("pointermove", onMove);
-    el.addEventListener("pointerleave", reset);
-    return () => {
-      el.removeEventListener("pointermove", onMove);
-      el.removeEventListener("pointerleave", reset);
-    };
-  }, [strength]);
+      const onMove = (event: PointerEvent) => {
+        const r = el.getBoundingClientRect();
+        xTo(clamp((event.clientX - (r.left + r.width / 2)) * strength));
+        yTo(clamp((event.clientY - (r.top + r.height / 2)) * strength));
+      };
+      const reset = () => {
+        xTo(0);
+        yTo(0);
+      };
+
+      el.addEventListener("pointermove", onMove);
+      el.addEventListener("pointerleave", reset);
+      el.addEventListener("blur", reset, true);
+      return () => {
+        el.removeEventListener("pointermove", onMove);
+        el.removeEventListener("pointerleave", reset);
+        el.removeEventListener("blur", reset, true);
+      };
+    },
+    { scope: ref, dependencies: [strength, max] },
+  );
 
   return (
     <span ref={ref} className={clsx("magnetic inline-flex", className)}>

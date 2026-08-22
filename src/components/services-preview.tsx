@@ -1,83 +1,125 @@
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Check } from "lucide-react";
 import { services, totalServices } from "@/lib/services";
-import { Reveal } from "@/components/reveal";
-import { Tilt } from "@/components/fx/tilt";
+import { Rise } from "@/components/motion/reveal";
+import { AscentHeading } from "@/components/motion/ascent-heading";
+import { ServiceGlyph } from "@/components/brand/service-glyph";
+import { actionText, eyebrow, h2 } from "@/lib/ui";
+import { sectionY, shell } from "@/lib/layout";
+import { clsx } from "@/lib/clsx";
 
+/**
+ * Five services as one ascending stack rather than a grid of equal cards.
+ *
+ * On desktop each act sticks a header-row lower than the last, so the sequence
+ * builds into a legible stack: the number and title of every service stays on
+ * screen while the active one is fully open. Below `lg` it is a plain vertical
+ * list — no pinning, no scroll trap, nothing hidden from keyboard or crawler.
+ */
 export function ServicesPreview() {
   return (
-    <section className="relative overflow-hidden px-5 py-20 sm:px-8 sm:py-28">
-      <div className="mx-auto max-w-6xl">
-        <Reveal className="mx-auto max-w-2xl text-center">
-          <p className="text-xs font-semibold tracking-[0.25em] text-brand uppercase">
-            What we do
-          </p>
-          <h2 className="mt-4 font-display text-3xl font-bold tracking-tight text-balance text-ink sm:text-5xl">
-            {`${totalServices} services. That\u2019s the whole list.`}
-          </h2>
-          <p className="mt-5 text-base leading-relaxed text-pretty text-muted">
+    <section className={clsx("relative", sectionY)}>
+      <div className={shell}>
+        <div className="grid gap-8 lg:grid-cols-12 lg:items-end">
+          <div className="lg:col-span-7">
+            <Rise as="p" className={eyebrow}>
+              What we do
+            </Rise>
+            <AscentHeading
+              className={clsx(h2, "mt-5")}
+              lines={[
+                `${totalServices} services.`,
+                "That’s the whole list.",
+              ]}
+            />
+          </div>
+          <Rise
+            as="p"
+            delay={0.08}
+            className="text-base leading-relaxed text-pretty text-muted lg:col-span-5"
+          >
             Take one of them or hand us the lot — we plug in wherever you need
             momentum.
-          </p>
-        </Reveal>
+          </Rise>
+        </div>
 
-        <div className="mt-12 grid gap-4 sm:mt-14 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3">
-          {services.map((service, i) => {
-            const Icon = service.icon;
-            return (
-              <Reveal key={service.id} delay={(i % 3) * 0.07} variant="scale">
-                <Tilt className="h-full rounded-2xl">
-                  <Link
-                    href={`/services#${service.id}`}
-                    className="group surface relative flex h-full flex-col gap-4 rounded-2xl p-6 transition-colors duration-300 hover:border-accent/40 sm:p-7"
-                  >
-                    <div className="flex items-start justify-between gap-3">
-                      <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-surface-2 text-brand ring-1 ring-line transition-colors group-hover:bg-accent group-hover:text-on-accent">
-                        <Icon size={20} strokeWidth={2} aria-hidden />
-                      </span>
-                      <span className="font-display text-sm font-semibold text-faint">
-                        0{i + 1}
-                      </span>
-                    </div>
+        {/* The gap sets how long each act stays open before the next stacks
+            over it — too tight and a card is covered mid-sentence. */}
+        <ol className="svc-stack mt-14 space-y-6 sm:mt-16 lg:space-y-20">
+          {services.map((service, i) => (
+            <li
+              key={service.id}
+              className="svc-stack__card"
+              style={{
+                ["--svc-i" as string]: i,
+                zIndex: i + 1,
+              }}
+            >
+              <article className="surface overflow-hidden rounded-2xl bg-surface shadow-[var(--shadow-lg)]">
+                {/* The strip that stays visible once the next act stacks over */}
+                <div className="flex items-center gap-4 border-b border-line bg-surface px-5 py-3.5 sm:px-7">
+                  <span className="font-display text-sm font-bold text-brand tabular-nums">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <h3 className="font-display text-lg font-bold tracking-tight text-ink sm:text-xl">
+                    {service.title}
+                  </h3>
+                  <ServiceGlyph
+                    id={service.id}
+                    className="ml-auto h-6 w-6 shrink-0"
+                    strokeWidth={3}
+                  />
+                </div>
 
-                    <div>
-                      <h3 className="font-display text-xl font-bold text-ink">
-                        {service.title}
-                      </h3>
-                      <p className="mt-2 text-sm leading-relaxed text-muted">
-                        {service.summary}
-                      </p>
-                    </div>
-
-                    <div className="flex flex-wrap gap-2">
-                      {service.includes.slice(0, 3).map((item) => (
-                        <span
-                          key={item}
-                          className="rounded-full border border-line bg-surface-2 px-2.5 py-1 text-xs text-muted"
-                        >
-                          {item}
-                        </span>
-                      ))}
-                      {service.includes.length > 3 && (
-                        <span className="px-1 py-1 text-xs text-faint">
-                          +{service.includes.length - 3} more
-                        </span>
-                      )}
-                    </div>
-
-                    <span className="mt-auto inline-flex items-center gap-1.5 pt-2 text-sm font-semibold text-brand">
+                <div className="grid gap-6 p-5 sm:p-7 lg:grid-cols-[1fr_1.1fr] lg:gap-12 lg:p-9">
+                  <div>
+                    <p className="font-display text-xl leading-snug font-semibold text-pretty text-ink sm:text-2xl">
+                      {service.summary}
+                    </p>
+                    <Link
+                      href={`/services#${service.id}`}
+                      className={clsx(actionText, "mt-6")}
+                    >
                       What&apos;s included
                       <ArrowRight
                         size={15}
-                        className="transition-transform group-hover:translate-x-1"
+                        aria-hidden
+                        className="transition-transform duration-300 group-hover:translate-x-1"
                       />
-                    </span>
-                  </Link>
-                </Tilt>
-              </Reveal>
-            );
-          })}
-        </div>
+                    </Link>
+                  </div>
+
+                  <div>
+                    <p className="text-sm leading-relaxed text-pretty text-muted">
+                      {service.description}
+                    </p>
+                    <ul
+                      className={clsx(
+                        "mt-6 grid gap-x-6 gap-y-2",
+                        service.includes.length > 3 && "sm:grid-cols-2",
+                      )}
+                    >
+                      {service.includes.map((item) => (
+                        <li
+                          key={item}
+                          className="flex items-start gap-2.5 text-sm text-ink"
+                        >
+                          <Check
+                            size={15}
+                            strokeWidth={2.5}
+                            className="mt-[3px] shrink-0 text-brand"
+                            aria-hidden
+                          />
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </article>
+            </li>
+          ))}
+        </ol>
       </div>
     </section>
   );

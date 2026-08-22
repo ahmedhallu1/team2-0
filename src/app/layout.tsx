@@ -4,6 +4,8 @@ import "./globals.css";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { CursorFx } from "@/components/fx/cursor-fx";
+import { RouteCurtain } from "@/components/fx/route-curtain";
+import { MotionRuntime } from "@/components/fx/motion-runtime";
 import { Preloader } from "@/components/preloader";
 import { contactPhonesE164 } from "@/lib/contact";
 
@@ -19,8 +21,13 @@ const bricolage = Bricolage_Grotesque({
   display: "swap",
 });
 
-// Runs before paint: applies the saved theme (or OS default) with no flash.
-const themeScript = `(function(){try{var e=document.documentElement;e.classList.add("js");var t=localStorage.getItem("theme");if(t==="light")e.classList.add("light");else if(t==="dark")e.classList.add("dark");}catch(_){}})();`;
+/**
+ * Runs before paint. Applies the saved theme (or OS default) with no flash,
+ * and decides in the same tick whether the brand intro plays at all: repeat
+ * loads within a session and reduced-motion visitors get `intro-skip`, so the
+ * loader is never painted for them even for one frame.
+ */
+const bootScript = `(function(){try{var e=document.documentElement;e.classList.add("js");var t=localStorage.getItem("theme");if(t==="light")e.classList.add("light");else if(t==="dark")e.classList.add("dark");var s=false;try{s=sessionStorage.getItem("intro")==="1"}catch(_){}if(!s&&window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches)s=true;if(s)e.classList.add("intro-skip","intro-done");}catch(_){}})();`;
 
 function resolveSiteUrl(): URL {
   const raw = process.env.NEXT_PUBLIC_SITE_URL?.trim();
@@ -126,17 +133,19 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`${inter.variable} ${bricolage.variable} h-full antialiased`}
     >
-      <body className="grain flex min-h-full flex-col overflow-x-hidden bg-bg font-sans text-ink">
-        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+      <body className="grain flex min-h-full flex-col bg-bg font-sans text-ink">
+        <script dangerouslySetInnerHTML={{ __html: bootScript }} />
         <Preloader />
+        <RouteCurtain />
         <CursorFx />
+        <MotionRuntime />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
         <a
           href="#main"
-          className="sr-only rounded-full bg-accent px-4 py-2 text-sm font-bold text-on-accent focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100]"
+          className="sr-only rounded-lg bg-accent px-4 py-2 text-sm font-bold text-on-accent focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100]"
         >
           Skip to content
         </a>

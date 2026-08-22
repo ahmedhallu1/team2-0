@@ -2,7 +2,11 @@ import Link from "next/link";
 import { ArrowUpRight, Mail } from "lucide-react";
 import { BrandLogo } from "@/components/brand-logo";
 import { WhatsAppLink } from "@/components/whatsapp-link";
+import { FooterStatement } from "@/components/footer-statement";
 import { contactEmail, phones } from "@/lib/contact";
+import { actionText } from "@/lib/ui";
+import { shell } from "@/lib/layout";
+import { clsx } from "@/lib/clsx";
 
 const nav = [
   { href: "/", label: "Home" },
@@ -16,33 +20,45 @@ const nav = [
 export function SiteFooter() {
   const year = new Date().getFullYear();
   return (
-    <footer className="border-t border-line bg-bg px-5 pt-16 pb-10 sm:px-8">
-      <div className="mx-auto max-w-6xl">
-        <div className="grid gap-10 md:grid-cols-[1.4fr_1fr_1fr]">
+    <footer className="relative overflow-hidden border-t border-line bg-bg pt-16 pb-8 sm:pt-20">
+      <div
+        aria-hidden
+        className="glow -bottom-64 left-1/2 h-[34rem] w-[46rem] max-w-[130vw] -translate-x-1/2"
+        style={{ ["--glow" as string]: "var(--violet-500)" }}
+      />
+
+      <div className={clsx(shell, "relative")}>
+        <div className="grid gap-10 md:grid-cols-[1.4fr_1fr_1.1fr] md:gap-12">
           {/* Brand */}
           <div className="max-w-sm">
             <BrandLogo className="h-8" />
-            <p className="mt-4 text-sm leading-relaxed text-muted">
+            <p className="mt-5 text-sm leading-relaxed text-muted">
               A B2B growth partner helping ambitious businesses promote, sell
               and expand — at home and across borders.
             </p>
-            <span className="mt-5 inline-block text-xs tracking-[0.25em] text-faint uppercase">
+            <span className="mt-6 inline-block text-xs tracking-[0.25em] text-faint uppercase">
               Elevate your vision
             </span>
           </div>
 
           {/* Navigate */}
           <nav aria-label="Footer">
-            <h2 className="text-xs font-semibold tracking-[0.2em] text-faint uppercase">
+            <h2 className="text-[11px] font-semibold tracking-[0.25em] text-faint uppercase">
               Navigate
             </h2>
-            <ul className="mt-4 space-y-2.5">
+            <ul className="mt-5 space-y-2.5">
               {nav.map((item) => (
                 <li key={item.href}>
                   <Link
                     href={item.href}
-                    className="text-sm text-muted transition-colors hover:text-brand"
+                    // Same six routes as the dock — no need to fetch them twice.
+                    prefetch={false}
+                    className="group inline-flex items-center gap-2 text-sm text-muted transition-colors hover:text-brand"
                   >
+                    <span
+                      aria-hidden
+                      className="h-px w-0 bg-accent transition-[width] duration-300 group-hover:w-4"
+                    />
                     {item.label}
                   </Link>
                 </li>
@@ -52,10 +68,10 @@ export function SiteFooter() {
 
           {/* Contact */}
           <div>
-            <h2 className="text-xs font-semibold tracking-[0.2em] text-faint uppercase">
+            <h2 className="text-[11px] font-semibold tracking-[0.25em] text-faint uppercase">
               Get in touch
             </h2>
-            <ul className="mt-4 space-y-2.5">
+            <ul className="mt-5 space-y-2.5">
               <li>
                 <a
                   href={`mailto:${contactEmail}`}
@@ -70,15 +86,13 @@ export function SiteFooter() {
                   <WhatsAppLink phone={p} />
                 </li>
               ))}
-              <li className="pt-1">
-                <Link
-                  href="/contact"
-                  className="group inline-flex items-center gap-1.5 text-sm font-semibold text-brand"
-                >
+              <li className="pt-1.5">
+                <Link href="/contact" className={actionText}>
                   Start a conversation
                   <ArrowUpRight
                     size={15}
-                    className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                    aria-hidden
+                    className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
                   />
                 </Link>
               </li>
@@ -86,7 +100,9 @@ export function SiteFooter() {
           </div>
         </div>
 
-        <div className="hairline mt-12" />
+        <FooterStatement />
+
+        <div className="hairline mt-8" />
 
         <div className="mt-6 flex flex-col items-center justify-between gap-3 sm:flex-row">
           <p className="text-xs text-faint">

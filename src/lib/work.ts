@@ -30,6 +30,13 @@ export type Project = {
   /** What we did on the project. */
   tags: string[];
   icon: LucideIcon;
+  /**
+   * Ambient colour for this project's chapter, drawn from its own artwork and
+   * then pitched to clear 3.7:1 against both themes so it can carry the chapter
+   * numeral. Atmosphere only — glow, rule, numeral — never body copy, and never
+   * a replacement for the brand palette.
+   */
+  tint: string;
   /** Live URL, when there is a public one. */
   href?: string;
   /** Overrides the default "Visit {name}" link text. */
@@ -93,6 +100,7 @@ export const projects: Project[] = [
     ],
     tags: ["Events", "Brand & Content", "Websites & Platforms"],
     icon: CalendarHeart,
+    tint: "#b8484f",
     href: "https://yacht-pilates.worldfitgym.info",
     image: "/work/yacht-pilates.jpg",
     imageAlt:
@@ -167,6 +175,7 @@ export const projects: Project[] = [
     ],
     tags: ["Websites & Platforms", "Brand & Content"],
     icon: Globe2,
+    tint: "#38808f",
     href: "https://elect-i-global.com",
     image: "/work/elect-i-global.jpg",
     imageAlt:
@@ -200,6 +209,7 @@ export const projects: Project[] = [
     ],
     tags: ["Websites & Platforms"],
     icon: ScanSearch,
+    tint: "#6b6fdb",
     href: "https://bxo-cv-analyzer.vercel.app",
     hrefNote: "Sign-in required",
     image: "/work/bxo-cv-analyzer.jpg",
@@ -234,6 +244,7 @@ export const projects: Project[] = [
     ],
     tags: ["Websites & Platforms"],
     icon: Users,
+    tint: "#2f7cc4",
     href: "https://sodio.vercel.app",
     hrefNote: "Sign-in required",
     image: "/work/sodio.jpg",
@@ -268,6 +279,7 @@ export const projects: Project[] = [
     ],
     tags: ["Websites & Platforms"],
     icon: ClipboardCheck,
+    tint: "#5d7d8f",
     href: "https://aiesec-alexandria-auditing.vercel.app",
     image: "/work/internal-auditing-system.jpg",
     imageAlt:
@@ -301,6 +313,7 @@ export const projects: Project[] = [
     ],
     tags: ["Brand & Content", "Websites & Platforms", "Growth Marketing"],
     icon: Dumbbell,
+    tint: "#cc3a41",
     href: "https://careers.worldfitgym.info",
     hrefLabel: "Visit the careers portal",
     hrefNote: "Other World Fit properties are private",

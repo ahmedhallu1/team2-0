@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export default function ContactPage() {
   return (
     <>
-      <div className="h-16 sm:h-20" aria-hidden />
+      <div className="h-14 sm:h-16" aria-hidden />
       <ContactSection />
     </>
   );

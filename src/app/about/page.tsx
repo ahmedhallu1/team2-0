@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <>
-      <div className="h-16 sm:h-20" aria-hidden />
+      <div className="h-14 sm:h-16" aria-hidden />
       <AboutSection />
       <CtaBand />
     </>

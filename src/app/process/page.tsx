@@ -12,8 +12,8 @@ export const metadata: Metadata = {
 export default function ProcessPage() {
   return (
     <>
-      <div className="h-16 sm:h-20" aria-hidden />
-      <ProcessSection />
+      <div className="h-14 sm:h-16" aria-hidden />
+      <ProcessSection headingLevel="h1" />
       <CtaBand />
     </>
   );
