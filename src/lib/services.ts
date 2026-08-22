@@ -42,13 +42,16 @@ export const services: Service[] = [
   {
     id: "web",
     title: "Websites & Platforms",
-    summary: "Custom-built, then kept running.",
+    summary: "Software built for how you actually work.",
     description:
-      "Marketing sites, online stores and the internal systems that run behind them — designed and built from scratch, fast and on-brand. We don't hand over a folder and disappear: hosting, updates and day-to-day changes stay with us for as long as you want them to.",
+      "Not just websites. Marketing sites and online stores, yes — but also mobile apps, CRMs, internal systems, dashboards and the automation that removes the manual work in between. If it runs your business and it can be built, we build it from scratch, fast and on-brand. We don't hand over a folder and disappear: hosting, updates and day-to-day changes stay with us for as long as you want them to.",
     includes: [
       "Custom websites",
       "Online stores & ordering",
-      "Internal tools & dashboards",
+      "Mobile applications",
+      "CRMs & internal systems",
+      "Dashboards & reporting",
+      "Automation & integrations",
       "Hosting, upkeep & support",
     ],
     icon: MonitorSmartphone,
