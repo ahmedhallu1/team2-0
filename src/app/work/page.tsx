@@ -6,7 +6,7 @@ import { CtaBand } from "@/components/cta-band";
 export const metadata: Metadata = {
   title: "Our work",
   description:
-    "Live products, platforms and brand experiences built by 2.0 — a 9,000-SKU B2B wholesale marketplace, a zero-cost CRM, an AI CV screening tool, an automated compliance system, a luxury event brought to life end to end, and the campaign design behind it all.",
+    "Live products, platforms and brand experiences built by 2.0 — a 9,000-SKU B2B wholesale marketplace, a zero-cost CRM, an AI CV screening tool, a luxury event brought to life end to end, and the campaign design behind it all. A selection of our work, not the whole archive.",
   alternates: { canonical: "/work" },
 };
 

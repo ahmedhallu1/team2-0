@@ -101,7 +101,11 @@ export function AscentField({ className }: { className?: string }) {
   );
 
   return (
-    <div ref={ref} aria-hidden className={clsx("pointer-events-none", className)}>
+    <div
+      ref={ref}
+      aria-hidden
+      className={clsx("ascent-field pointer-events-none", className)}
+    >
       <svg viewBox="0 0 400 400" className="h-full w-full overflow-visible">
         {/* Concentric guides — the "rising grid" read radially */}
         <g stroke="currentColor" fill="none" className="text-ink opacity-[0.07]">

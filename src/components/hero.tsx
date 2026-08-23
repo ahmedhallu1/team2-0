@@ -98,8 +98,11 @@ export function Hero() {
           </div>
 
           {/* The mark, opened into a field. Cropped off-corner below lg. */}
-          <div className="enter-field pointer-events-none relative -order-1 -z-10 h-40 overflow-hidden sm:h-52 lg:order-none lg:col-span-5 lg:z-auto lg:h-auto lg:overflow-visible">
-            <AscentField className="absolute -top-14 -right-20 h-72 w-72 text-ink opacity-60 sm:-top-16 sm:h-[22rem] sm:w-[22rem] lg:static lg:mx-auto lg:h-[clamp(22rem,32vw,30rem)] lg:w-[clamp(22rem,32vw,30rem)] lg:opacity-100" />
+          {/* No crop below `lg`: the field fades at its own edges (see
+              `.ascent-field`) and bleeds off the corner of the screen. A hard
+              rectangular clip through the rays read as a rendering fault. */}
+          <div className="enter-field pointer-events-none relative -order-1 -z-10 h-44 sm:h-56 lg:order-none lg:col-span-5 lg:z-auto lg:h-auto">
+            <AscentField className="absolute -top-20 -right-24 h-[21rem] w-[21rem] text-ink opacity-75 sm:-top-24 sm:h-[25rem] sm:w-[25rem] lg:static lg:mx-auto lg:h-[clamp(22rem,32vw,30rem)] lg:w-[clamp(22rem,32vw,30rem)] lg:opacity-100" />
           </div>
         </div>
 

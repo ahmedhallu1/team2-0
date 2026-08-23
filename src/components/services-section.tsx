@@ -12,7 +12,7 @@ import {
 import { DUR, EASE, STAGGER } from "@/lib/motion/tokens";
 import { services, totalServices } from "@/lib/services";
 import { Rise } from "@/components/motion/reveal";
-import { AscentHeading } from "@/components/motion/ascent-heading";
+import { AscentHeading, AscentLine } from "@/components/motion/ascent-heading";
 import { ServiceGlyph } from "@/components/brand/service-glyph";
 import { actionText, eyebrow, h1 } from "@/lib/ui";
 import { measure, sectionY, shell } from "@/lib/layout";
@@ -62,30 +62,81 @@ export function ServicesSection() {
       gsap.fromTo(
         el,
         { opacity: 0, rotate: -28, scale: 0.82 },
-        { opacity: 1, rotate: 0, scale: 1, duration: DUR.slow, ease: EASE.ascent },
+        {
+          opacity: 1,
+          rotate: 0,
+          scale: 1,
+          duration: DUR.slow,
+          ease: EASE.ascent,
+        },
       );
     },
     { dependencies: [active] },
   );
 
-  // Included items land quickly — information first, choreography second.
+  /**
+   * Each act arrives as a piece: the rule draws, the title lifts out of its own
+   * line, the promise and the prose follow, then the included items land fast.
+   * This runs at every width — on a phone there is no sticky index to watch, so
+   * without it the page was five static blocks of text.
+   */
   useGSAP(
     () => {
       const root = ref.current;
       if (!root || prefersReducedMotion()) return;
-      gsap.utils.toArray<HTMLElement>("[data-includes]", root).forEach((list) => {
-        gsap.fromTo(
-          list.children,
-          { opacity: 0, y: 12 },
+
+      gsap.utils.toArray<HTMLElement>("[data-act]", root).forEach((act) => {
+        const rule = act.querySelector("[data-act-rule]");
+        const line = act.querySelector(".line-mask__inner");
+        const copy = act.querySelectorAll("[data-act-copy]");
+        const list = act.querySelector("[data-includes]");
+
+        const tl = gsap.timeline({
+          scrollTrigger: { trigger: act, start: "top 82%", once: true },
+        });
+
+        if (rule) {
+          tl.fromTo(
+            rule,
+            { scaleX: 0 },
+            { scaleX: 1, duration: DUR.slow, ease: EASE.ascent },
+          );
+        }
+        if (line) {
+          tl.fromTo(
+            line,
+            { yPercent: 115, y: 0 },
+            { yPercent: 0, y: 0, duration: DUR.slow, ease: EASE.ascent },
+            0.1,
+          );
+        }
+        tl.fromTo(
+          copy,
+          { opacity: 0, y: 22 },
           {
             opacity: 1,
             y: 0,
-            duration: DUR.fast,
+            duration: DUR.base,
             ease: EASE.ascent,
-            stagger: STAGGER.tight,
-            scrollTrigger: { trigger: list, start: "top 90%", once: true },
+            stagger: STAGGER.base,
           },
+          0.24,
         );
+        if (list) {
+          // Information first: the list lands fast, never made to wait.
+          tl.fromTo(
+            list.children,
+            { opacity: 0, y: 12 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: DUR.fast,
+              ease: EASE.ascent,
+              stagger: STAGGER.tight,
+            },
+            0.36,
+          );
+        }
       });
     },
     { scope: ref },
@@ -104,7 +155,11 @@ export function ServicesSection() {
               as="h1"
               eager
               className={clsx(h1, "mt-5")}
-              lines={[`${totalServices} services.`, "That’s the", "whole list."]}
+              lines={[
+                `${totalServices} services.`,
+                "That’s the",
+                "whole list.",
+              ]}
             />
           </div>
           <Rise
@@ -116,8 +171,8 @@ export function ServicesSection() {
               "text-base leading-relaxed text-pretty text-muted lg:col-span-5 lg:text-lg",
             )}
           >
-            We kept it to five things we do properly, rather than a menu you have
-            to decode. Take one of them, or hand us the whole engine — most
+            We kept it to five things we do properly, rather than a menu you
+            have to decode. Take one of them, or hand us the whole engine — most
             clients start with one and grow into the rest.
           </Rise>
         </div>
@@ -188,7 +243,11 @@ export function ServicesSection() {
                   <span className="font-display text-sm font-bold text-brand tabular-nums">
                     {String(i + 1).padStart(2, "0")}
                   </span>
-                  <span aria-hidden className="h-px flex-1 bg-line" />
+                  <span
+                    aria-hidden
+                    data-act-rule
+                    className="h-px flex-1 origin-left bg-line"
+                  />
                   <ServiceGlyph
                     id={service.id}
                     className="h-7 w-7 shrink-0 lg:hidden"
@@ -197,12 +256,16 @@ export function ServicesSection() {
                 </div>
 
                 <h2 className="mt-6 font-display text-[clamp(1.875rem,4.5vw,3rem)] leading-[1.05] font-extrabold tracking-[-0.02em] text-ink">
-                  {service.title}
+                  <AscentLine>{service.title}</AscentLine>
                 </h2>
-                <p className="mt-4 font-display text-xl leading-snug font-semibold text-pretty text-brand sm:text-2xl">
+                <p
+                  data-act-copy
+                  className="mt-4 font-display text-xl leading-snug font-semibold text-pretty text-brand sm:text-2xl"
+                >
                   {service.summary}
                 </p>
                 <p
+                  data-act-copy
                   className={clsx(
                     measure,
                     "mt-6 text-base leading-relaxed text-pretty text-muted",
@@ -211,7 +274,10 @@ export function ServicesSection() {
                   {service.description}
                 </p>
 
-                <p className="mt-9 text-[11px] font-semibold tracking-[0.25em] text-faint uppercase">
+                <p
+                  data-act-copy
+                  className="mt-9 text-[11px] font-semibold tracking-[0.25em] text-faint uppercase"
+                >
                   What&apos;s included
                 </p>
                 <ul
@@ -253,7 +319,10 @@ export function ServicesSection() {
             ))}
 
             <Rise delay={0.06} className="pt-2">
-              <Link href="/work" className="group inline-flex items-center gap-2 text-sm font-semibold text-ink transition-colors hover:text-brand">
+              <Link
+                href="/work"
+                className="group inline-flex items-center gap-2 text-sm font-semibold text-ink transition-colors hover:text-brand"
+              >
                 See what this looks like in practice
                 <ArrowRight
                   size={16}

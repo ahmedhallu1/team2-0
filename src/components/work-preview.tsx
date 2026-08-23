@@ -47,7 +47,7 @@ export function WorkPreview() {
           >
             Marketplaces, internal systems, brand experiences — {totalProjects}{" "}
             projects that are live and doing a job for the businesses that own
-            them.
+            them. A selection, not everything we&apos;ve built.
           </Rise>
         </div>
 

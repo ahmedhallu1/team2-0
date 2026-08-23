@@ -241,6 +241,11 @@ body {
     background-color 0.3s ease,
     color 0.3s ease;
 }
+/* During the theme reveal the new surface must arrive already in the new
+   theme; easing it as well makes the uncovered area look washed out. */
+.theme-swapping body {
+  transition: none;
+}
 
 ::selection {
   background: var(--selection-bg);
@@ -376,6 +381,22 @@ body {
     transparent 100%
   );
   opacity: var(--ambient);
+}
+
+/**
+ * The brand field dissolves at its edges instead of being cut. Below `lg` it
+ * bleeds off the corner of the screen, and a hard rectangular crop through the
+ * rays looked like a rendering fault rather than a deliberate frame.
+ */
+.ascent-field {
+  --fade: radial-gradient(
+    closest-side,
+    #000 55%,
+    rgba(0, 0, 0, 0.65) 78%,
+    transparent 100%
+  );
+  -webkit-mask-image: var(--fade);
+  mask-image: var(--fade);
 }
 
 /* Film grain — depth without dirtying the type */
@@ -954,6 +975,30 @@ dialog.lightbox[open]::backdrop {
 /* ------------------------------------------------------------------ */
 /*  Theme switch — circular reveal from the control                    */
 /* ------------------------------------------------------------------ */
+/* Only used where View Transitions are unavailable — inside a transition the
+   page is a static snapshot and a live element would not animate anyway. */
+.theme-ping {
+  position: fixed;
+  z-index: 80;
+  width: 2.5rem;
+  height: 2.5rem;
+  margin: -1.25rem 0 0 -1.25rem;
+  border-radius: 50%;
+  border: 2px solid var(--accent);
+  pointer-events: none;
+}
+
+/* The icon turns as the surface flips, so the control itself is animate. */
+.theme-toggle__icon {
+  display: inline-flex;
+  transition:
+    transform 0.5s var(--ease-ascent),
+    opacity 0.25s ease;
+}
+.theme-toggle:hover .theme-toggle__icon {
+  transform: rotate(35deg);
+}
+
 ::view-transition-old(root),
 ::view-transition-new(root) {
   animation: none;
@@ -964,7 +1009,9 @@ dialog.lightbox[open]::backdrop {
 }
 ::view-transition-new(root) {
   z-index: 1;
-  animation: theme-reveal 520ms var(--ease-precise) forwards;
+  /* Expo-out, not ease-in-out: the circle has to leave the control fast to
+     read as coming *from* it. An ease-in-out start looks like a slow wash. */
+  animation: theme-reveal 620ms var(--ease-ascent) forwards;
 }
 @keyframes theme-reveal {
   from {

@@ -4,6 +4,7 @@ import { services, totalServices } from "@/lib/services";
 import { Rise } from "@/components/motion/reveal";
 import { AscentHeading } from "@/components/motion/ascent-heading";
 import { ServiceGlyph } from "@/components/brand/service-glyph";
+import { StackedActs } from "@/components/motion/stacked-acts";
 import { actionText, eyebrow, h2 } from "@/lib/ui";
 import { sectionY, shell } from "@/lib/layout";
 import { clsx } from "@/lib/clsx";
@@ -27,10 +28,7 @@ export function ServicesPreview() {
             </Rise>
             <AscentHeading
               className={clsx(h2, "mt-5")}
-              lines={[
-                `${totalServices} services.`,
-                "That’s the whole list.",
-              ]}
+              lines={[`${totalServices} services.`, "That’s the whole list."]}
             />
           </div>
           <Rise
@@ -45,7 +43,7 @@ export function ServicesPreview() {
 
         {/* The gap sets how long each act stays open before the next stacks
             over it — too tight and a card is covered mid-sentence. */}
-        <ol className="svc-stack mt-14 space-y-6 sm:mt-16 lg:space-y-20">
+        <StackedActs className="mt-14 space-y-6 sm:mt-16 lg:space-y-20">
           {services.map((service, i) => (
             <li
               key={service.id}
@@ -55,9 +53,15 @@ export function ServicesPreview() {
                 zIndex: i + 1,
               }}
             >
-              <article className="surface overflow-hidden rounded-2xl bg-surface shadow-[var(--shadow-lg)]">
+              <article
+                data-act-panel
+                className="surface overflow-hidden rounded-2xl bg-surface shadow-[var(--shadow-lg)]"
+              >
                 {/* The strip that stays visible once the next act stacks over */}
-                <div className="flex items-center gap-4 border-b border-line bg-surface px-5 py-3.5 sm:px-7">
+                <div
+                  data-act-head
+                  className="flex items-center gap-4 border-b border-line bg-surface px-5 py-3.5 sm:px-7"
+                >
                   <span className="font-display text-sm font-bold text-brand tabular-nums">
                     {String(i + 1).padStart(2, "0")}
                   </span>
@@ -71,7 +75,10 @@ export function ServicesPreview() {
                   />
                 </div>
 
-                <div className="grid gap-6 p-5 sm:p-7 lg:grid-cols-[1fr_1.1fr] lg:gap-12 lg:p-9">
+                <div
+                  data-act-body
+                  className="grid gap-6 p-5 sm:p-7 lg:grid-cols-[1fr_1.1fr] lg:gap-12 lg:p-9"
+                >
                   <div>
                     <p className="font-display text-xl leading-snug font-semibold text-pretty text-ink sm:text-2xl">
                       {service.summary}
@@ -102,6 +109,7 @@ export function ServicesPreview() {
                       {service.includes.map((item) => (
                         <li
                           key={item}
+                          data-act-item
                           className="flex items-start gap-2.5 text-sm text-ink"
                         >
                           <Check
@@ -119,7 +127,7 @@ export function ServicesPreview() {
               </article>
             </li>
           ))}
-        </ol>
+        </StackedActs>
       </div>
     </section>
   );

@@ -1,7 +1,6 @@
 import type { LucideIcon } from "lucide-react";
 import {
   CalendarHeart,
-  ClipboardCheck,
   Dumbbell,
   Globe2,
   ScanSearch,
@@ -249,41 +248,7 @@ export const projects: Project[] = [
     hrefNote: "Sign-in required",
     image: "/work/sodio.jpg",
     imageAlt:
-      "The Sodio sign-in screen, built for AIESEC in Alexandria",
-    imageWidth: 1600,
-    imageHeight: 1000,
-  },
-  {
-    slug: "internal-auditing-system",
-    name: "Internal Auditing System",
-    client: "AIESEC in Alexandria",
-    category: "Compliance & operations",
-    year: "2026",
-    tagline:
-      "Every document a team owes, tracked, collected and packaged for audit — automatically.",
-    summary:
-      "The system reads the live operations sheet, works out which documents each case needs at its current stage, and tracks what's missing. Files can be uploaded through the app or simply dropped into Drive — it detects those too. Every week it builds the submission folder and ZIP for the deadline and emails and calendar-invites the people who still owe something.",
-    impact:
-      "Audit week stops being a scramble. The evidence pack assembles itself on schedule, and nobody has to chase colleagues document by document.",
-    highlights: [
-      "Reads the live source sheet and flags missing documents by stage",
-      "Auto-detects files uploaded manually into Drive",
-      "Builds weekly submission folders and ZIPs on a fixed cadence",
-      "Calendar invites and email reminders to the right stakeholders",
-    ],
-    facts: [
-      { label: "Functions tracked", value: "4" },
-      { label: "Deadlines", value: "Weekly" },
-      { label: "Packaging", value: "Automatic" },
-      { label: "Running cost", value: "EGP 0" },
-    ],
-    tags: ["Websites & Platforms"],
-    icon: ClipboardCheck,
-    tint: "#5d7d8f",
-    href: "https://aiesec-alexandria-auditing.vercel.app",
-    image: "/work/internal-auditing-system.jpg",
-    imageAlt:
-      "The Internal Auditing System dashboard, showing the tracked programme functions",
+      "The Sodio sign-in screen — the Sodio mark and wordmark over a deep navy field, with Google and password sign-in",
     imageWidth: 1600,
     imageHeight: 1000,
   },

@@ -7,8 +7,31 @@ import { clsx } from "@/lib/clsx";
 type Theme = "light" | "dark";
 
 type ViewTransitionDocument = Document & {
-  startViewTransition?: (callback: () => void) => unknown;
+  startViewTransition?: (callback: () => void) => { finished: Promise<void> };
 };
+
+/**
+ * A lime ring that leaves the control and fades — the fallback origin cue for
+ * browsers without View Transitions. It is deliberately *not* used alongside
+ * the circular reveal: during a transition the page is replaced by static
+ * snapshots, so a live element added here would simply freeze.
+ */
+function ping(x: number, y: number) {
+  const ring = document.createElement("span");
+  ring.className = "theme-ping";
+  ring.setAttribute("aria-hidden", "true");
+  ring.style.left = `${x}px`;
+  ring.style.top = `${y}px`;
+  document.body.append(ring);
+  const anim = ring.animate(
+    [
+      { transform: "scale(0.4)", opacity: 0.9 },
+      { transform: "scale(14)", opacity: 0 },
+    ],
+    { duration: 620, easing: "cubic-bezier(0.16, 1, 0.3, 1)" },
+  );
+  anim.finished.catch(() => {}).finally(() => ring.remove());
+}
 
 function resolveTheme(): Theme {
   const el = document.documentElement;
@@ -57,9 +80,8 @@ export function ThemeToggle({ className }: { className?: string }) {
       }
     };
 
-    const doc = document as ViewTransitionDocument;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduce || typeof doc.startViewTransition !== "function") {
+    if (reduce) {
       apply();
       return;
     }
@@ -67,6 +89,15 @@ export function ThemeToggle({ className }: { className?: string }) {
     const rect = event.currentTarget.getBoundingClientRect();
     const x = rect.left + rect.width / 2;
     const y = rect.top + rect.height / 2;
+
+    const doc = document as ViewTransitionDocument;
+    if (typeof doc.startViewTransition !== "function") {
+      // No circular reveal here, so the ring carries the origin instead.
+      ping(x, y);
+      apply();
+      return;
+    }
+
     const radius = Math.hypot(
       Math.max(x, window.innerWidth - x),
       Math.max(y, window.innerHeight - y),
@@ -75,7 +106,11 @@ export function ThemeToggle({ className }: { className?: string }) {
     root.style.setProperty("--vt-x", `${x}px`);
     root.style.setProperty("--vt-y", `${y}px`);
     root.style.setProperty("--vt-r", `${radius}px`);
-    doc.startViewTransition(apply);
+    root.classList.add("theme-swapping");
+    const transition = doc.startViewTransition(apply);
+    transition.finished
+      .catch(() => {})
+      .finally(() => root.classList.remove("theme-swapping"));
   }
 
   const isDark = theme === "dark";
@@ -87,17 +122,19 @@ export function ThemeToggle({ className }: { className?: string }) {
       aria-label={isDark ? "Switch to light theme" : "Switch to dark theme"}
       title={isDark ? "Light mode" : "Dark mode"}
       className={clsx(
-        "inline-flex h-10 w-10 items-center justify-center rounded-full border border-line text-muted transition-colors hover:border-line-2 hover:text-ink",
+        "theme-toggle inline-flex h-10 w-10 items-center justify-center rounded-full border border-line text-muted transition-colors hover:border-line-2 hover:text-ink",
         className,
       )}
     >
-      {theme === null ? (
-        <span className="h-[18px] w-[18px]" aria-hidden />
-      ) : isDark ? (
-        <Sun size={18} aria-hidden />
-      ) : (
-        <Moon size={18} aria-hidden />
-      )}
+      <span className="theme-toggle__icon">
+        {theme === null ? (
+          <span className="block h-[18px] w-[18px]" aria-hidden />
+        ) : isDark ? (
+          <Sun size={18} aria-hidden />
+        ) : (
+          <Moon size={18} aria-hidden />
+        )}
+      </span>
     </button>
   );
 }

@@ -5,16 +5,16 @@ import { gsap, useGSAP } from "@/lib/motion/gsap";
 import { clsx } from "@/lib/clsx";
 
 /**
- * Low-amplitude image parallax. Deliberately gated with `gsap.matchMedia()` to
- * pointer-capable widths with motion allowed — on phones the effect costs more
- * than it gives, and it must not exist at all under reduced motion.
+ * Low-amplitude image parallax, gated with `gsap.matchMedia()` so it never
+ * exists under reduced motion. It runs at every width — at a smaller amplitude
+ * on phones, where a large travel would be more distracting than alive.
  *
  * The media sits in an oversized inner box so travelling never exposes an edge.
  */
 export function ParallaxMedia({
   children,
   className,
-  amount = 6,
+  amount: amountProp = 6,
 }: {
   children: ReactNode;
   className?: string;
@@ -32,8 +32,15 @@ export function ParallaxMedia({
 
       const mm = gsap.matchMedia();
       mm.add(
-        "(min-width: 1024px) and (prefers-reduced-motion: no-preference)",
-        () => {
+        {
+          wide: "(min-width: 1024px) and (prefers-reduced-motion: no-preference)",
+          narrow:
+            "(max-width: 1023.98px) and (prefers-reduced-motion: no-preference)",
+        },
+        (context) => {
+          const amount = context.conditions?.wide
+            ? amountProp
+            : amountProp * 0.6;
           // Grow the media only while it actually travels, so every other
           // context frames the artwork exactly as authored.
           const bleed = amount + 2;
@@ -59,7 +66,7 @@ export function ParallaxMedia({
       );
       return () => mm.revert();
     },
-    { scope: ref, dependencies: [amount] },
+    { scope: ref, dependencies: [amountProp] },
   );
 
   return (

@@ -14,8 +14,10 @@ export type PhoneContact = {
 };
 
 /** Pre-filled message that lands in WhatsApp when a number is tapped. */
+// Plain text only: the waving-hand emoji was arriving as a replacement
+// character on some clients, and the sentence reads fine without it.
 const whatsappMessage =
-  "Hi 2.0 👋 I found your number on your website and I'd like to get in touch.";
+  "Hi 2.0, I found your number on your website and I'd like to get in touch.";
 
 function phone(region: string, display: string): PhoneContact {
   const digits = display.replace(/\D/g, "");

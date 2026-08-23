@@ -144,8 +144,12 @@ export function ProcessSection({
       draw(0);
       const trigger = ScrollTrigger.create({
         trigger: root,
-        start: "top 72%",
-        end: "bottom 78%",
+        // `clamp()` matters here. On a short page the rail is already on screen
+        // at scroll 0, so an unclamped start resolves to a negative scroll and
+        // the chevron begins life two-thirds of the way along. Clamped, the
+        // travel always starts at stage one and tracks the scroll.
+        start: "clamp(top 78%)",
+        end: "clamp(bottom 25%)",
         scrub: 0.5,
         onUpdate: (self) => draw(self.progress),
         onRefresh: measure,

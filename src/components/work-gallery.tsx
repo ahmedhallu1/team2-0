@@ -14,7 +14,7 @@ import { clsx } from "@/lib/clsx";
 /** Headline numbers above the case studies. */
 const stats = [
   { value: `${totalProjects}`, label: "Projects shipped" },
-  { value: "5", label: "Live products & platforms" },
+  { value: "4", label: "Live products & platforms" },
   { value: "9k+", label: "SKUs on one marketplace" },
   { value: "8", label: "Brands on one event" },
 ];
@@ -60,7 +60,8 @@ export function WorkGallery() {
           >
             Not mockups — live products, platforms and brand experiences that
             are running today. Each one below explains what it is, what it does
-            and why it earns its place in the business that owns it.
+            and why it earns its place in the business that owns it. This is a
+            selection of our work, not the whole archive.
           </Rise>
         </div>
 

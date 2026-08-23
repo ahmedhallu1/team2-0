@@ -47,8 +47,12 @@ export function Preloader() {
         },
       });
 
+      // Both parts must turn about the *viewBox* centre, not their own bounding
+      // boxes, or the burst and the chevron scale away from each other and the
+      // arms swing outside the viewBox, where the root <svg> clips them.
+      gsap.set([burst, chevron], { svgOrigin: "50 50" });
+
       tl.set(mark, { transformOrigin: "50% 50%" })
-        .set([burst, chevron], { transformOrigin: "50% 50%" })
         .fromTo(
           glow,
           { opacity: 0, scale: 0.72 },
@@ -96,7 +100,7 @@ export function Preloader() {
         <BrandIcon
           markFill="var(--ink)"
           arrowFill="var(--accent)"
-          className="h-full w-full"
+          className="h-full w-full overflow-visible"
         />
       </div>
     </div>
