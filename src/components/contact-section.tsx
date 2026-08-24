@@ -5,9 +5,15 @@ import { ArrowRight, CheckCircle2, Loader2, Mail } from "lucide-react";
 import { services, serviceOptions } from "@/lib/services";
 import { BrandLogo } from "@/components/brand-logo";
 import { WhatsAppLink } from "@/components/whatsapp-link";
+import { InstagramIcon } from "@/components/instagram-icon";
 import { Rise, RiseGroup } from "@/components/motion/reveal";
 import { AscentHeading } from "@/components/motion/ascent-heading";
-import { contactEmail, phones } from "@/lib/contact";
+import {
+  contactEmail,
+  instagramHandle,
+  instagramUrl,
+  phones,
+} from "@/lib/contact";
 import { eyebrow, h1 } from "@/lib/ui";
 import { sectionY, shell } from "@/lib/layout";
 import { clsx } from "@/lib/clsx";
@@ -137,6 +143,15 @@ export function ContactSection() {
                       label="Chat on WhatsApp"
                     />
                   ))}
+                  <a
+                    href={instagramUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 text-sm font-medium text-brand transition-opacity hover:opacity-80"
+                  >
+                    <InstagramIcon className="h-4 w-4" />
+                    {instagramHandle}
+                  </a>
                 </div>
                 <BrandLogo className="mt-10 hidden h-10 lg:block" />
               </Rise>

@@ -870,20 +870,15 @@ body {
 }
 
 /**
- * Stacked-card ascent. Each act sticks a header-height lower than the last, so
- * the sequence builds into a legible stack of tabs — every service's number and
- * title stays on screen, nothing is ever hidden from keyboard or crawler, and
- * there is no pinned region to trap the scroll. Below `lg` it is a plain list.
+ * The service deck. Nothing is pinned — see act-deck.tsx for why sticky had to
+ * go — so this only establishes the stacking order and warns the compositor
+ * that the panels move.
  */
-.svc-stack {
-  --svc-top: 6.5rem;
-  --svc-step: 3.25rem;
+.act-deck > li {
+  position: relative;
 }
-@media (min-width: 1024px) {
-  .svc-stack__card {
-    position: sticky;
-    top: calc(var(--svc-top) + var(--svc-i, 0) * var(--svc-step));
-  }
+.act-deck [data-act-panel] {
+  will-change: transform;
 }
 
 /**
@@ -1069,9 +1064,6 @@ dialog.lightbox[open]::backdrop {
   }
   .field__line {
     transition: none;
-  }
-  .svc-stack__card {
-    position: static;
   }
   .marquee {
     overflow-x: auto;

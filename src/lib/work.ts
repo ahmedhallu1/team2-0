@@ -150,6 +150,41 @@ export const projects: Project[] = [
     asideHeight: 799,
   },
   {
+    slug: "sodio",
+    name: "Sodio",
+    client: "AIESEC in Alexandria",
+    category: "CRM platform",
+    year: "2026",
+    tagline:
+      "A full sales CRM — accounts, contacts, visits and pipeline — running at zero cost.",
+    summary:
+      "Sodio puts accounts, contacts, visits and pipeline in one place, with permissions deciding who reads and edits what. Booked visits land on the rep's own Google Calendar with reminders 24 hours and 1 hour ahead, a follow-up email asks whether the visit actually happened, and branded emails go out from the director's mailbox. It installs on a phone like an app.",
+    impact:
+      "Nothing depends on someone remembering any more. The pipeline, the reminders and the follow-ups run themselves — and the whole system costs nothing to operate.",
+    highlights: [
+      "Role-based access across every account and record",
+      "Calendar reminders 24h and 1h before each visit",
+      "Automatic follow-up prompts and branded email",
+      "Two-way Google Sheets sync · installable as a phone app",
+    ],
+    facts: [
+      { label: "Running cost", value: "EGP 0" },
+      { label: "Access", value: "Role-based" },
+      { label: "Reminders", value: "Automatic" },
+      { label: "Mobile", value: "Installable" },
+    ],
+    tags: ["Websites & Platforms"],
+    icon: Users,
+    tint: "#2f7cc4",
+    href: "https://sodio.vercel.app",
+    hrefNote: "Sign-in required",
+    image: "/work/sodio.jpg",
+    imageAlt:
+      "The Sodio sign-in screen — the Sodio mark and wordmark over a deep navy field, with Google and password sign-in",
+    imageWidth: 1600,
+    imageHeight: 1000,
+  },
+  {
     slug: "elect-i-global",
     name: "ELECT-I Global",
     category: "B2B marketplace",
@@ -214,41 +249,6 @@ export const projects: Project[] = [
     image: "/work/bxo-cv-analyzer.jpg",
     imageAlt:
       "The BXO CV Analyzer sign-in screen — 'Secure access to smarter CV decisions'",
-    imageWidth: 1600,
-    imageHeight: 1000,
-  },
-  {
-    slug: "sodio",
-    name: "Sodio",
-    client: "AIESEC in Alexandria",
-    category: "CRM platform",
-    year: "2026",
-    tagline:
-      "A full sales CRM — accounts, contacts, visits and pipeline — running at zero cost.",
-    summary:
-      "Sodio puts accounts, contacts, visits and pipeline in one place, with permissions deciding who reads and edits what. Booked visits land on the rep's own Google Calendar with reminders 24 hours and 1 hour ahead, a follow-up email asks whether the visit actually happened, and branded emails go out from the director's mailbox. It installs on a phone like an app.",
-    impact:
-      "Nothing depends on someone remembering any more. The pipeline, the reminders and the follow-ups run themselves — and the whole system costs nothing to operate.",
-    highlights: [
-      "Role-based access across every account and record",
-      "Calendar reminders 24h and 1h before each visit",
-      "Automatic follow-up prompts and branded email",
-      "Two-way Google Sheets sync · installable as a phone app",
-    ],
-    facts: [
-      { label: "Running cost", value: "EGP 0" },
-      { label: "Access", value: "Role-based" },
-      { label: "Reminders", value: "Automatic" },
-      { label: "Mobile", value: "Installable" },
-    ],
-    tags: ["Websites & Platforms"],
-    icon: Users,
-    tint: "#2f7cc4",
-    href: "https://sodio.vercel.app",
-    hrefNote: "Sign-in required",
-    image: "/work/sodio.jpg",
-    imageAlt:
-      "The Sodio sign-in screen — the Sodio mark and wordmark over a deep navy field, with Google and password sign-in",
     imageWidth: 1600,
     imageHeight: 1000,
   },

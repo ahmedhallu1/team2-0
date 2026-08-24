@@ -4,7 +4,7 @@ import { services, totalServices } from "@/lib/services";
 import { Rise } from "@/components/motion/reveal";
 import { AscentHeading } from "@/components/motion/ascent-heading";
 import { ServiceGlyph } from "@/components/brand/service-glyph";
-import { StackedActs } from "@/components/motion/stacked-acts";
+import { ActDeck } from "@/components/motion/act-deck";
 import { actionText, eyebrow, h2 } from "@/lib/ui";
 import { sectionY, shell } from "@/lib/layout";
 import { clsx } from "@/lib/clsx";
@@ -41,23 +41,13 @@ export function ServicesPreview() {
           </Rise>
         </div>
 
-        {/* The gap sets how long each act stays open before the next stacks
-            over it — too tight and a card is covered mid-sentence. */}
-        <StackedActs className="mt-14 space-y-6 sm:mt-16 lg:space-y-20">
+        <ActDeck className="mt-14 space-y-6 sm:mt-16 sm:space-y-8">
           {services.map((service, i) => (
-            <li
-              key={service.id}
-              className="svc-stack__card"
-              style={{
-                ["--svc-i" as string]: i,
-                zIndex: i + 1,
-              }}
-            >
+            <li key={service.id} style={{ zIndex: i + 1 }}>
               <article
                 data-act-panel
                 className="surface overflow-hidden rounded-2xl bg-surface shadow-[var(--shadow-lg)]"
               >
-                {/* The strip that stays visible once the next act stacks over */}
                 <div
                   data-act-head
                   className="flex items-center gap-4 border-b border-line bg-surface px-5 py-3.5 sm:px-7"
@@ -68,9 +58,14 @@ export function ServicesPreview() {
                   <h3 className="font-display text-lg font-bold tracking-tight text-ink sm:text-xl">
                     {service.title}
                   </h3>
+                  <span
+                    aria-hidden
+                    data-act-rule
+                    className="ml-auto h-px flex-1 origin-left bg-line"
+                  />
                   <ServiceGlyph
                     id={service.id}
-                    className="ml-auto h-6 w-6 shrink-0"
+                    className="h-6 w-6 shrink-0"
                     strokeWidth={3}
                   />
                 </div>
@@ -127,7 +122,7 @@ export function ServicesPreview() {
               </article>
             </li>
           ))}
-        </StackedActs>
+        </ActDeck>
       </div>
     </section>
   );

@@ -11,13 +11,28 @@ export type DesignPiece = {
  * A cut of the day-to-day brand and content work — the campaigns, product
  * features and content series that never become a "platform" but are most of
  * what a brand actually publishes. Deliberately a selection, not an archive.
+ *
+ * Ordered to alternate brand, palette and subject rather than grouping by
+ * client, so the run reads as a range of work instead of one colour story.
  */
 export const designPieces: DesignPiece[] = [
   {
-    src: "/work/design/rose-berry-gift-set.jpg",
-    alt: "Rose Berry gift set — an open pink makeup box with mirror, styled among blossom",
+    src: "/work/design/rose-berry-queen.jpg",
+    alt: "A model wearing a crown beside Arabic campaign copy reading 'wake up a queen every morning'",
     brand: "Rose Berry",
-    caption: "Gift-set launch creative",
+    caption: "“Wake up a queen” campaign",
+  },
+  {
+    src: "/work/design/vherb-bikini-mask.jpg",
+    alt: "The VHerb Bikini Mask skincare set on a soft pink set with a red sphere",
+    brand: "VHerb Skincare",
+    caption: "Bikini Mask launch",
+  },
+  {
+    src: "/work/design/food-content-series.jpg",
+    alt: "An overhead food shot arranged around a large letter R, from an alphabet content series",
+    brand: "Food & lifestyle",
+    caption: "Alphabet content series",
   },
   {
     src: "/work/design/rose-berry-golden-box.jpg",
@@ -26,16 +41,22 @@ export const designPieces: DesignPiece[] = [
     caption: "Golden Box campaign",
   },
   {
-    src: "/work/design/rose-berry-queen.jpg",
-    alt: "A model wearing a crown beside Arabic campaign copy reading 'wake up a queen every morning'",
-    brand: "Rose Berry",
-    caption: "“Wake up a queen” campaign",
+    src: "/work/design/vherb-range.jpg",
+    alt: "The VHerb skincare range arranged on pink plinths",
+    brand: "VHerb Skincare",
+    caption: "Range on set",
   },
   {
     src: "/work/design/rose-berry-national-day.jpg",
     alt: "A green Saudi National Day layout with the full Rose Berry product range laid out",
     brand: "Rose Berry",
     caption: "Saudi National Day offer",
+  },
+  {
+    src: "/work/design/rose-berry-gift-set.jpg",
+    alt: "Rose Berry gift set — an open pink makeup box with mirror, styled among blossom",
+    brand: "Rose Berry",
+    caption: "Gift-set launch creative",
   },
   {
     src: "/work/design/rose-berry-bridal-box.jpg",
@@ -48,24 +69,6 @@ export const designPieces: DesignPiece[] = [
     alt: "An open Rose Berry makeup kit with brushes and palettes, styled with blossom",
     brand: "Rose Berry",
     caption: "Product feature — full kit",
-  },
-  {
-    src: "/work/design/vherb-bikini-mask.jpg",
-    alt: "The VHerb Bikini Mask skincare set on a soft pink set with a red sphere",
-    brand: "VHerb Skincare",
-    caption: "Bikini Mask launch",
-  },
-  {
-    src: "/work/design/vherb-range.jpg",
-    alt: "The VHerb skincare range arranged on pink plinths",
-    brand: "VHerb Skincare",
-    caption: "Range on set",
-  },
-  {
-    src: "/work/design/food-content-series.jpg",
-    alt: "An overhead food shot arranged around a large letter R, from an alphabet content series",
-    brand: "Food & lifestyle",
-    caption: "Alphabet content series",
   },
 ];
 

@@ -2,8 +2,14 @@ import Link from "next/link";
 import { ArrowUpRight, Mail } from "lucide-react";
 import { BrandLogo } from "@/components/brand-logo";
 import { WhatsAppLink } from "@/components/whatsapp-link";
+import { InstagramIcon } from "@/components/instagram-icon";
 import { FooterStatement } from "@/components/footer-statement";
-import { contactEmail, phones } from "@/lib/contact";
+import {
+  contactEmail,
+  instagramHandle,
+  instagramUrl,
+  phones,
+} from "@/lib/contact";
 import { actionText } from "@/lib/ui";
 import { shell } from "@/lib/layout";
 import { clsx } from "@/lib/clsx";
@@ -86,6 +92,17 @@ export function SiteFooter() {
                   <WhatsAppLink phone={p} />
                 </li>
               ))}
+              <li>
+                <a
+                  href={instagramUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 text-sm text-muted transition-colors hover:text-brand"
+                >
+                  <InstagramIcon className="h-[15px] w-[15px]" />
+                  {instagramHandle}
+                </a>
+              </li>
               <li className="pt-1.5">
                 <Link href="/contact" className={actionText}>
                   Start a conversation

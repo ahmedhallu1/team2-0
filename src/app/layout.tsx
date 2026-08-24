@@ -7,7 +7,7 @@ import { CursorFx } from "@/components/fx/cursor-fx";
 import { RouteCurtain } from "@/components/fx/route-curtain";
 import { MotionRuntime } from "@/components/fx/motion-runtime";
 import { Preloader } from "@/components/preloader";
-import { contactPhonesE164 } from "@/lib/contact";
+import { contactPhonesE164, instagramUrl } from "@/lib/contact";
 
 const inter = Inter({
   variable: "--font-body",
@@ -108,6 +108,7 @@ const jsonLd = {
   image: new URL("/brand/2.0logo.png", siteUrl).toString(),
   email: "contact@elevate2point0.com",
   telephone: contactPhonesE164,
+  sameAs: [instagramUrl],
   areaServed: "Worldwide",
   knowsAbout: [
     "B2B lead generation",

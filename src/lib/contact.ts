@@ -2,6 +2,10 @@
 
 export const contactEmail = "contact@elevate2point0.com";
 
+/** Where we post. Also declared as `sameAs` in the structured data. */
+export const instagramUrl = "https://www.instagram.com/2point0.eg/";
+export const instagramHandle = "@2point0.eg";
+
 export type PhoneContact = {
   /** Where this line rings — shown next to the number. */
   region: string;
