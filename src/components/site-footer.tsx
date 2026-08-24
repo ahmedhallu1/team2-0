@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { ArrowUpRight, Mail } from "lucide-react";
 import { BrandLogo } from "@/components/brand-logo";
-import { WhatsAppLink } from "@/components/whatsapp-link";
+import { ContactLink } from "@/components/contact-link";
+import { WhatsAppIcon } from "@/components/whatsapp-icon";
 import { InstagramIcon } from "@/components/instagram-icon";
 import { FooterStatement } from "@/components/footer-statement";
 import {
@@ -77,31 +78,33 @@ export function SiteFooter() {
             <h2 className="text-[11px] font-semibold tracking-[0.25em] text-faint uppercase">
               Get in touch
             </h2>
-            <ul className="mt-5 space-y-2.5">
+            <ul className="mt-5 space-y-3">
               <li>
-                <a
+                <ContactLink
                   href={`mailto:${contactEmail}`}
-                  className="inline-flex items-center gap-2 text-sm text-muted transition-colors hover:text-brand"
-                >
-                  <Mail size={15} aria-hidden />
-                  {contactEmail}
-                </a>
+                  icon={<Mail size={16} />}
+                  label={contactEmail}
+                />
               </li>
               {phones.map((p) => (
                 <li key={p.e164}>
-                  <WhatsAppLink phone={p} />
+                  <ContactLink
+                    href={p.whatsappHref}
+                    external
+                    srPrefix="Chat with 2.0 on WhatsApp — "
+                    icon={<WhatsAppIcon className="h-[15px] w-[15px]" />}
+                    label={p.display}
+                    meta={p.region}
+                  />
                 </li>
               ))}
               <li>
-                <a
+                <ContactLink
                   href={instagramUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 text-sm text-muted transition-colors hover:text-brand"
-                >
-                  <InstagramIcon className="h-[15px] w-[15px]" />
-                  {instagramHandle}
-                </a>
+                  external
+                  icon={<InstagramIcon className="h-4 w-4" />}
+                  label={instagramHandle}
+                />
               </li>
               <li className="pt-1.5">
                 <Link href="/contact" className={actionText}>

@@ -6,6 +6,7 @@ import { AscentHeading } from "@/components/motion/ascent-heading";
 import { ParallaxMedia } from "@/components/motion/parallax-media";
 import { StatBand } from "@/components/motion/stat-band";
 import { PortfolioRail } from "@/components/portfolio-rail";
+import { ChapterMotion } from "@/components/motion/chapter-motion";
 import { WorkCollateral } from "@/components/work-collateral";
 import { chip, eyebrow, h1 } from "@/lib/ui";
 import { measure, sectionY, shell } from "@/lib/layout";
@@ -34,6 +35,7 @@ export function WorkGallery() {
   return (
     <section className={clsx("relative", sectionY)}>
       <PortfolioRail />
+      <ChapterMotion />
 
       <div className={shell}>
         {/* Intro */}
@@ -78,15 +80,20 @@ export function WorkGallery() {
               <article
                 key={project.slug}
                 id={project.slug}
+                data-chapter
                 className="relative scroll-mt-6"
               >
                 <div
                   aria-hidden
+                  data-chapter-glow
                   className="glow pointer-events-none -top-24 -right-40 -z-10 h-[30rem] w-[30rem]"
                   style={{ ["--glow" as string]: project.tint }}
                 />
 
-                <div className="grid gap-10 lg:grid-cols-12 lg:gap-14">
+                <div
+                  data-chapter-grid
+                  className="grid gap-10 lg:grid-cols-12 lg:gap-14"
+                >
                   {/* Identity — sticks while the evidence passes */}
                   <div className="lg:col-span-4">
                     <div className="lg:sticky lg:top-28">
@@ -94,6 +101,7 @@ export function WorkGallery() {
                         <div className="flex items-center gap-4">
                           <span
                             aria-hidden
+                            data-chapter-number
                             className="font-display text-[clamp(3rem,7vw,5rem)] leading-none font-extrabold tabular-nums"
                             style={{ color: project.tint }}
                           >

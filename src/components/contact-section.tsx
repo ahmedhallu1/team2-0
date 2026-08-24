@@ -4,7 +4,8 @@ import { useRef, useState } from "react";
 import { ArrowRight, CheckCircle2, Loader2, Mail } from "lucide-react";
 import { services, serviceOptions } from "@/lib/services";
 import { BrandLogo } from "@/components/brand-logo";
-import { WhatsAppLink } from "@/components/whatsapp-link";
+import { ContactLink } from "@/components/contact-link";
+import { WhatsAppIcon } from "@/components/whatsapp-icon";
 import { InstagramIcon } from "@/components/instagram-icon";
 import { Rise, RiseGroup } from "@/components/motion/reveal";
 import { AscentHeading } from "@/components/motion/ascent-heading";
@@ -127,31 +128,32 @@ export function ContactSection() {
               </RiseGroup>
 
               <Rise delay={0.1} className="mt-9 border-t border-line pt-8">
-                <div className="flex flex-col items-start gap-3.5">
-                  <a
+                <div className="flex flex-col items-start gap-4">
+                  <ContactLink
+                    size="lg"
                     href={`mailto:${contactEmail}`}
-                    className="inline-flex items-center gap-2 text-sm font-medium text-brand transition-opacity hover:opacity-80"
-                  >
-                    <Mail size={16} aria-hidden />
-                    {contactEmail}
-                  </a>
+                    icon={<Mail size={18} />}
+                    label={contactEmail}
+                  />
                   {phones.map((p) => (
-                    <WhatsAppLink
+                    <ContactLink
                       key={p.e164}
-                      phone={p}
                       size="lg"
-                      label="Chat on WhatsApp"
+                      href={p.whatsappHref}
+                      external
+                      srPrefix="Chat with 2.0 on WhatsApp — "
+                      icon={<WhatsAppIcon className="h-4 w-4" />}
+                      label={p.display}
+                      meta={p.region}
                     />
                   ))}
-                  <a
+                  <ContactLink
+                    size="lg"
                     href={instagramUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 text-sm font-medium text-brand transition-opacity hover:opacity-80"
-                  >
-                    <InstagramIcon className="h-4 w-4" />
-                    {instagramHandle}
-                  </a>
+                    external
+                    icon={<InstagramIcon className="h-[18px] w-[18px]" />}
+                    label={instagramHandle}
+                  />
                 </div>
                 <BrandLogo className="mt-10 hidden h-10 lg:block" />
               </Rise>

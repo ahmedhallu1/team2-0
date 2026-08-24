@@ -870,14 +870,36 @@ body {
 }
 
 /**
- * The service deck. Nothing is pinned — see act-deck.tsx for why sticky had to
- * go — so this only establishes the stacking order and warns the compositor
- * that the panels move.
+ * Stacked-card ascent. Each act pins a header-row lower than the last, so the
+ * sequence builds into a legible stack of tabs — every service's number and
+ * title stays on screen, nothing is hidden from keyboard or crawler, and there
+ * is no pinned region to trap the scroll.
+ *
+ * `--svc-step` is written from the header's measured height by stacked-acts.tsx;
+ * the value here is only a sensible starting point before that runs.
+ *
+ * The trailing spacer is load-bearing, not padding. A sticky box may only
+ * travel as far as the room left in its containing block's *content* box, so
+ * padding on the list buys nothing — the last card had no room at all, never
+ * pinned, and cards slid up past ones still stuck. A real last child extends
+ * the content box, which gives every card the same room to hold its place
+ * before the stack peels away in order.
  */
-.act-deck > li {
-  position: relative;
+.svc-stack {
+  --svc-top: 6.5rem;
+  --svc-step: 3.5rem;
 }
-.act-deck [data-act-panel] {
+@media (min-width: 1024px) {
+  .svc-stack__card {
+    position: sticky;
+    top: calc(var(--svc-top) + var(--svc-i, 0) * var(--svc-step));
+  }
+  .svc-stack__hold {
+    display: block;
+    height: 26rem;
+  }
+}
+.svc-stack [data-act-panel] {
   will-change: transform;
 }
 
@@ -1064,6 +1086,12 @@ dialog.lightbox[open]::backdrop {
   }
   .field__line {
     transition: none;
+  }
+  .svc-stack__card {
+    position: static;
+  }
+  .svc-stack__hold {
+    display: none;
   }
   .marquee {
     overflow-x: auto;
