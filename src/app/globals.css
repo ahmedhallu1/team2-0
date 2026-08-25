@@ -347,6 +347,25 @@ body {
 }
 
 /**
+ * For a glow tucked into a corner with a modest negative offset, the parent's
+ * `overflow-hidden` cuts through the gradient's interior rather than at its own
+ * transparent edge — the offset simply isn't large relative to the box, so the
+ * visible boundary still carries real opacity and reads as a hard rectangular
+ * seam. Moving the offset *doesn't* fix this: pushing the box further out moves
+ * the cut line closer to the gradient's bright centre, not further from it —
+ * verified by sampling rendered pixels at a range of offsets, where a bigger
+ * offset was consistently the more visible failure, not the safer one.
+ *
+ * A mask sidesteps the geometry entirely: it forces the glow to zero well
+ * inside its own box (30% of the radius here), so whatever offset a corner
+ * instance uses, the clip always lands in territory the mask already erased.
+ */
+.glow--tucked {
+  -webkit-mask-image: radial-gradient(closest-side, #000 12%, transparent 30%);
+  mask-image: radial-gradient(closest-side, #000 12%, transparent 30%);
+}
+
+/**
  * The editorial grid: rising vertical hairlines with a faint horizontal
  * rhythm, masked so it never reaches the type. The brand's "progress lines".
  */

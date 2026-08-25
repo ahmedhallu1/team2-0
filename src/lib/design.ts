@@ -13,7 +13,10 @@ export type DesignPiece = {
  * what a brand actually publishes. Deliberately a selection, not an archive.
  *
  * Ordered to alternate brand, palette and subject rather than grouping by
- * client, so the run reads as a range of work instead of one colour story.
+ * client, so the run reads as a range of work instead of one colour story —
+ * except where two pieces are the same campaign (a product shot and its
+ * matching portrait, two letters of one alphabet series), which sit next to
+ * each other on purpose so they read as the pair they are.
  */
 export const designPieces: DesignPiece[] = [
   {
@@ -29,10 +32,10 @@ export const designPieces: DesignPiece[] = [
     caption: "Bikini Mask launch",
   },
   {
-    src: "/work/design/food-content-series.jpg",
-    alt: "An overhead food shot arranged around a large letter R, from an alphabet content series",
-    brand: "Food & lifestyle",
-    caption: "Alphabet content series",
+    src: "/work/design/regina-letter-a.jpg",
+    alt: "An overhead food shot of a wood-fired pizza and two plated sides arranged around a large letter A, from Regina's alphabet menu series",
+    brand: "Regina",
+    caption: "Alphabet menu series — A",
   },
   {
     src: "/work/design/rose-berry-golden-box.jpg",
@@ -41,10 +44,22 @@ export const designPieces: DesignPiece[] = [
     caption: "Golden Box campaign",
   },
   {
+    src: "/work/design/rose-berry-golden-box-portrait.jpg",
+    alt: "A model in gold jewellery beside Arabic campaign copy for the Rose Berry Golden Box, 'be a star for every occasion'",
+    brand: "Rose Berry",
+    caption: "Golden Box — campaign portrait",
+  },
+  {
     src: "/work/design/vherb-range.jpg",
     alt: "The VHerb skincare range arranged on pink plinths",
     brand: "VHerb Skincare",
     caption: "Range on set",
+  },
+  {
+    src: "/work/design/regina-wordmark.jpg",
+    alt: "The Regina wordmark, with the N doubled inside a maroon column through the centre of the name",
+    brand: "Regina",
+    caption: "Brand identity — wordmark",
   },
   {
     src: "/work/design/rose-berry-national-day.jpg",
@@ -53,10 +68,22 @@ export const designPieces: DesignPiece[] = [
     caption: "Saudi National Day offer",
   },
   {
+    src: "/work/design/rose-berry-national-day-portrait.jpg",
+    alt: "A model beside green Arabic campaign copy for Rose Berry's Saudi National Day offer",
+    brand: "Rose Berry",
+    caption: "National Day — campaign portrait",
+  },
+  {
     src: "/work/design/rose-berry-gift-set.jpg",
     alt: "Rose Berry gift set — an open pink makeup box with mirror, styled among blossom",
     brand: "Rose Berry",
     caption: "Gift-set launch creative",
+  },
+  {
+    src: "/work/design/food-content-series.jpg",
+    alt: "An overhead food shot of a wood-fired pizza and two plated sides arranged around a large letter R, from Regina's alphabet menu series",
+    brand: "Regina",
+    caption: "Alphabet menu series — R",
   },
   {
     src: "/work/design/rose-berry-bridal-box.jpg",

@@ -23,7 +23,7 @@ export function DesignShowcase() {
     >
       <div
         aria-hidden
-        className="glow -z-10 -bottom-40 -left-40 h-[32rem] w-[32rem]"
+        className="glow glow--tucked -z-10 -bottom-40 -left-40 h-[32rem] w-[32rem]"
         style={{ ["--glow" as string]: "var(--lime-400)" }}
       />
       <div className={shell}>

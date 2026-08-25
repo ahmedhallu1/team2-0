@@ -61,7 +61,7 @@ export function AboutSection() {
     <section className={clsx("relative overflow-hidden", sectionY)}>
       <div
         aria-hidden
-        className="glow -z-10 -bottom-40 -left-40 h-[34rem] w-[34rem]"
+        className="glow glow--tucked -z-10 -bottom-40 -left-40 h-[34rem] w-[34rem]"
         style={{ ["--glow" as string]: "var(--lime-400)" }}
       />
 
