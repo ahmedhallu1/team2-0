@@ -34,6 +34,7 @@ function riseVar(distance: Distance): CSSProperties {
 export function Rise({
   children,
   as,
+  id,
   className,
   style,
   delay = 0,
@@ -43,6 +44,7 @@ export function Rise({
 }: {
   children: ReactNode;
   as?: ElementType;
+  id?: string;
   className?: string;
   style?: CSSProperties;
   delay?: number;
@@ -78,6 +80,7 @@ export function Rise({
     return (
       <Tag
         ref={ref}
+        id={id}
         className={clsx("enter-rise", className)}
         style={{ ["--enter-i" as string]: index, ...style }}
       >
@@ -89,6 +92,7 @@ export function Rise({
   return (
     <Tag
       ref={ref}
+      id={id}
       className={clsx("rise", className)}
       style={{ ...riseVar(distance), ...style }}
     >

@@ -1049,6 +1049,23 @@ dialog.lightbox[open]::backdrop {
      read as coming *from* it. An ease-in-out start looks like a slow wash. */
   animation: theme-reveal 620ms var(--ease-ascent) forwards;
 }
+/* Footer's "Start a conversation" jumps here when already on /contact —
+   the ring says "look, this" instead of landing with no acknowledgement. */
+@keyframes form-summon {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in oklab, var(--accent) 55%, transparent);
+  }
+  70% {
+    box-shadow: 0 0 0 14px color-mix(in oklab, var(--accent) 0%, transparent);
+  }
+  100% {
+    box-shadow: 0 0 0 0 color-mix(in oklab, var(--accent) 0%, transparent);
+  }
+}
+.js .form-summon-play {
+  animation: form-summon 1.1s var(--ease-ascent);
+}
+
 @keyframes theme-reveal {
   from {
     clip-path: circle(0 at var(--vt-x, 50%) var(--vt-y, 50%));

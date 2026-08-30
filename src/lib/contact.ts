@@ -37,7 +37,7 @@ function phone(region: string, display: string): PhoneContact {
 
 /** Every number we answer on. The first is the primary. */
 export const phones: PhoneContact[] = [
-  phone("Jordan", "+962 79 608 0454"),
+  phone("Egypt", "+20 100 220 0337"),
   phone("Egypt", "+20 109 901 9374"),
 ];
 

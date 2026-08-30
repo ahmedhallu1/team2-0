@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { ArrowUpRight, Mail } from "lucide-react";
 import { BrandLogo } from "@/components/brand-logo";
 import { ContactLink } from "@/components/contact-link";
@@ -26,6 +29,26 @@ const nav = [
 
 export function SiteFooter() {
   const year = new Date().getFullYear();
+  const onContactPage = usePathname() === "/contact";
+
+  // On any other page this is a plain link to the form. Landing there while
+  // you're already on /contact would just sit still with no feedback, so
+  // instead jump to the form and give it a visible nudge — the same place
+  // the button always claimed to go.
+  function summonForm(e: React.MouseEvent<HTMLAnchorElement>) {
+    if (!onContactPage) return;
+    e.preventDefault();
+    const form = document.getElementById("contact-form");
+    if (!form) return;
+    form.scrollIntoView({ behavior: "smooth", block: "start" });
+    form.classList.remove("form-summon-play");
+    void form.offsetWidth;
+    form.classList.add("form-summon-play");
+    document
+      .getElementById("name")
+      ?.focus({ preventScroll: true });
+  }
+
   return (
     <footer className="relative overflow-hidden border-t border-line bg-bg pt-16 pb-8 sm:pt-20">
       <div
@@ -107,7 +130,11 @@ export function SiteFooter() {
                 />
               </li>
               <li className="pt-1.5">
-                <Link href="/contact" className={actionText}>
+                <Link
+                  href="/contact#contact-form"
+                  onClick={summonForm}
+                  className={actionText}
+                >
                   Start a conversation
                   <ArrowUpRight
                     size={15}

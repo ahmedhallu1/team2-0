@@ -162,7 +162,10 @@ export function ContactSection() {
 
           {/* Inquiry form */}
           <div className="lg:col-span-7">
-            <Rise className="surface rounded-2xl p-5 shadow-[var(--shadow-md)] sm:p-8 lg:p-10">
+            <Rise
+              id="contact-form"
+              className="surface scroll-mt-28 rounded-2xl p-5 shadow-[var(--shadow-md)] sm:p-8 lg:p-10"
+            >
               {/* Progress and success are announced here; a failure instead
                   moves focus to the message, so it is never read twice. */}
               <p className="sr-only" role="status" aria-live="polite">
