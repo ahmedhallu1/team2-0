@@ -22,12 +22,15 @@ import { clsx } from "@/lib/clsx";
 export function AscentHeading({
   lines,
   as,
+  id,
   className,
   delay = 0,
   eager = false,
 }: {
   lines: ReactNode[];
   as?: ElementType;
+  /** For sections that point `aria-labelledby` at their own heading. */
+  id?: string;
   className?: string;
   delay?: number;
   /**
@@ -66,7 +69,7 @@ export function AscentHeading({
   );
 
   return (
-    <Tag ref={ref} className={clsx(eager && "enter-lines", className)}>
+    <Tag ref={ref} id={id} className={clsx(eager && "enter-lines", className)}>
       {lines.map((line, i) => (
         <Fragment key={i}>
           <AscentLine

@@ -23,6 +23,12 @@ const links = [
 
 export function SiteHeader() {
   const pathname = usePathname();
+  /**
+   * Proposal routes are presented full-screen in a meeting and carry their own
+   * minimal chrome. Bailing out here rather than in the root layout keeps this
+   * a one-line concern and leaves every other route untouched.
+   */
+  const immersive = pathname.startsWith("/proposals");
   const [compact, setCompact] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -164,6 +170,8 @@ export function SiteHeader() {
       window.removeEventListener("keydown", onKey);
     };
   }, [open]);
+
+  if (immersive) return null;
 
   return (
     <>

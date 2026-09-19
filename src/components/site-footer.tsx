@@ -29,7 +29,10 @@ const nav = [
 
 export function SiteFooter() {
   const year = new Date().getFullYear();
-  const onContactPage = usePathname() === "/contact";
+  const pathname = usePathname();
+  const onContactPage = pathname === "/contact";
+  /** Proposal routes close themselves — see the note in site-header.tsx. */
+  const immersive = pathname.startsWith("/proposals");
 
   // On any other page this is a plain link to the form. Landing there while
   // you're already on /contact would just sit still with no feedback, so
@@ -48,6 +51,8 @@ export function SiteFooter() {
       .getElementById("name")
       ?.focus({ preventScroll: true });
   }
+
+  if (immersive) return null;
 
   return (
     <footer className="relative overflow-hidden border-t border-line bg-bg pt-16 pb-8 sm:pt-20">
