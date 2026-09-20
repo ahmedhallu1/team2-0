@@ -50,6 +50,49 @@ export const DEFAULT_STATE: CupState = {
 /** Columns are drawn at this width in design px — the print's sampling rate. */
 const COLUMN = 1.5;
 
+/**
+ * The unrolled label strips, painted once and shared by every cup on the page.
+ *
+ * They are a function of design-space constants only — the circumference and
+ * the band's height never change — so an instance that paints its own, or
+ * repaints them when its canvas resizes, can only ever produce the identical
+ * bitmap again. Each strip is about 1.7 megapixels, so the page's two scenes
+ * were between them holding ~40MB of duplicate canvas and reallocating all of
+ * it on every ResizeObserver callback. On a desktop that is merely wasteful;
+ * on a phone, where canvas memory is budgeted and reclaimed lazily, churning
+ * tens of megabytes during layout is a good way to have the tab quietly
+ * reloaded underneath the visitor.
+ *
+ * The generation counter is what lets a renderer notice the strips were
+ * repainted — when a webfont lands — and drop the frame it composed from the
+ * old ones.
+ */
+let sharedStrips: Map<LabelKind, Strip> | null = null;
+let stripGeneration = 0;
+
+function strips(): Map<LabelKind, Strip> {
+  if (sharedStrips) return sharedStrips;
+  const { top, bottom } = bandBounds();
+  const circumference = 2 * Math.PI * CUP.rTop;
+  const height = bottom - top;
+  const built = new Map<LabelKind, Strip>();
+  (["blank", "kuphub", "linkup"] as LabelKind[]).forEach((kind) => {
+    built.set(kind, paintStrip(kind, circumference, height));
+  });
+  sharedStrips = built;
+  return built;
+}
+
+/**
+ * Throw the strips away so the next frame repaints them. Called once the
+ * display face has actually loaded, since canvas text falls back to a system
+ * font until then.
+ */
+export function refreshStrips(): void {
+  sharedStrips = null;
+  stripGeneration += 1;
+}
+
 export class CupRenderer {
   private ctx: CanvasRenderingContext2D;
   /**
@@ -75,7 +118,7 @@ export class CupRenderer {
   private base: HTMLCanvasElement | null = null;
   private baseCtx: CanvasRenderingContext2D | null = null;
   private baseKey = "";
-  private strips = new Map<LabelKind, Strip>();
+  private stripGen = -1;
   private body = bodyShape();
   private dpr = 1;
   private cssW = 0;
@@ -90,16 +133,11 @@ export class CupRenderer {
     this.ctx = ctx;
   }
 
-  /** Repaint the strips — after fonts load, and whenever the theme flips. */
-  buildStrips(): void {
-    const { top, bottom } = bandBounds();
-    const circumference = 2 * Math.PI * CUP.rTop;
-    const height = bottom - top;
-    this.strips.clear();
-    (["blank", "kuphub", "linkup"] as LabelKind[]).forEach((kind) => {
-      this.strips.set(kind, paintStrip(kind, circumference, height));
-    });
-    this.invalidate();
+  /** Drop this cup's cached frame if the shared strips have been repainted. */
+  private syncStrips(): void {
+    if (this.stripGen === stripGeneration) return;
+    this.stripGen = stripGeneration;
+    this.baseKey = "";
   }
 
   /** Fit the design space into the element's box. Call on mount and resize. */
@@ -138,6 +176,7 @@ export class CupRenderer {
 
   draw(state: CupState): void {
     if (!this.cssW || !this.cssH || !this.base || !this.baseCtx) return;
+    this.syncStrips();
 
     // Everything except the steam and the lid is a function of these, so it
     // only has to be composed again when one of them moves.
@@ -290,7 +329,7 @@ export class CupRenderer {
     e: number,
     alpha: number,
   ): void {
-    const strip = this.strips.get(kind);
+    const strip = strips().get(kind);
     const buf = this.scratchCtx;
     if (!strip || !buf || !this.scratch || alpha <= 0) return;
 

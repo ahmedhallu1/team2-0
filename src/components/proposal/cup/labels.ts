@@ -32,8 +32,15 @@ export const PALETTE = {
   cream: "#f7f3ea",
 } as const;
 
-/** Resolution of the unrolled strip, in device pixels per design pixel. */
-const STRIP_SCALE = 2.4;
+/**
+ * Resolution of the unrolled strip, in device pixels per design pixel.
+ *
+ * Only about a fifth of the strip is legible once it is wrapped, and that
+ * fifth lands on roughly 250 screen pixels, so 2× is already oversampling the
+ * part anyone can read. Every extra tenth here costs real canvas memory on a
+ * phone for detail that is being squeezed around the side of a cylinder.
+ */
+const STRIP_SCALE = 2;
 
 export type Strip = { canvas: HTMLCanvasElement; width: number; height: number };
 

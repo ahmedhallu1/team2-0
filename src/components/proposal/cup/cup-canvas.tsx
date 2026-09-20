@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { prefersReducedMotion } from "@/lib/motion/gsap";
-import { CupRenderer, type CupState } from "./renderer";
+import { CupRenderer, refreshStrips, type CupState } from "./renderer";
 import { clsx } from "@/lib/clsx";
 
 /**
@@ -38,7 +38,22 @@ export function CupCanvas({
     try {
       renderer = new CupRenderer(canvas);
     } catch {
-      return; // No 2D context: the section's static fallback carries the meaning.
+      /**
+       * No 2D context — a browser with canvas disabled, or a phone under
+       * enough memory pressure to refuse one. Everything the scene says is
+       * real text either way, so collapse it to the same layout a
+       * reduced-motion visitor gets rather than leaving a viewport-sized hole
+       * where the cup was going to be.
+       */
+      const scroller = wrap.closest<HTMLElement>(".cup-scroll");
+      if (scroller) {
+        scroller.dataset.still = "true";
+        scroller
+          .querySelector("[data-cup-beats]")
+          ?.setAttribute("data-still", "true");
+      }
+      wrap.style.display = "none";
+      return;
     }
 
     const reduced = prefersReducedMotion();
@@ -95,8 +110,11 @@ export function CupCanvas({
     const resize = () => {
       const rect = wrap.getBoundingClientRect();
       if (!rect.width || !rect.height) return;
+      // Deliberately does not touch the label strips. They are painted from
+      // design-space constants, so a resize cannot change them — and this
+      // callback fires often enough (fonts, orientation, the address bar) that
+      // reallocating them here was churning tens of megabytes of canvas.
       renderer.resize(rect.width, rect.height, Math.min(window.devicePixelRatio || 1, 2));
-      renderer.buildStrips();
       paint();
     };
 
@@ -104,12 +122,14 @@ export function CupCanvas({
     const ro = new ResizeObserver(resize);
     ro.observe(wrap);
 
-    // Canvas text falls back to a system face until the webfont is ready.
+    // Canvas text falls back to a system face until the webfont is ready, so
+    // the strips are repainted once it lands — for every cup on the page, not
+    // just this one.
     let cancelled = false;
     document.fonts?.ready
       .then(() => {
         if (cancelled) return;
-        renderer.buildStrips();
+        refreshStrips();
         paint();
       })
       .catch(() => {});
