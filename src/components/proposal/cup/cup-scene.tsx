@@ -3,6 +3,7 @@
 import { useMemo, useRef } from "react";
 import { gsap, useGSAP, ScrollTrigger, prefersReducedMotion } from "@/lib/motion/gsap";
 import { CupCanvas } from "./cup-canvas";
+import { popSetter, type Pop } from "./setters";
 import type { CupState } from "./renderer";
 import { clsx } from "@/lib/clsx";
 import { shell } from "@/lib/layout";
@@ -154,10 +155,9 @@ export function CupScene() {
           o: gsap.quickSetter(b, "opacity") as (v: number) => void,
           y: gsap.quickSetter(b, "y", "px") as (v: number) => void,
         })),
-        layer: layers.map((l) => ({
-          o: gsap.quickSetter(l, "opacity") as (v: number) => void,
-          s: gsap.quickSetter(l, "scale") as (v: number) => void,
-        })),
+        // See setters.ts — `quickSetter` cannot express GSAP's compound
+        // `scale` alias, and trying throws on every frame in WebKit.
+        layer: layers.map((l) => popSetter(l)) as Pop[],
       };
 
       const apply = (p: number) => {
@@ -173,8 +173,7 @@ export function CupScene() {
 
         layers.forEach((_, i) => {
           const a = ramp(p, 0.78 + i * 0.035, 0.87 + i * 0.035);
-          setters.layer[i].o(a);
-          setters.layer[i].s(0.86 + a * 0.14);
+          setters.layer[i](a, 0.86 + a * 0.14);
         });
       };
 

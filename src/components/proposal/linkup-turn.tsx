@@ -4,6 +4,7 @@ import { useRef } from "react";
 import { gsap, useGSAP, ScrollTrigger, prefersReducedMotion } from "@/lib/motion/gsap";
 import { CupCanvas } from "@/components/proposal/cup/cup-canvas";
 import type { CupState } from "@/components/proposal/cup/renderer";
+import { popSetter, type Pop } from "@/components/proposal/cup/setters";
 import { eyebrow } from "@/lib/ui";
 import { shell } from "@/lib/layout";
 import { clsx } from "@/lib/clsx";
@@ -104,10 +105,9 @@ export function LinkUpTurn() {
       const set = {
         kup: kup ? gsap.quickSetter(kup, "opacity") : null,
         link: link ? gsap.quickSetter(link, "opacity") : null,
-        buyers: buyers.map((b) => ({
-          o: gsap.quickSetter(b, "opacity") as (v: number) => void,
-          s: gsap.quickSetter(b, "scale") as (v: number) => void,
-        })),
+        // See setters.ts — the compound `scale` alias cannot go through
+        // `quickSetter` without throwing in WebKit.
+        buyers: buyers.map((b) => popSetter(b)) as Pop[],
       };
 
       const apply = (p: number) => {
@@ -122,8 +122,7 @@ export function LinkUpTurn() {
           // In on the blank, out again as LinkUp's own mark lands.
           const a =
             ramp(p, 0.36 + i * 0.025, 0.47 + i * 0.025) * (1 - ramp(p, 0.66, 0.8));
-          set.buyers[i].o(a);
-          set.buyers[i].s(0.82 + a * 0.18);
+          set.buyers[i](a, 0.82 + a * 0.18);
         });
       };
 
