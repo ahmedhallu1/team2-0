@@ -28,6 +28,8 @@ export function Compare() {
   const [at, setAt] = useState(52);
   const wrap = useRef<HTMLDivElement>(null);
   const nudged = useRef(false);
+  /** Ours, not the browser's — see `onPointerDown`. */
+  const dragging = useRef(false);
 
   /**
    * A control nobody touches proves nothing, so the handle demonstrates itself
@@ -83,13 +85,89 @@ export function Compare() {
   /** Any deliberate move cancels the hint for good. */
   function move(value: number) {
     nudged.current = true;
-    setAt(value);
+    setAt(Math.max(0, Math.min(100, value)));
+  }
+
+  /**
+   * The divider is dragged with pointer events on the frame, not by the range
+   * input underneath it.
+   *
+   * The range is still there, and still does the keyboard and screen-reader
+   * work — but it cannot be the drag target. An `opacity: 0` range stretched
+   * over a box hit-tests only on its *thumb* in Safari, so on an iPhone the
+   * whole frame was dead to touch and the comparison simply would not move.
+   * Pointer events hit the element you actually touched, are captured for the
+   * length of the gesture, and behave identically for mouse, pen and finger.
+   *
+   * `touch-action: pan-y` on the frame (see globals.css) is what makes this
+   * cooperate with the page: the browser keeps vertical scrolling, and hands
+   * us the horizontal gesture. If it decides mid-gesture that the visitor is
+   * scrolling after all, it sends `pointercancel` and the drag ends.
+   */
+  function fromClientX(clientX: number) {
+    const el = wrap.current;
+    if (!el) return;
+    const box = el.getBoundingClientRect();
+    if (!box.width) return;
+    move(((clientX - box.left) / box.width) * 100);
+  }
+
+  function onPointerDown(event: React.PointerEvent<HTMLDivElement>) {
+    dragging.current = true;
+    fromClientX(event.clientX);
+    // Capture keeps the gesture alive past the frame's edges, but it is an
+    // enhancement, not the mechanism: it throws for any pointer the browser
+    // does not consider active, and gating the drag on it meant one throw
+    // took the whole interaction out.
+    try {
+      wrap.current?.setPointerCapture(event.pointerId);
+    } catch {
+      /* no capture — the drag still works inside the frame */
+    }
+  }
+
+  function onPointerMove(event: React.PointerEvent<HTMLDivElement>) {
+    if (!dragging.current) return;
+    fromClientX(event.clientX);
+  }
+
+  function endDrag(event: React.PointerEvent<HTMLDivElement>) {
+    dragging.current = false;
+    try {
+      const el = wrap.current;
+      if (el?.hasPointerCapture(event.pointerId)) {
+        el.releasePointerCapture(event.pointerId);
+      }
+    } catch {
+      /* nothing to release */
+    }
   }
 
   return (
     <div>
+      {/*
+        The two labels sit above the frame rather than on it. Overlaid, they
+        landed on whatever the mockup happened to have in that corner — on a
+        phone the "Direction" chip printed straight over the proposed frame's
+        own "Daily" line. Each label still sits over the half it names, so
+        nothing is lost by moving them out of the artwork.
+      */}
+      <div className="mb-3 flex items-center justify-between gap-4">
+        <span className="text-[10px] font-semibold tracking-[0.18em] text-muted uppercase sm:text-xs">
+          {comparison.today.label}
+        </span>
+        <span className="text-[10px] font-semibold tracking-[0.18em] text-brand uppercase sm:text-xs">
+          One possible direction
+        </span>
+      </div>
+
       <div
         ref={wrap}
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={endDrag}
+        onPointerCancel={endDrag}
+        onPointerLeave={endDrag}
         className="compare concept relative aspect-square w-full max-w-[34rem] border border-line"
       >
         {/* Proposed — the full frame, uncovered as the handle moves left. */}
@@ -121,19 +199,6 @@ export function Compare() {
           </span>
         </span>
 
-        {/* Which side is which — always on, never a guess. */}
-        <span
-          aria-hidden
-          className="pointer-events-none absolute top-3 left-3 z-20 rounded-full bg-bg/85 px-2.5 py-1 text-[10px] font-semibold tracking-[0.14em] text-muted uppercase backdrop-blur-sm"
-        >
-          {comparison.today.label}
-        </span>
-        <span
-          aria-hidden
-          className="pointer-events-none absolute top-3 right-3 z-20 rounded-full bg-accent px-2.5 py-1 text-[10px] font-semibold tracking-[0.14em] text-on-accent uppercase"
-        >
-          Direction
-        </span>
       </div>
 
       <dl className="mt-6 grid gap-5 sm:grid-cols-2">

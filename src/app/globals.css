@@ -1247,10 +1247,22 @@ dialog.lightbox[open]::backdrop {
    * focusable, arrow-key operable and announced correctly, which is three
    * behaviours we would otherwise have had to build badly.
    */
+  /**
+   * `pan-y` is load-bearing: it tells the browser to keep vertical scrolling
+   * for itself and hand the horizontal gesture to our pointer handlers, so a
+   * drag moves the divider and a swipe still scrolls the page.
+   */
   .compare {
     position: relative;
     touch-action: pan-y;
+    cursor: ew-resize;
   }
+  /**
+   * The range does the keyboard and screen-reader work and nothing else.
+   * `pointer-events: none` is deliberate — see the note in compare.tsx: a
+   * transparent range stretched over the frame hit-tests only on its thumb in
+   * Safari, which left the whole comparison unmovable by touch on iOS.
+   */
   .compare__range {
     position: absolute;
     inset: 0;
@@ -1258,21 +1270,10 @@ dialog.lightbox[open]::backdrop {
     width: 100%;
     height: 100%;
     margin: 0;
-    cursor: ew-resize;
     opacity: 0;
+    pointer-events: none;
     -webkit-appearance: none;
     appearance: none;
-    background: transparent;
-  }
-  .compare__range::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    width: 48px;
-    height: 100%;
-  }
-  .compare__range::-moz-range-thumb {
-    width: 48px;
-    height: 100%;
-    border: 0;
     background: transparent;
   }
   .compare__range:focus-visible ~ .compare__handle {
