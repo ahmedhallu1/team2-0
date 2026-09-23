@@ -7,8 +7,10 @@ import { SectionHead } from "@/components/proposal/section-head";
 import { ConceptTile } from "@/components/proposal/concept-tile";
 import { Compare } from "@/components/proposal/compare";
 import { Rise } from "@/components/motion/reveal";
-import { kuphubFeed } from "@/lib/proposals/kuphub";
-import { sectionY, shell } from "@/lib/layout";
+import { CurrentFeed } from "@/components/proposal/current-feed";
+import { ContentSystem } from "@/components/proposal/content-system";
+import { kuphubCurrent, kuphubFeed } from "@/lib/proposals/kuphub";
+import { proposalY, shell } from "@/lib/layout";
 import { clsx } from "@/lib/clsx";
 
 /**
@@ -46,8 +48,9 @@ export function FeedConcept() {
   return (
     <section
       id="feed"
+      data-zone="kuphub"
       aria-labelledby="feed-heading"
-      className={clsx("relative border-t border-line", sectionY)}
+      className={clsx("relative border-t border-line", proposalY)}
     >
       <div
         aria-hidden
@@ -71,7 +74,17 @@ export function FeedConcept() {
           }
         />
 
+        {/* What is on the feed today — their posts, unretouched. */}
+        <CurrentFeed
+          className="mt-12"
+          label="On the feed now"
+          posts={kuphubCurrent}
+        />
+
         <div ref={grid} className="mt-14">
+          <p className="mb-5 text-[11px] font-semibold tracking-[0.28em] text-brand uppercase">
+            The same month, designed as one system
+          </p>
           <div className="feed-scroll no-scrollbar sm:grid sm:grid-cols-3 sm:gap-2.5 lg:gap-3">
             {kuphubFeed.map((post) => (
               <ConceptTile key={post.id} post={post} />
@@ -136,6 +149,8 @@ export function FeedConcept() {
             <Compare />
           </div>
         </div>
+
+        <ContentSystem className="mt-16" />
       </div>
     </section>
   );

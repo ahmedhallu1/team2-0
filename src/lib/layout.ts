@@ -11,3 +11,10 @@ export const measure = "max-w-[42rem]";
 
 /** Vertical rhythm for a standard section. */
 export const sectionY = "py-20 sm:py-24 lg:py-32";
+
+/**
+ * Tighter rhythm for the proposal routes. The page is presented by scrolling
+ * through it in a meeting, where the site's generous section spacing turns
+ * into seconds of empty screen between every point being made.
+ */
+export const proposalY = "py-14 sm:py-16 lg:py-20";

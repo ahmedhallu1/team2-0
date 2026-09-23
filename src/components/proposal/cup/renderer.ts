@@ -47,8 +47,41 @@ export const DEFAULT_STATE: CupState = {
   light: false,
 };
 
-/** Columns are drawn at this width in design px — the print's sampling rate. */
-const COLUMN = 1.5;
+/**
+ * How many device pixels each sampled column of the print should cover.
+ *
+ * The wrap is the expensive part of a frame — one `drawImage` per column — and
+ * the columns only have to be fine enough that the 1.1px overlap hides the
+ * seams. Sampling per *device* pixel rather than per design pixel means a cup
+ * drawn small on a phone does proportionally less work, instead of paying the
+ * same couple of hundred draws it would at desktop size.
+ */
+const DEVICE_PX_PER_COLUMN = 3;
+
+/** Never sample finer or coarser than this, in design px. */
+const COLUMN_MIN = 1.2;
+const COLUMN_MAX = 7;
+
+/**
+ * Adaptive quality.
+ *
+ * The cup is scrubbed, so every scroll frame moves the rotation and forces the
+ * printed body to be composed again. On a fast machine that is comfortably
+ * inside a frame; on an ordinary laptop or an older phone it is not, and the
+ * scroll judders. Rather than pick one quality and hope, the renderer times
+ * its own compose and steps down when it cannot keep up:
+ *
+ *   0 — full: sample finely, rotate continuously.
+ *   1 — coarse: sample about half as finely. Visually near-identical.
+ *   2 — stepped: quantise the rotation to 24 positions a turn, so the body is
+ *       recomposed a couple of dozen times across the whole scene instead of
+ *       once a frame. The cup steps rather than glides, which reads as a
+ *       slightly lower frame rate rather than as a broken animation.
+ *
+ * It only ever steps down. Oscillating between levels would be more visible
+ * than either level on its own.
+ */
+const COMPOSE_BUDGET_MS = [9, 18] as const;
 
 /**
  * The unrolled label strips, painted once and shared by every cup on the page.
@@ -119,6 +152,13 @@ export class CupRenderer {
   private baseCtx: CanvasRenderingContext2D | null = null;
   private baseKey = "";
   private stripGen = -1;
+  /** Static, so they are composed once and blitted: see `shade`. */
+  private shading: HTMLCanvasElement | null = null;
+  private shadingScreen: HTMLCanvasElement | null = null;
+  /** Rolling cost of a compose, and the quality level it has driven us to. */
+  private composeMs = 0;
+  private quality = 0;
+  private samples = 0;
   private body = bodyShape();
   private dpr = 1;
   private cssW = 0;
@@ -167,6 +207,9 @@ export class CupRenderer {
     this.base.width = this.canvas.width;
     this.base.height = this.canvas.height;
     this.baseKey = "";
+    // Baked against the old transform — they have to go.
+    this.shading = null;
+    this.shadingScreen = null;
   }
 
   /** A repaint of the strips invalidates everything composed from them. */
@@ -178,21 +221,28 @@ export class CupRenderer {
     if (!this.cssW || !this.cssH || !this.base || !this.baseCtx) return;
     this.syncStrips();
 
+    // At the lowest quality level the rotation is snapped to 24 positions a
+    // turn, which is what turns "compose every frame" into "compose two dozen
+    // times across the whole scene".
+    const spin =
+      this.quality >= 2 ? Math.round(state.spin * 24) / 24 : state.spin;
+
     // Everything except the steam and the lid is a function of these, so it
     // only has to be composed again when one of them moves.
     const key = [
-      state.spin.toFixed(4),
+      spin.toFixed(4),
       state.blend.toFixed(3),
       state.label,
       state.nextLabel,
       state.lift.toFixed(3),
       state.lid.toFixed(3),
-      state.light ? "l" : "d",
     ].join("|");
 
     if (key !== this.baseKey) {
       this.baseKey = key;
-      this.composeBase(state);
+      const started = performance.now();
+      this.composeBase({ ...state, spin });
+      this.recordCompose(performance.now() - started);
     }
 
     const ctx = this.ctx;
@@ -210,6 +260,32 @@ export class CupRenderer {
     this.steam(state);
     this.lid(state);
     ctx.restore();
+  }
+
+  /**
+   * Watch what a compose actually costs on this machine and step down if it is
+   * too slow. The first few frames are ignored: they include first paint and
+   * the strips being rasterised, and judging the device on those would drop
+   * the quality on hardware that is perfectly capable.
+   */
+  private recordCompose(ms: number): void {
+    this.samples += 1;
+    if (this.samples < 6) return;
+    this.composeMs = this.composeMs ? this.composeMs * 0.85 + ms * 0.15 : ms;
+    if (this.quality < 2 && this.composeMs > COMPOSE_BUDGET_MS[1]) {
+      this.quality = 2;
+    } else if (this.quality < 1 && this.composeMs > COMPOSE_BUDGET_MS[0]) {
+      this.quality = 1;
+      this.composeMs = 0;
+      this.samples = 0;
+    }
+  }
+
+  /** Column width in design px, from the on-screen size and the quality level. */
+  private column(): number {
+    const perDesignPx = this.scale * this.dpr || 1;
+    const ideal = (DEVICE_PX_PER_COLUMN / perDesignPx) * (this.quality >= 1 ? 1.8 : 1);
+    return Math.min(COLUMN_MAX, Math.max(COLUMN_MIN, ideal));
   }
 
   /** Shadow, printed body and open mouth, composed into the cached layer. */
@@ -302,7 +378,7 @@ export class CupRenderer {
       }
     }
 
-    this.shade(state);
+    this.shade();
     ctx.restore();
 
     // A drawn edge keeps the silhouette crisp once the fill is shaded.
@@ -340,6 +416,7 @@ export class CupRenderer {
 
     const sw = strip.canvas.width;
     const sh = strip.canvas.height;
+    const COLUMN = this.column();
     const overlap = COLUMN + 1.1;
 
     // Walk the visible width of the cup. `s` is the column's position across
@@ -384,52 +461,90 @@ export class CupRenderer {
     ctx.restore();
   }
 
-  /** Cylindrical lighting: a key from the upper left, a rim light opposite. */
-  private shade(state: CupState): void {
+  /**
+   * Cylindrical lighting: a key from the upper left, a rim light opposite.
+   *
+   * Composed once into two bitmaps and blitted thereafter. The light on this
+   * cup never changes — the proposal is art-directed in one fixed palette, so
+   * there is no theme to follow — which makes six gradients and four
+   * full-height composited fills per frame pure repetition. The two layers are
+   * separate because they need different composite modes.
+   */
+  private shade(): void {
+    this.buildShading();
     const ctx = this.ctx;
+    if (!this.shading || !this.shadingScreen) return;
+    ctx.save();
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.globalCompositeOperation = "multiply";
+    ctx.drawImage(this.shading, 0, 0);
+    ctx.globalCompositeOperation = "screen";
+    ctx.drawImage(this.shadingScreen, 0, 0);
+    ctx.restore();
+  }
+
+  /** Paint the two lighting layers. Re-run only when the canvas is resized. */
+  private buildShading(): void {
+    if (this.shading && this.shadingScreen) return;
     const left = CUP.cx - CUP.rTop;
     const right = CUP.cx + CUP.rTop;
+    const top = CUP.yTop - 40;
+    const height = CUP.yBot - CUP.yTop + 80;
 
-    ctx.save();
-    ctx.globalCompositeOperation = "multiply";
-    const g = ctx.createLinearGradient(left, 0, right, 0);
-    g.addColorStop(0, "rgba(22,22,26,0.88)");
-    g.addColorStop(0.1, "rgba(92,92,100,0.42)");
-    g.addColorStop(0.3, "rgba(255,255,255,0)");
-    g.addColorStop(0.58, "rgba(140,140,150,0.16)");
-    g.addColorStop(0.82, "rgba(66,66,74,0.46)");
-    g.addColorStop(1, "rgba(24,24,28,0.8)");
-    ctx.fillStyle = g;
-    ctx.fillRect(left - 10, CUP.yTop - 40, CUP.rTop * 2 + 20, CUP.yBot - CUP.yTop + 80);
-    ctx.restore();
+    const layer = () => {
+      const c = document.createElement("canvas");
+      c.width = this.canvas.width;
+      c.height = this.canvas.height;
+      const x = c.getContext("2d");
+      if (x) {
+        x.setTransform(this.dpr, 0, 0, this.dpr, 0, 0);
+        x.translate(this.offsetX, this.offsetY);
+        x.scale(this.scale, this.scale);
+      }
+      return { canvas: c, ctx: x };
+    };
 
-    // Specular band — narrow, and on the same side as the key.
-    ctx.save();
-    ctx.globalCompositeOperation = "screen";
-    const s = ctx.createLinearGradient(left, 0, right, 0);
-    s.addColorStop(0.14, "rgba(255,255,255,0)");
-    s.addColorStop(0.27, "rgba(255,255,255,0.21)");
-    s.addColorStop(0.4, "rgba(255,255,255,0)");
-    ctx.fillStyle = s;
-    ctx.fillRect(left, CUP.yTop - 40, CUP.rTop * 2, CUP.yBot - CUP.yTop + 80);
+    // Multiply: the body's falloff to either silhouette edge.
+    const mul = layer();
+    if (mul.ctx) {
+      const g = mul.ctx.createLinearGradient(left, 0, right, 0);
+      g.addColorStop(0, "rgba(22,22,26,0.88)");
+      g.addColorStop(0.1, "rgba(92,92,100,0.42)");
+      g.addColorStop(0.3, "rgba(255,255,255,0)");
+      g.addColorStop(0.58, "rgba(140,140,150,0.16)");
+      g.addColorStop(0.82, "rgba(66,66,74,0.46)");
+      g.addColorStop(1, "rgba(24,24,28,0.8)");
+      mul.ctx.fillStyle = g;
+      mul.ctx.fillRect(left - 10, top, CUP.rTop * 2 + 20, height);
+    }
 
-    // Rim light down the right edge separates the cup from a dark page.
-    if (!state.light) {
-      const rim = ctx.createLinearGradient(right - 30, 0, right, 0);
+    // Screen: the specular band, the rim light, and the bounce off the table.
+    const scr = layer();
+    if (scr.ctx) {
+      const x = scr.ctx;
+      const spec = x.createLinearGradient(left, 0, right, 0);
+      spec.addColorStop(0.14, "rgba(255,255,255,0)");
+      spec.addColorStop(0.27, "rgba(255,255,255,0.21)");
+      spec.addColorStop(0.4, "rgba(255,255,255,0)");
+      x.fillStyle = spec;
+      x.fillRect(left, top, CUP.rTop * 2, height);
+
+      const rim = x.createLinearGradient(right - 30, 0, right, 0);
       rim.addColorStop(0, "rgba(255,255,255,0)");
       rim.addColorStop(0.72, "rgba(255,255,255,0.16)");
       rim.addColorStop(1, "rgba(255,255,255,0.46)");
-      ctx.fillStyle = rim;
-      ctx.fillRect(right - 30, CUP.yTop, 30, CUP.yBot - CUP.yTop);
+      x.fillStyle = rim;
+      x.fillRect(right - 30, CUP.yTop, 30, CUP.yBot - CUP.yTop);
+
+      const bounce = x.createLinearGradient(0, CUP.yBot - 60, 0, CUP.yBot);
+      bounce.addColorStop(0, "rgba(255,255,255,0)");
+      bounce.addColorStop(1, "rgba(255,255,255,0.1)");
+      x.fillStyle = bounce;
+      x.fillRect(left, CUP.yBot - 60, CUP.rTop * 2, 60);
     }
 
-    // Bounce off the table.
-    const bounce = ctx.createLinearGradient(0, CUP.yBot - 60, 0, CUP.yBot);
-    bounce.addColorStop(0, "rgba(255,255,255,0)");
-    bounce.addColorStop(1, "rgba(255,255,255,0.1)");
-    ctx.fillStyle = bounce;
-    ctx.fillRect(left, CUP.yBot - 60, CUP.rTop * 2, 60);
-    ctx.restore();
+    this.shading = mul.canvas;
+    this.shadingScreen = scr.canvas;
   }
 
   /** What the lid was covering. Only drawn once it starts to lift. */

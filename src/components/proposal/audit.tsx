@@ -7,7 +7,7 @@ import { DUR, EASE, STAGGER, TRIGGER_START } from "@/lib/motion/tokens";
 import { SectionHead } from "@/components/proposal/section-head";
 import { Rise } from "@/components/motion/reveal";
 import { observations, type Observation } from "@/lib/proposals/kuphub";
-import { sectionY, shell } from "@/lib/layout";
+import { proposalY, shell } from "@/lib/layout";
 import { clsx } from "@/lib/clsx";
 
 /**
@@ -33,7 +33,7 @@ function ObservationCard({ item, index }: { item: Observation; index: number }) 
   return (
     <li
       data-obs
-      className="group relative flex flex-col rounded-xl border border-line bg-surface p-6 transition-colors duration-500 hover:border-line-2 sm:p-7"
+      className="group relative flex w-[78%] shrink-0 snap-center flex-col rounded-xl border border-line bg-surface p-6 transition-colors duration-500 hover:border-line-2 sm:w-auto sm:p-7"
     >
       <div className="flex items-center gap-3">
         <span className="font-display text-xs font-bold text-faint tabular-nums">
@@ -205,8 +205,9 @@ export function Audit() {
   return (
     <section
       id="audit"
+      data-zone="both"
       aria-labelledby="audit-heading"
-      className={clsx("relative border-t border-line bg-surface-2/20", sectionY)}
+      className={clsx("relative border-t border-line bg-surface-2/20", proposalY)}
     >
       <div className={shell}>
         <SectionHead
@@ -228,7 +229,7 @@ export function Audit() {
         <Rise>
           <ul
             ref={ref}
-            className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-5"
+            className="no-scrollbar mt-6 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-1 sm:grid sm:snap-none sm:grid-cols-2 sm:overflow-visible lg:grid-cols-4 lg:gap-5"
           >
             {observations
               .filter((o) => o.id !== "domains")

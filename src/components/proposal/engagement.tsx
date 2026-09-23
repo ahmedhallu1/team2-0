@@ -1,101 +1,66 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
-import { SectionHead } from "@/components/proposal/section-head";
 import { Rise, RiseGroup } from "@/components/motion/reveal";
 import { engagement } from "@/lib/proposals/kuphub";
 import { actionText } from "@/lib/ui";
-import { sectionY, shell } from "@/lib/layout";
 import { clsx } from "@/lib/clsx";
 
 /**
- * How the work would actually run.
+ * How the work would run — now a block inside the engine chapter rather than a
+ * chapter of its own.
  *
- * Mapped onto the four stages already published on /process, so the proposal
- * and the website tell the same story — a prospect who checks will find the
- * same four words, not a second methodology invented for the pitch. The stage
- * names are theirs; the titles and the bodies are this engagement's.
+ * The four stages are the ones already published on elevate2point0.com/process,
+ * so the proposal and the site tell the same story and nothing here is a
+ * special promise invented for one meeting. Everything that used to sit under
+ * it as a six-item list has been reduced to the one line that was actually
+ * doing the work.
  *
  * A server component: it is a list, and a list does not need hydration.
  */
-export function Engagement() {
+export function Engagement({ className }: { className?: string }) {
   return (
-    <section
-      id="engagement"
-      aria-labelledby="engagement-heading"
-      className={clsx("relative border-t border-line", sectionY)}
-    >
-      <div className={shell}>
-        <SectionHead
-          n="10"
-          label="What we'd actually do"
-          headingId="engagement-heading"
-          lines={["The same four steps", "we run on everything."]}
-          lede={
-            <>
-              This is 2.0&apos;s standard way of working, applied to these two
-              businesses — the same four stages published on our own site, so
-              nothing here is a special promise made for one meeting.
-            </>
-          }
-        >
-          <Rise className="mt-7">
-            <Link href="/process" className={actionText}>
-              See how we work
-              <ArrowUpRight
-                size={15}
-                aria-hidden
-                className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-              />
-            </Link>
-          </Rise>
-        </SectionHead>
+    <div className={clsx("border-t border-line pt-12", className)}>
+      <Rise className="flex flex-wrap items-baseline justify-between gap-4">
+        <h3 className="font-display text-xl font-extrabold tracking-tight text-ink sm:text-2xl">
+          And the four steps we&apos;d run it in
+        </h3>
+        <Link href="/process" className={actionText}>
+          How we work
+          <ArrowUpRight
+            size={14}
+            aria-hidden
+            className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+          />
+        </Link>
+      </Rise>
 
-        <RiseGroup as="ol" className="mt-14 grid gap-px overflow-hidden rounded-xl border border-line bg-line lg:grid-cols-4">
-          {engagement.map((step) => (
-            <li key={step.n} className="relative bg-surface p-6 sm:p-8">
-              <div className="flex items-baseline gap-3">
-                <span className="font-display text-sm font-bold text-brand tabular-nums">
-                  {step.n}
-                </span>
-                <span className="text-[11px] font-semibold tracking-[0.2em] text-faint uppercase">
-                  {step.stage}
-                </span>
-              </div>
-              <h3 className="mt-5 font-display text-xl leading-tight font-extrabold tracking-tight text-ink">
-                {step.title}
-              </h3>
-              <p className="mt-3 text-sm leading-relaxed text-muted">{step.body}</p>
-            </li>
-          ))}
-        </RiseGroup>
+      <RiseGroup
+        as="ol"
+        className="mt-7 grid gap-px overflow-hidden rounded-xl border border-line bg-line sm:grid-cols-2 lg:grid-cols-4"
+      >
+        {engagement.map((step) => (
+          <li key={step.n} className="bg-surface p-5">
+            <div className="flex items-baseline gap-2.5">
+              <span className="font-display text-xs font-bold text-brand tabular-nums">
+                {step.n}
+              </span>
+              <span className="text-[10px] font-semibold tracking-[0.2em] text-faint uppercase">
+                {step.stage}
+              </span>
+            </div>
+            <h4 className="mt-3 font-display text-base leading-tight font-extrabold tracking-tight text-ink">
+              {step.title}
+            </h4>
+            <p className="mt-2 text-xs leading-relaxed text-muted">{step.body}</p>
+          </li>
+        ))}
+      </RiseGroup>
 
-        {/* The one thing a proposal usually leaves out. */}
-        <Rise>
-          <div className="mt-6 rounded-xl border border-line bg-surface-2/50 p-6 sm:p-8">
-            <h3 className="font-display text-lg font-extrabold tracking-tight text-ink">
-              And after launch, the part nobody puts in a proposal
-            </h3>
-            <ul className="mt-5 grid gap-x-8 gap-y-3 sm:grid-cols-2 lg:grid-cols-3">
-              {[
-                "Both sites stay with us — hosting, updates, changes",
-                "The calendar is built a month ahead, not the night before",
-                "Comments and DMs answered in Arabic and English",
-                "One monthly report, in language a decision can be made from",
-                "Photography reshot as the menu changes",
-                "Campaigns planned around the seasons you actually trade in",
-              ].map((item) => (
-                <li key={item} className="flex gap-3 text-sm leading-relaxed text-muted">
-                  <span
-                    aria-hidden
-                    className="mt-[0.45rem] h-1.5 w-1.5 shrink-0 rounded-full bg-accent"
-                  />
-                  {item}
-                </li>
-              ))}
-            </ul>
-          </div>
-        </Rise>
-      </div>
-    </section>
+      <Rise as="p" className="mt-5 text-sm leading-relaxed text-muted">
+        Both sites stay with us afterwards — hosting, updates and changes — the
+        calendar is built a month ahead rather than the night before, and the
+        comments and DMs get answered in both languages inside the day.
+      </Rise>
+    </div>
   );
 }

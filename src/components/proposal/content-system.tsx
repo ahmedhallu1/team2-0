@@ -3,8 +3,6 @@
 import { useRef, useState } from "react";
 import { gsap, useGSAP, prefersReducedMotion } from "@/lib/motion/gsap";
 import { DUR, EASE, STAGGER, TRIGGER_START } from "@/lib/motion/tokens";
-import { SectionHead } from "@/components/proposal/section-head";
-import { sectionY, shell } from "@/lib/layout";
 import { clsx } from "@/lib/clsx";
 
 /**
@@ -71,7 +69,7 @@ const PILLARS = [
   },
 ] as const;
 
-export function ContentSystem() {
+export function ContentSystem({ className }: { className?: string }) {
   const [active, setActive] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
   const tabsRef = useRef<HTMLDivElement>(null);
@@ -130,27 +128,17 @@ export function ContentSystem() {
   }
 
   return (
-    <section
-      id="system"
-      aria-labelledby="system-heading"
-      className={clsx("relative border-t border-line", sectionY)}
-    >
-      <div className={shell}>
-        <SectionHead
-          n="06"
-          label="Social, as a system"
-          headingId="system-heading"
-          lines={["Not more posts.", "A shape that repeats."]}
-          lede={
-            <>
-              Right now every post is a fresh decision. A system makes most of
-              those decisions once: four pillars, a fixed share of the month
-              each, and a frame already designed for whatever goes in it.
-            </>
-          }
-        />
+    <div className={clsx("border-t border-line pt-12", className)}>
+      <h3 className="font-display text-xl font-extrabold tracking-tight text-ink sm:text-2xl">
+        Not more posts. A shape that repeats.
+      </h3>
+      <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted">
+        Right now every post is a fresh decision. A system makes most of those
+        decisions once: four pillars, a fixed share of the month each, and a
+        frame already designed for whatever goes in it.
+      </p>
 
-        <div ref={ref} className="mt-14 grid gap-8 lg:grid-cols-12 lg:gap-12">
+      <div ref={ref} className="mt-8 grid gap-8 lg:grid-cols-12 lg:gap-12">
           {/* The pillars */}
           <div
             ref={tabsRef}
@@ -242,9 +230,8 @@ export function ContentSystem() {
                 </p>
               </div>
             ))}
-          </div>
         </div>
       </div>
-    </section>
+    </div>
   );
 }

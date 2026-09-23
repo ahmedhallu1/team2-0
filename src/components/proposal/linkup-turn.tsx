@@ -143,10 +143,11 @@ export function LinkUpTurn() {
   return (
     <section
       id="turn"
+      data-zone="both"
       aria-labelledby="turn-heading"
       className="relative border-t border-line"
     >
-      <div ref={root} className="cup-scroll relative h-[240vh] lg:h-[300vh]">
+      <div ref={root} className="cup-scroll relative h-[150vh] lg:h-[180vh]">
         <div className="cup-stage sticky top-0 flex h-[100svh] items-center overflow-hidden">
           <div
             aria-hidden

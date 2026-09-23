@@ -1164,30 +1164,107 @@ dialog.lightbox[open]::backdrop {
 /*  the markup would expect.                                           */
 /* ================================================================== */
 @layer components {
+  /**
+   * The proposal is art-directed in the *clients'* colours, not 2.0's.
+   *
+   * Rather than paint brand colours on top of the site's palette, each zone
+   * re-points the semantic tokens themselves — `--bg`, `--ink`, `--accent` and
+   * the rest. Everything inside then re-themes for free: the same `text-muted`,
+   * `border-line` and `bg-surface` utilities the rest of the site uses come out
+   * in KUPHUB's forest and cream, or LinkUp's ink and amber, with no component
+   * needing to know which world it is in.
+   *
+   * 2.0's lime and violet survive in exactly two places — the chrome's logo and
+   * the closing signature — because 2.0 is the author of the document, not its
+   * subject.
+   */
   .proposal {
-    /* KUPHUB — sampled from the profile mark. */
+    /* Raw brand values, sampled from the two profile marks. */
     --kup: #0c4f28;
     --kup-deep: #07331a;
     --kup-lift: #12633a;
     --kup-amber: #c88c46;
-    /* Readable on either theme, unlike the deep green itself. */
-    --kup-ink: #4fae77;
-
-    /* LinkUp Egypt — sampled from the profile mark. */
     --link: #e9a13b;
     --link-deep: #b9741a;
-    --link-ink: #e9a13b;
-
-    /* Unprinted stock, for concept surfaces that imitate paper. */
     --paper: #f4efe6;
     --paper-2: #e7dfd1;
+
+    /* Defaults to KUPHUB's world; zones below override. */
+    --kup-ink: #7cc79a;
+    --link-ink: #e9a13b;
   }
-  .light .proposal,
-  :root:not(.dark) .proposal:where(:not(.dark *)) {
-    /* Both accents need to darken on paper to stay legible as text. */
-    --kup-ink: #0c4f28;
-    --link-ink: #9a6412;
+
+  /**
+   * KUPHUB — deep forest ground, cream type, caramel as the only accent.
+   * The greens are darkened well past the logo's own value: the mark has to
+   * read against this, not disappear into it.
+   */
+  .proposal [data-zone="kuphub"] {
+    --bg: #061a0e;
+    --surface: #0b2716;
+    --surface-2: #08200f;
+    --surface-3: #14361f;
+    --line: rgba(244, 239, 230, 0.13);
+    --line-2: rgba(244, 239, 230, 0.24);
+    --ink: #f4efe6;
+    --muted: rgba(244, 239, 230, 0.7);
+    --faint: rgba(244, 239, 230, 0.52);
+    --accent: #c88c46;
+    --on-accent: #1a1105;
+    --brand: #dda86a;
+    --ring: #dda86a;
+    --kup-ink: #8fd4ac;
+    --ambient: 0.75;
   }
+
+  /** LinkUp — near-black ground, amber accent, warmer paper for concepts. */
+  .proposal [data-zone="linkup"] {
+    --bg: #0d0b08;
+    --surface: #171310;
+    --surface-2: #120f0c;
+    --surface-3: #221c16;
+    --line: rgba(247, 244, 238, 0.12);
+    --line-2: rgba(247, 244, 238, 0.22);
+    --ink: #f7f4ee;
+    --muted: rgba(247, 244, 238, 0.68);
+    --faint: rgba(247, 244, 238, 0.5);
+    --accent: #e9a13b;
+    --on-accent: #1a1105;
+    --brand: #e9a13b;
+    --ring: #e9a13b;
+    --link-ink: #f0b45c;
+    --ambient: 0.7;
+  }
+
+  /** Where the two meet — the opening, the turn and the close. */
+  .proposal [data-zone="both"] {
+    --bg: #090c0a;
+    --surface: #141814;
+    --surface-2: #0f130f;
+    --surface-3: #1d231d;
+    --line: rgba(240, 240, 234, 0.12);
+    --line-2: rgba(240, 240, 234, 0.22);
+    --ink: #f2f0ea;
+    --muted: rgba(242, 240, 234, 0.68);
+    --faint: rgba(242, 240, 234, 0.5);
+    --accent: #c88c46;
+    --on-accent: #1a1105;
+    --brand: #dda86a;
+    --ring: #dda86a;
+    --ambient: 0.7;
+  }
+
+  /* Each zone paints its own ground, so the seams between them are the story. */
+  .proposal [data-zone] {
+    background: var(--bg);
+    color: var(--ink);
+  }
+  /* The chrome is fixed and therefore outside the flow, but it still has to
+     be dressed in the same palette as the document under it. */
+  .proposal-chrome[data-zone] {
+    background: transparent;
+  }
+
 
   /**
    * A concept surface. Everything inside one of these is speculative work made
@@ -1330,6 +1407,37 @@ dialog.lightbox[open]::backdrop {
     }
   }
 
+}
+
+/* ------------------------------------------------------------------ */
+/*  Proposal routes own the whole canvas                               */
+/*                                                                     */
+/*  Unlayered, because it has to beat the site's own themed `body`     */
+/*  background. A class on <html> (set by the route) rather than a     */
+/*  wrapper, so iOS rubber-band overscroll shows the proposal's ground */
+/*  instead of a strip of the marketing site's black.                  */
+/* ------------------------------------------------------------------ */
+html.proposal-route,
+html.proposal-route body {
+  background: #061a0e;
+  color-scheme: dark;
+}
+
+/**
+ * The word that carries the whole idea, in the two brands' own colours:
+ * KUPHUB's green running into LinkUp's amber, replacing 2.0's violet → lime.
+ *
+ * Unlayered on purpose. `.text-gradient-brand` is itself defined unlayered
+ * further up this file, and an unlayered rule beats a layered one whatever
+ * their specificity — so the `@layer components` version of this override was
+ * losing silently, and the last word on the page was still arguing the
+ * document belongs to us rather than to them.
+ */
+.proposal .text-gradient-brand {
+  background: linear-gradient(100deg, #8fd4ac 0%, #c9c47e 42%, #e9a13b 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 /* ------------------------------------------------------------------ */

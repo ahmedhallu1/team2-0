@@ -196,12 +196,19 @@ export function CupScene() {
   return (
     <section
       aria-labelledby="cup-heading"
+      data-zone="kuphub"
       className="relative"
       // The pinned frame is one viewport; the scroll length above it is what
       // the timeline is scrubbed against. Shorter on phones, where the same
       // distance costs far more thumb travel.
     >
-      <div ref={root} className="cup-scroll relative h-[340vh] lg:h-[420vh]">
+      {/*
+          The scroll distance the timeline is scrubbed against. Roughly half
+          what it was: four beats do not need four-and-a-bit screens of thumb
+          travel to land, and every extra viewport here is one the presenter
+          has to scroll past in the room.
+        */}
+        <div ref={root} className="cup-scroll relative h-[190vh] lg:h-[230vh]">
         <div className="cup-stage sticky top-0 flex h-[100svh] flex-col overflow-hidden">
           <div
             aria-hidden

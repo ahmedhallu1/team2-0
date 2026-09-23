@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { BrandLogo } from "@/components/brand-logo";
-import { ThemeToggle } from "@/components/theme-toggle";
 import { clsx } from "@/lib/clsx";
 
 /**
@@ -67,8 +66,9 @@ export function ProposalChrome({ sections }: { sections: { id: string; label: st
 
   return (
     <header
+      data-zone="both"
       className={clsx(
-        "fixed inset-x-0 top-0 z-50 transition-colors duration-500",
+        "proposal-chrome fixed inset-x-0 top-0 z-50 transition-colors duration-500",
         lifted && "border-b border-line bg-bg/80 backdrop-blur-xl",
       )}
     >
@@ -84,12 +84,16 @@ export function ProposalChrome({ sections }: { sections: { id: string; label: st
         <span aria-hidden className="hidden h-4 w-px bg-line-2 sm:block" />
 
         <p className="min-w-0 flex-1 truncate text-[11px] font-medium tracking-[0.2em] text-faint uppercase">
-          <span className="hidden sm:inline">Proposal · KUPHUB × LinkUp · </span>
+          <span className="hidden sm:inline">KUPHUB × LinkUp · </span>
           <span className="text-muted">{current}</span>
         </p>
 
+        {/*
+          No theme toggle. The proposal is art-directed in the clients' own
+          colours rather than following the site's light/dark themes, so a
+          control that promised to change them would be lying.
+        */}
         <div className="flex shrink-0 items-center gap-2">
-          <ThemeToggle />
           <Link
             href="#next"
             className="group hidden items-center gap-1.5 rounded-lg bg-accent px-4 py-2 text-xs font-bold tracking-tight text-on-accent sm:inline-flex"
@@ -107,8 +111,8 @@ export function ProposalChrome({ sections }: { sections: { id: string; label: st
       <span aria-hidden className="block h-px w-full bg-line">
         <span
           ref={fillRef}
-          className="block h-px w-full origin-left bg-gradient-to-r from-violet-500 to-lime-400"
-          style={{ transform: "scaleX(0)" }}
+          className="block h-px w-full origin-left"
+          style={{ transform: "scaleX(0)", background: "linear-gradient(90deg,#8fd4ac,#e9a13b)" }}
         />
       </span>
     </header>

@@ -5,7 +5,8 @@ import { gsap, useGSAP, prefersReducedMotion } from "@/lib/motion/gsap";
 import { DUR, EASE, TRIGGER_START } from "@/lib/motion/tokens";
 import { SectionHead } from "@/components/proposal/section-head";
 import { engine } from "@/lib/proposals/kuphub";
-import { sectionY, shell } from "@/lib/layout";
+import { Engagement } from "@/components/proposal/engagement";
+import { proposalY, shell } from "@/lib/layout";
 import { clsx } from "@/lib/clsx";
 
 /**
@@ -94,12 +95,13 @@ export function Ecosystem() {
   return (
     <section
       id="engine"
+      data-zone="both"
       aria-labelledby="engine-heading"
-      className={clsx("relative border-t border-line bg-surface-2/20", sectionY)}
+      className={clsx("relative border-t border-line bg-surface-2/20", proposalY)}
     >
       <div className={shell}>
         <SectionHead
-          n="09"
+          n="10"
           label="Two brands, one engine"
           headingId="engine-heading"
           lines={["Two businesses.", "One team behind both."]}
@@ -230,6 +232,8 @@ export function Ecosystem() {
           its place on one side only — LinkUp is the one where the enquiries{" "}
           <em>are</em> the business.
         </p>
+
+        <Engagement className="mt-14" />
       </div>
     </section>
   );

@@ -6,8 +6,9 @@ import { DUR, EASE } from "@/lib/motion/tokens";
 import { SectionHead } from "@/components/proposal/section-head";
 import { Rise } from "@/components/motion/reveal";
 import { CupGlyph, Dot, KupMark, PinGlyph } from "@/components/proposal/kup-glyphs";
+import { DeviceNav } from "@/components/proposal/device-nav";
 import { kuphubBranches, kuphubCampaigns, kuphubMenu } from "@/lib/proposals/kuphub";
-import { sectionY, shell } from "@/lib/layout";
+import { proposalY, shell } from "@/lib/layout";
 import { clsx } from "@/lib/clsx";
 
 /**
@@ -61,8 +62,9 @@ export function SiteConcept() {
   return (
     <section
       id="site"
+      data-zone="kuphub"
       aria-labelledby="site-heading"
-      className={clsx("relative border-t border-line bg-surface-2/20", sectionY)}
+      className={clsx("relative border-t border-line bg-surface-2/20", proposalY)}
     >
       <div className={shell}>
         <SectionHead
@@ -75,7 +77,7 @@ export function SiteConcept() {
               kuphub.com already exists — it just doesn&apos;t open yet. Here is
               what would be behind it: the menu, the branches, and whichever
               offer is running today, on a page a customer can be sent to from
-              anywhere.
+              anywhere. <span className="text-ink">Click through it — the tabs work.</span>
             </>
           }
         />
@@ -120,43 +122,47 @@ export function SiteConcept() {
 
 /* ------------------------------------------------------------------ */
 
-const NAV = ["Menu", "Branches", "Offers", "Our koffee"];
-
+/**
+ * kuphub.com, clickable.
+ *
+ * Every panel is built from something KUPHUB already publishes — the four
+ * branches, the menu groups, the offers that are running — so the only new
+ * thing on screen is that they are in one place with one address.
+ */
 function DesktopSite() {
   return (
-    <div
-      className="relative overflow-hidden text-white"
-      style={{ background: "var(--kup)" }}
-    >
-      {/* Header */}
-      <div className="flex items-center justify-between border-b border-white/10 px-6 py-3.5">
-        <KupMark tone="light" className="text-sm" />
-        <nav className="hidden items-center gap-6 text-[11px] font-medium text-white/70 sm:flex">
-          {NAV.map((n) => (
-            <span key={n}>{n}</span>
-          ))}
-        </nav>
-        <span
-          className="rounded-md px-3 py-1.5 text-[11px] font-bold"
-          style={{ background: "var(--kup-amber)", color: "#1a1105" }}
-        >
-          Order
-        </span>
-      </div>
+    <div className="text-white" style={{ background: "var(--kup)" }}>
+      <DeviceNav
+        accent="var(--kup-amber)"
+        ink="#ffffff"
+        mutedInk="rgba(255,255,255,0.6)"
+        action="Order"
+        brandMark={<KupMark tone="light" className="shrink-0 text-sm" />}
+        panels={[
+          { id: "home", label: "Home", content: <HomePanel /> },
+          { id: "menu", label: "Menu", content: <MenuPanel /> },
+          { id: "branches", label: "Branches", content: <BranchPanel /> },
+          { id: "offers", label: "Offers", content: <OffersPanel /> },
+        ]}
+      />
+    </div>
+  );
+}
 
-      {/* Hero */}
+function HomePanel() {
+  return (
+    <>
       <div className="grid gap-6 px-6 pt-8 pb-10 sm:grid-cols-12 sm:px-10 sm:pt-12">
         <div className="sm:col-span-7">
           <p className="text-[10px] tracking-[0.24em] text-white/50 uppercase">
-            Alexandria · since the first kup
+            Alexandria · four addresses
           </p>
           <p className="mt-4 font-display text-[clamp(1.7rem,4.6vw,3.2rem)] leading-[0.88] font-extrabold tracking-[-0.04em]">
             Less is more
             <Dot className="ml-[0.08em] inline-block h-[0.12em] w-[0.12em] align-baseline" />
           </p>
           <p className="mt-4 max-w-sm text-[13px] leading-relaxed text-white/70">
-            Premium koffee and kup to go. Four branches across the city, open
-            from seven.
+            Premium koffee and kup to go. Open from seven.
           </p>
           <div className="mt-6 flex flex-wrap gap-2.5">
             <span
@@ -175,7 +181,6 @@ function DesktopSite() {
         </div>
       </div>
 
-      {/* Today's offer — the thing the feed currently has to re-announce. */}
       <div
         className="flex flex-wrap items-center gap-x-6 gap-y-2 border-y border-white/10 px-6 py-3.5 sm:px-10"
         style={{ background: "rgba(0,0,0,0.18)" }}
@@ -190,53 +195,73 @@ function DesktopSite() {
           </span>
         ))}
       </div>
+    </>
+  );
+}
 
-      {/* Menu */}
-      <div className="grid gap-px bg-white/10 sm:grid-cols-4">
-        {kuphubMenu.map((group) => (
-          <div key={group.group} className="p-5 sm:p-6" style={{ background: "var(--kup)" }}>
-            <p className="font-display text-sm font-bold tracking-tight">
-              {group.group}
+function MenuPanel() {
+  return (
+    <div className="grid gap-px bg-white/10 sm:grid-cols-4">
+      {kuphubMenu.map((group) => (
+        <div key={group.group} className="p-5 sm:p-6" style={{ background: "var(--kup)" }}>
+          <p className="font-display text-sm font-bold tracking-tight">
+            {group.group}
+          </p>
+          <ul className="mt-3 space-y-2">
+            {group.items.map((item) => (
+              <li key={item.name}>
+                <p className="text-[11px] font-medium text-white/85">{item.name}</p>
+                <p className="text-[10px] leading-snug text-white/45">{item.note}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function BranchPanel() {
+  return (
+    <div className="px-6 py-8 sm:px-10">
+      <ul className="grid gap-2.5 sm:grid-cols-4">
+        {kuphubBranches.map((b) => (
+          <li key={b.name} className="rounded-lg border border-white/12 bg-white/[0.04] p-4">
+            <PinGlyph className="h-4 w-4 text-white/40" />
+            <p className="mt-2.5 font-display text-[13px] font-bold tracking-tight">
+              {b.name}
             </p>
-            <ul className="mt-3 space-y-2">
-              {group.items.map((item) => (
-                <li key={item.name}>
-                  <p className="text-[11px] font-medium text-white/85">{item.name}</p>
-                  <p className="text-[10px] leading-snug text-white/45">{item.note}</p>
-                </li>
-              ))}
-            </ul>
-          </div>
+            <p className="mt-1 text-[10px] leading-snug text-white/55">{b.detail}</p>
+            <p dir="rtl" lang="ar" className="mt-1.5 text-[10px] leading-snug text-white/35">
+              {b.arabic}
+            </p>
+          </li>
         ))}
-      </div>
+      </ul>
+    </div>
+  );
+}
 
-      {/* Branches */}
-      <div className="px-6 py-8 sm:px-10">
-        <p className="text-[10px] tracking-[0.24em] text-white/50 uppercase">
-          Branches
-        </p>
-        <ul className="mt-4 grid gap-2.5 sm:grid-cols-4">
-          {kuphubBranches.map((b) => (
-            <li
-              key={b.name}
-              className="rounded-lg border border-white/12 bg-white/[0.04] p-4"
-            >
-              <PinGlyph className="h-4 w-4 text-white/40" />
-              <p className="mt-2.5 font-display text-[13px] font-bold tracking-tight">
-                {b.name}
-              </p>
-              <p className="mt-1 text-[10px] leading-snug text-white/55">{b.detail}</p>
-              <p
-                dir="rtl"
-                lang="ar"
-                className="mt-1.5 text-[10px] leading-snug text-white/35"
-              >
-                {b.arabic}
-              </p>
-            </li>
-          ))}
-        </ul>
-      </div>
+function OffersPanel() {
+  return (
+    <div className="grid gap-px bg-white/10 sm:grid-cols-3">
+      {kuphubCampaigns.map((c) => (
+        <div key={c.title} className="p-6" style={{ background: "var(--kup)" }}>
+          <p className="font-display text-lg font-extrabold tracking-tight">
+            {c.title}
+          </p>
+          <p className="mt-2 text-[11px] leading-relaxed text-white/65">{c.line}</p>
+          <p dir="rtl" lang="ar" className="mt-3 text-[11px] text-white/80">
+            {c.arabic}
+          </p>
+          <span
+            className="mt-5 inline-block rounded-md px-3 py-1.5 text-[10px] font-bold"
+            style={{ background: "var(--kup-amber)", color: "#1a1105" }}
+          >
+            Order this
+          </span>
+        </div>
+      ))}
     </div>
   );
 }

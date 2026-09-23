@@ -19,6 +19,7 @@ export function Opening() {
   return (
     <section
       id="opening"
+      data-zone="both"
       aria-labelledby="opening-heading"
       className="relative isolate flex min-h-[100svh] flex-col justify-center overflow-hidden pt-28 pb-16 sm:pt-32"
     >

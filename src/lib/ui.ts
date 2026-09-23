@@ -11,9 +11,15 @@ export const actionPrimary =
 export const actionGhost =
   "group inline-flex items-center justify-center gap-2 rounded-lg border border-line-2 px-6 py-3.5 text-sm font-semibold tracking-tight text-ink transition-colors duration-300 hover:border-accent hover:text-brand";
 
-/** Inline text action — the quiet third tier. */
+/**
+ * Inline text action — the quiet third tier.
+ *
+ * The vertical padding is a touch-target concern, not a visual one: at its
+ * natural line height this control is about 20px tall, which is a poor tap on
+ * a phone. The padding is negated by the margin so nothing moves on screen.
+ */
 export const actionText =
-  "group inline-flex items-center gap-1.5 text-sm font-semibold text-brand";
+  "group inline-flex items-center gap-1.5 py-2.5 -my-2.5 text-sm font-semibold text-brand";
 
 /** Section eyebrow — the small tracked label above every heading. */
 export const eyebrow =

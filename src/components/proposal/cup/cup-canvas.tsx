@@ -62,17 +62,9 @@ export function CupCanvas({
     let last = "";
     const started = performance.now();
 
-    const isLight = () => {
-      const root = document.documentElement;
-      if (root.classList.contains("light")) return true;
-      if (root.classList.contains("dark")) return false;
-      return window.matchMedia("(prefers-color-scheme: light)").matches;
-    };
-
     const paint = () => {
       const state = stateRef.current;
       if (!state) return;
-      state.light = isLight();
       state.time = (performance.now() - started) / 1000;
       renderer.draw(state);
     };
@@ -114,7 +106,10 @@ export function CupCanvas({
       // design-space constants, so a resize cannot change them — and this
       // callback fires often enough (fonts, orientation, the address bar) that
       // reallocating them here was churning tens of megabytes of canvas.
-      renderer.resize(rect.width, rect.height, Math.min(window.devicePixelRatio || 1, 2));
+      // 1.5× rather than the device's full ratio. The cup is soft-shaded with
+      // no fine detail, so the extra pixels bought nothing and every one of
+      // them is fill cost on a phone.
+      renderer.resize(rect.width, rect.height, Math.min(window.devicePixelRatio || 1, 1.5));
       paint();
     };
 
@@ -133,13 +128,6 @@ export function CupCanvas({
         paint();
       })
       .catch(() => {});
-
-    // The cup is drawn, not styled, so a theme flip has to be repainted by hand.
-    const themeWatch = new MutationObserver(() => paint());
-    themeWatch.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ["class"],
-    });
 
     const io = new IntersectionObserver(
       ([entry]) => {
@@ -162,7 +150,6 @@ export function CupCanvas({
       if (frame) cancelAnimationFrame(frame);
       ro.disconnect();
       io.disconnect();
-      themeWatch.disconnect();
     };
   }, [stateRef, live]);
 

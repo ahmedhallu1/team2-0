@@ -1,25 +1,22 @@
 import type { Metadata } from "next";
 import { ProposalChrome } from "@/components/proposal/proposal-chrome";
+import { ProposalTheme } from "@/components/proposal/proposal-theme";
 import { Opening } from "@/components/proposal/opening";
 import { CupScene } from "@/components/proposal/cup/cup-scene";
 import { Audit } from "@/components/proposal/audit";
 import { FeedConcept } from "@/components/proposal/feed-concept";
 import { SiteConcept } from "@/components/proposal/site-concept";
-import { ContentSystem } from "@/components/proposal/content-system";
+import { Campaigns } from "@/components/proposal/campaigns";
 import { LinkUpTurn } from "@/components/proposal/linkup-turn";
+import { LinkUpRebrand } from "@/components/proposal/linkup-rebrand";
 import { LinkUpConcept } from "@/components/proposal/linkup-concept";
 import { Ecosystem } from "@/components/proposal/ecosystem";
-import { Engagement } from "@/components/proposal/engagement";
-import { Proof } from "@/components/proposal/proof";
 import { Closing } from "@/components/proposal/closing";
 
 /**
  * KUPHUB × LinkUp Egypt — a private proposal.
  *
- * Twelve chapters, one argument: the two businesses share an object, so they
- * should share the team behind how that object is presented.
- *
- * Two things about this route are deliberate and worth not undoing.
+ * Three things about this route are deliberate and worth not undoing.
  *
  * It is `noindex, nofollow`. The page names a prospect, quotes their channels
  * and shows speculative concept work for their brands; it is meant to be
@@ -30,13 +27,19 @@ import { Closing } from "@/components/proposal/closing";
  * It has no site navigation. SiteHeader and SiteFooter stand down on
  * `/proposals/*` (see the note in each), because this is presented full-screen
  * in a meeting and six links back to the marketing site at the top of it is an
- * invitation to leave halfway. `ProposalChrome` carries the logo, the chapter
- * you are in, and the way out.
+ * invitation to leave halfway.
+ *
+ * It is art-directed in the clients' colours, not 2.0's. Each section declares
+ * a `data-zone`, which re-points the semantic design tokens (see globals.css)
+ * so KUPHUB's forest and LinkUp's ink each own their part of the document.
+ * 2.0's own palette survives only in the chrome's logo and the signature at
+ * the end — we are the author here, not the subject. There is no theme
+ * toggle for the same reason.
  */
 export const metadata: Metadata = {
   title: "KUPHUB × LinkUp — a proposal",
   description:
-    "A private proposal from 2.0 for KUPHUB and LinkUp Egypt: brand and content, two websites, and the growth work behind them.",
+    "A private proposal from 2.0 for KUPHUB and LinkUp Egypt: brand and content, two websites, campaigns and the growth work behind them.",
   robots: { index: false, follow: false, nocache: true },
   openGraph: {
     title: "KUPHUB × LinkUp — a proposal by 2.0",
@@ -49,24 +52,26 @@ const sections = [
   { id: "opening", label: "The idea" },
   { id: "cup", label: "One cup" },
   { id: "audit", label: "What we see" },
-  { id: "feed", label: "The system" },
+  { id: "feed", label: "The content" },
   { id: "site", label: "The website" },
-  { id: "system", label: "Social" },
+  { id: "campaigns", label: "Campaigns" },
   { id: "turn", label: "The turn" },
+  { id: "rebrand", label: "LinkUp identity" },
   { id: "linkup", label: "LinkUp" },
   { id: "engine", label: "One engine" },
-  { id: "engagement", label: "How we'd run it" },
-  { id: "proof", label: "Proof" },
   { id: "next", label: "Next" },
 ];
 
 export default function KuphubProposalPage() {
   return (
     <>
-      <ProposalChrome sections={sections} />
+      <ProposalTheme />
 
-      {/* `.proposal` scopes the two client palettes — see globals.css. */}
+      {/* `.proposal` scopes the two client palettes — see globals.css. The
+          chrome lives inside it so the fixed bar is dressed in the same
+          palette as the document beneath it. */}
       <div className="proposal">
+        <ProposalChrome sections={sections} />
         <Opening />
         <div id="cup">
           <CupScene />
@@ -74,12 +79,11 @@ export default function KuphubProposalPage() {
         <Audit />
         <FeedConcept />
         <SiteConcept />
-        <ContentSystem />
+        <Campaigns />
         <LinkUpTurn />
+        <LinkUpRebrand />
         <LinkUpConcept />
         <Ecosystem />
-        <Engagement />
-        <Proof />
         <Closing />
       </div>
     </>

@@ -7,12 +7,15 @@ import { DUR, EASE, STAGGER, TRIGGER_START } from "@/lib/motion/tokens";
 import { SectionHead } from "@/components/proposal/section-head";
 import { Rise } from "@/components/motion/reveal";
 import { CupGlyph, LinkMark } from "@/components/proposal/kup-glyphs";
+import { DeviceNav } from "@/components/proposal/device-nav";
 import {
+  linkupLeadTimes,
   linkupLines,
   linkupProducts,
+  linkupServices,
   linkupSizes,
 } from "@/lib/proposals/kuphub";
-import { sectionY, shell } from "@/lib/layout";
+import { proposalY, shell } from "@/lib/layout";
 import { clsx } from "@/lib/clsx";
 
 /**
@@ -53,8 +56,9 @@ export function LinkUpConcept() {
   return (
     <section
       id="linkup"
+      data-zone="linkup"
       aria-labelledby="linkup-heading"
-      className={clsx("relative border-t border-line", sectionY)}
+      className={clsx("relative border-t border-line", proposalY)}
     >
       <div
         aria-hidden
@@ -64,7 +68,7 @@ export function LinkUpConcept() {
 
       <div className={shell}>
         <SectionHead
-          n="08"
+          n="09"
           label="LinkUp Egypt"
           headingId="linkup-heading"
           lines={["A catalogue,", "not a feed."]}
@@ -177,9 +181,9 @@ export function LinkUpConcept() {
             </h3>
             <p className="mt-4 text-sm leading-relaxed text-muted">
               The domain is live and says &ldquo;Launching Soon&rdquo;. Behind
-              it: the range, the specifications, the certifications, and a form
-              that turns a scroll into a named enquiry with a size and a
-              quantity attached.
+              it: the range, the lead times, the print options and a form that
+              turns a scroll into a named enquiry with a size and a quantity
+              attached. <span className="text-ink">The tabs work — click through it.</span>
             </p>
             <ul className="mt-6 space-y-2.5">
               {[
@@ -226,97 +230,30 @@ export function LinkUpConcept() {
   );
 }
 
+/**
+ * linkupegypt.com, clickable.
+ *
+ * Built from their own product graphics: the material, the four sizes, the
+ * IML print, the one-cup minimum and the 4/8/14-day lead times are all
+ * LinkUp's own published numbers — this only puts them where a buyer looks
+ * for them instead of in a caption.
+ */
 function LinkUpSite() {
   return (
     <div className="bg-[#faf8f4] text-[#14120f]">
-      <div className="flex items-center justify-between border-b border-black/8 px-6 py-3.5">
-        <LinkMark className="text-sm" />
-        <nav className="hidden gap-6 text-[11px] font-medium text-black/55 sm:flex">
-          {["Reusable PP", "Rice husk", "IML printing", "Sustainability", "About"].map(
-            (n) => (
-              <span key={n}>{n}</span>
-            ),
-          )}
-        </nav>
-        <span
-          className="rounded-md px-3 py-1.5 text-[11px] font-bold text-white"
-          style={{ background: "var(--link-deep)" }}
-        >
-          Request a quote
-        </span>
-      </div>
-
-      <div className="grid gap-8 px-6 py-9 sm:grid-cols-12 sm:px-10">
-        <div className="sm:col-span-6">
-          <p className="text-[10px] tracking-[0.24em] text-black/40 uppercase">
-            Reusable collection
-          </p>
-          <p className="mt-3 font-display text-[clamp(1.5rem,4vw,2.6rem)] leading-[0.92] font-extrabold tracking-[-0.035em]">
-            Reusable PP
-          </p>
-          <p className="mt-4 max-w-sm text-[13px] leading-relaxed text-black/60">
-            Food-grade PP5, microwave safe, hot and cold. Printed in the mould,
-            so the graphic lasts as long as the cup does.
-          </p>
-
-          <div className="mt-6 flex flex-wrap gap-2">
-            {linkupSizes.map((size, i) => (
-              <span
-                key={size}
-                className={clsx(
-                  "rounded-md border px-3 py-1.5 text-[11px] font-semibold",
-                  i === 2
-                    ? "border-transparent text-white"
-                    : "border-black/15 text-black/65",
-                )}
-                style={i === 2 ? { background: "var(--link-deep)" } : undefined}
-              >
-                {size}
-              </span>
-            ))}
-          </div>
-
-          <div className="mt-7 rounded-lg border border-black/10 bg-white p-4">
-            <p className="text-[11px] font-semibold">Minimum order</p>
-            <p className="mt-1 font-display text-2xl font-extrabold tracking-tight">
-              None
-            </p>
-            <p className="mt-1 text-[11px] text-black/50">
-              Their own promise, in the place a buyer looks for it.
-            </p>
-          </div>
-        </div>
-
-        <div className="sm:col-span-6">
-          <div className="flex h-44 items-end justify-center gap-3 rounded-lg bg-[#f0ebe2]">
-            {/* The ladder the buyer is actually choosing between. */}
-            {[0.58, 0.72, 0.88, 1].map((h, i) => (
-              <CupGlyph
-                key={h}
-                lid={i % 2 === 1}
-                className="text-black/45"
-                style={{ height: `${h * 8}rem` }}
-              />
-            ))}
-          </div>
-          <dl className="mt-4 grid grid-cols-2 gap-px overflow-hidden rounded-lg border border-black/10 bg-black/10">
-            {[
-              ["Material", "PP5, food grade"],
-              ["Print", "IML, in-mould"],
-              ["Use", "Hot & cold"],
-              ["Care", "Microwave safe"],
-            ].map(([k, v]) => (
-              <div key={k} className="bg-white px-3.5 py-2.5">
-                <dt className="text-[9px] tracking-[0.14em] text-black/40 uppercase">
-                  {k}
-                </dt>
-                <dd className="mt-0.5 text-[11px] font-medium">{v}</dd>
-              </div>
-            ))}
-          </dl>
-        </div>
-      </div>
-
+      <DeviceNav
+        accent="var(--link-deep)"
+        ink="#14120f"
+        mutedInk="rgba(20,18,15,0.55)"
+        action="Request a quote"
+        brandMark={<LinkMark className="shrink-0 text-sm" />}
+        panels={[
+          { id: "pp", label: "Reusable PP", content: <ProductPanel /> },
+          { id: "lead", label: "Lead times", content: <LeadPanel /> },
+          { id: "print", label: "Printing", content: <PrintPanel /> },
+          { id: "quote", label: "Get a quote", content: <QuotePanel /> },
+        ]}
+      />
       <div
         className="flex flex-wrap items-center justify-between gap-4 px-6 py-5 sm:px-10"
         style={{ background: "var(--link)" }}
@@ -327,6 +264,195 @@ function LinkUpSite() {
         <span className="rounded-md bg-[#1a1105] px-4 py-2 text-[11px] font-bold text-white">
           Request a quote
         </span>
+      </div>
+    </div>
+  );
+}
+
+function ProductPanel() {
+  return (
+    <div className="grid gap-8 px-6 py-9 sm:grid-cols-12 sm:px-10">
+      <div className="sm:col-span-6">
+        <p className="text-[10px] tracking-[0.24em] text-black/40 uppercase">
+          Reusable collection
+        </p>
+        <p className="mt-3 font-display text-[clamp(1.5rem,4vw,2.6rem)] leading-[0.92] font-extrabold tracking-[-0.035em]">
+          Reusable PP
+        </p>
+        <p className="mt-4 max-w-sm text-[13px] leading-relaxed text-black/60">
+          Food-grade PP5, microwave safe, hot and cold. Printed in the mould, so
+          the graphic lasts as long as the cup does.
+        </p>
+        <div className="mt-6 flex flex-wrap gap-2">
+          {linkupSizes.map((size, i) => (
+            <span
+              key={size}
+              className={clsx(
+                "rounded-md border px-3 py-1.5 text-[11px] font-semibold",
+                i === 2 ? "border-transparent text-white" : "border-black/15 text-black/65",
+              )}
+              style={i === 2 ? { background: "var(--link-deep)" } : undefined}
+            >
+              {size}
+            </span>
+          ))}
+        </div>
+        <div className="mt-7 rounded-lg border border-black/10 bg-white p-4">
+          <p className="text-[11px] font-semibold">Minimum order</p>
+          <p className="mt-1 font-display text-2xl font-extrabold tracking-tight">
+            One cup
+          </p>
+          <p className="mt-1 text-[11px] text-black/50">
+            Their own promise, in the place a buyer looks for it.
+          </p>
+        </div>
+      </div>
+      <div className="sm:col-span-6">
+        <div className="flex h-44 items-end justify-center gap-3 rounded-lg bg-[#f0ebe2]">
+          {[0.58, 0.72, 0.88, 1].map((h, i) => (
+            <CupGlyph
+              key={h}
+              lid={i % 2 === 1}
+              className="text-black/45"
+              style={{ height: `${h * 8}rem` }}
+            />
+          ))}
+        </div>
+        <dl className="mt-4 grid grid-cols-2 gap-px overflow-hidden rounded-lg border border-black/10 bg-black/10">
+          {[
+            ["Material", "PP5, food grade"],
+            ["Print", "IML, in-mould"],
+            ["Use", "Hot & cold"],
+            ["Care", "Microwave safe"],
+          ].map(([k, v]) => (
+            <div key={k} className="bg-white px-3.5 py-2.5">
+              <dt className="text-[9px] tracking-[0.14em] text-black/40 uppercase">{k}</dt>
+              <dd className="mt-0.5 text-[11px] font-medium">{v}</dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+    </div>
+  );
+}
+
+function LeadPanel() {
+  return (
+    <div className="px-6 py-9 sm:px-10">
+      <p className="text-[10px] tracking-[0.24em] text-black/40 uppercase">
+        How fast you need them
+      </p>
+      <ul className="mt-5 grid gap-3 sm:grid-cols-3">
+        {linkupLeadTimes.map((tier, i) => (
+          <li
+            key={tier.tier}
+            className={clsx(
+              "rounded-lg border p-5",
+              i === 0 ? "border-transparent text-white" : "border-black/12 bg-white",
+            )}
+            style={i === 0 ? { background: "var(--link-deep)" } : undefined}
+          >
+            <p className="text-[10px] font-semibold tracking-[0.18em] uppercase opacity-70">
+              {tier.tier}
+            </p>
+            <p className="mt-2 font-display text-2xl font-extrabold tracking-tight">
+              {tier.days}
+            </p>
+            <p className="mt-1 text-[11px] opacity-65">{tier.note}</p>
+          </li>
+        ))}
+      </ul>
+      <p className="mt-5 text-[11px] text-black/50">
+        Their own published lead times — currently only visible inside a post.
+      </p>
+    </div>
+  );
+}
+
+function PrintPanel() {
+  return (
+    <div className="px-6 py-9 sm:px-10">
+      <div className="grid gap-8 sm:grid-cols-12">
+        <div className="sm:col-span-5">
+          <p className="font-display text-xl font-extrabold tracking-tight">
+            In-mould labelling
+          </p>
+          <p className="mt-3 text-[13px] leading-relaxed text-black/60">
+            The graphic goes into the mould with the cup, so it cannot peel,
+            scratch or fade off. Full colour, edge to edge.
+          </p>
+          <ul className="mt-5 space-y-2">
+            {linkupServices.map((svc) => (
+              <li key={svc} className="flex items-center gap-2.5 text-[12px] text-black/70">
+                <span
+                  aria-hidden
+                  className="h-1.5 w-1.5 rounded-full"
+                  style={{ background: "var(--link)" }}
+                />
+                {svc}
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div className="sm:col-span-7">
+          <div className="grid grid-cols-3 gap-2.5">
+            {["#1f3d2b", "#8e2b2b", "#243a5e", "#c2762a", "#2f2f33", "#6b4a86"].map((c) => (
+              <div
+                key={c}
+                className="flex aspect-[3/4] items-end justify-center rounded-md p-3"
+                style={{ background: c }}
+              >
+                <span className="text-[8px] font-bold tracking-[0.18em] text-white/70 uppercase">
+                  Your brand
+                </span>
+              </div>
+            ))}
+          </div>
+          <p className="mt-3 text-[11px] text-black/45">
+            Six of the brands on their shelf, as the range would show them.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function QuotePanel() {
+  return (
+    <div className="px-6 py-9 sm:px-10">
+      <div className="grid gap-8 sm:grid-cols-12">
+        <div className="sm:col-span-6">
+          <p className="font-display text-xl font-extrabold tracking-tight">
+            Three fields, then a person
+          </p>
+          <p className="mt-3 text-[13px] leading-relaxed text-black/60">
+            Size, quantity, and where to send it. Everything else is a
+            conversation — but the enquiry lands somewhere it can be followed
+            up, instead of in a comment thread.
+          </p>
+        </div>
+        <div className="sm:col-span-6">
+          <div className="space-y-2.5 rounded-lg border border-black/10 bg-white p-5">
+            {[
+              ["Size", linkupSizes.join(" / ")],
+              ["Quantity", "From one cup"],
+              ["Deliver to", "Company, city"],
+            ].map(([label, hint]) => (
+              <div key={label} className="rounded-md border border-black/10 px-3.5 py-2.5">
+                <span className="block text-[9px] tracking-[0.14em] text-black/40 uppercase">
+                  {label}
+                </span>
+                <span className="block text-[12px] text-black/70">{hint}</span>
+              </div>
+            ))}
+            <span
+              className="mt-1 block rounded-md px-4 py-2.5 text-center text-[11px] font-bold text-white"
+              style={{ background: "var(--link-deep)" }}
+            >
+              Send it
+            </span>
+          </div>
+        </div>
       </div>
     </div>
   );

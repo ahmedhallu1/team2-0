@@ -10,6 +10,7 @@ import { Rise } from "@/components/motion/reveal";
 import { Magnetic } from "@/components/fx/magnetic";
 import { WhatsAppIcon } from "@/components/whatsapp-icon";
 import { CupGlyph, KupMark, LinkMark } from "@/components/proposal/kup-glyphs";
+import { Proof } from "@/components/proposal/proof";
 import { contactEmail, phones } from "@/lib/contact";
 import { actionGhost, actionPrimary, eyebrow } from "@/lib/ui";
 import { shell } from "@/lib/layout";
@@ -56,6 +57,7 @@ export function Closing() {
   return (
     <section
       id="next"
+      data-zone="both"
       aria-labelledby="next-heading"
       className="relative isolate overflow-hidden border-t border-line py-24 sm:py-32 lg:py-40"
     >
@@ -76,7 +78,7 @@ export function Closing() {
             <CupGlyph className="h-24 text-ink opacity-25 sm:h-28" />
           </span>
 
-          <p className={clsx(eyebrow, "mt-8")}>12 — Where this goes next</p>
+          <p className={clsx(eyebrow, "mt-8")}>11 — Where this goes next</p>
 
           <AscentHeading
             as="h2"
@@ -148,7 +150,7 @@ export function Closing() {
           <Rise delay={0.22} className="mt-10">
             <a
               href={`mailto:${contactEmail}?subject=${encodeURIComponent("KUPHUB × LinkUp — next step")}`}
-              className="inline-flex items-center gap-2 text-sm text-muted transition-colors hover:text-ink"
+              className="inline-flex items-center gap-2 py-2.5 text-sm text-muted transition-colors hover:text-ink"
             >
               <Mail size={15} aria-hidden className="text-brand" />
               {contactEmail}
@@ -156,8 +158,10 @@ export function Closing() {
           </Rise>
         </div>
 
+        <Proof className="mt-20" />
+
         {/* Where this page came from, and what it is. */}
-        <footer className="mt-24 border-t border-line pt-8">
+        <footer className="mt-14 border-t border-line pt-8">
           <div className="flex flex-col gap-4 text-xs text-faint sm:flex-row sm:items-center sm:justify-between">
             <p>
               Prepared by 2.0 for KUPHUB and LinkUp Egypt · September 2026 ·

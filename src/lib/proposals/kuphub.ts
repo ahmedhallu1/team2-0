@@ -153,11 +153,64 @@ export const linkupProducts = [
 
 export const linkupSizes = ["6 oz", "8 oz", "12 oz", "16 oz"] as const;
 
+/** Lead times, exactly as their own graphic prints them. */
+export const linkupLeadTimes = [
+  { tier: "Fast track", days: "4 days", note: "Urgent orders" },
+  { tier: "Standard", days: "8 days", note: "Regular orders" },
+  { tier: "Economy", days: "14 days", note: "Large orders" },
+] as const;
+
+/** What they already offer around the cup itself, from the same post. */
+export const linkupServices = [
+  "Photo session",
+  "Product launch",
+  "Brand presentation",
+  "Menu design",
+  "Social media content",
+  "Samples & prototypes",
+] as const;
+
+/**
+ * The same company, introduced four different ways.
+ *
+ * Each of these is a different lockup on a different surface, all currently
+ * live. This is the whole argument for the rebrand, and it is entirely theirs
+ * — we are only putting the four next to each other.
+ */
+export const linkupLockups = [
+  {
+    mark: "LINKUP",
+    descriptor: "PAPER KUP",
+    where: "Instagram profile",
+    palette: "Black & amber",
+  },
+  {
+    mark: "LINKUP",
+    descriptor: "COVERING — ALL PACKING SOLUTIONS",
+    where: "Facebook profile, and the custom-print posts",
+    palette: "Black & amber",
+  },
+  {
+    mark: "LINKUP®",
+    descriptor: "ECO SOLUTIONS",
+    where: "The reusable-cup range posts",
+    palette: "Green & white",
+  },
+  {
+    mark: "LINKUP",
+    descriptor: "EGYPT — Creating Sustainable Packaging Solutions",
+    where: "Facebook cover",
+    palette: "Green & tan",
+  },
+] as const;
+
 /** Lines LinkUp already uses on its own artwork. We'd build on these. */
 export const linkupLines = [
   "Sustainability starts with one cup.",
   "Sustainable by choice. Better by design.",
   "Designed for reuse. Built for a greener future.",
+  "Your brand, our passion.",
+  "Let's build a greener future together.",
 ] as const;
 
 /* ------------------------------------------------------------------ */
@@ -178,6 +231,13 @@ export type Observation = {
   source: string;
 };
 
+/**
+ * Five, deliberately.
+ *
+ * Two more were cut rather than trimmed: LinkUp's competing lockups and the
+ * Smouha partnership each now have a chapter of their own, and hearing the
+ * same observation twice makes the audit read as padding.
+ */
 export const observations: Observation[] = [
   {
     id: "domains",
@@ -198,15 +258,6 @@ export const observations: Observation[] = [
     source: "Facebook & Instagram profiles",
   },
   {
-    id: "identity",
-    title: "One company, three introductions",
-    seen: "LinkUp arrives as “PAPER KUP” on Instagram, “COVERING — ALL PACKING SOLUTIONS” on the Facebook profile, and “Creating Sustainable Packaging Solutions” on the cover — three marks, three descriptions, two colour stories.",
-    opportunity:
-      "One identity system, so a buyer who meets you twice meets the same company.",
-    brand: "linkup",
-    source: "Both profile marks and the Facebook cover",
-  },
-  {
     id: "tagline",
     title: "The line is already right",
     seen: "“Less is more” sits under the KUPHUB mark. It is a good line — specific, confident, and the opposite of how most coffee brands talk.",
@@ -223,15 +274,6 @@ export const observations: Observation[] = [
       "A product story that keeps selling after the post has scrolled away.",
     brand: "linkup",
     source: "Facebook, 12 Aug 2026",
-  },
-  {
-    id: "club",
-    title: "A partnership doing a coupon's job",
-    seen: "“Ibn El Nady”, with Smouha Sporting Club, runs as a weekend discount. The club, the members and the ground are all real assets already in hand.",
-    opportunity:
-      "The same partnership, run as a campaign with a name, a look and a season.",
-    brand: "kuphub",
-    source: "KUPHUB feed, August–September 2026",
   },
   {
     id: "offers",
@@ -496,3 +538,213 @@ export const engagement = [
 
 /** Slugs from `@/lib/work` that earn their place on this page. */
 export const proofSlugs = ["yacht-pilates", "sodio", "world-fit"] as const;
+
+/* ------------------------------------------------------------------ */
+/*  What is running now                                               */
+/* ------------------------------------------------------------------ */
+
+export type CurrentPost = {
+  src: string;
+  alt: string;
+  /** When it was published, as the channel shows it. */
+  date: string;
+  /** What the frame is doing, described plainly. Never a verdict on taste. */
+  note: string;
+  width: number;
+  height: number;
+};
+
+/**
+ * Real posts, downloaded from the public channels.
+ *
+ * Shown to the people who published them, in a document prepared for them —
+ * their own work, not repurposed for anyone else. The notes describe what each
+ * frame is carrying, which is a design observation, and stop there. Nothing
+ * here grades the work, and nothing claims a post was generated unless the
+ * channel itself says so.
+ */
+export const kuphubCurrent: CurrentPost[] = [
+  {
+    src: "/proposals/kuphub/current/business-morning-2sep.jpg",
+    alt: "KUPHUB's Business Morning post: a storefront scene behind a headline, three numbered offers, a cup and a brownie, an hours badge and a branch line",
+    date: "2 September",
+    note: "Three offers, two languages, the hours, a branch, five badges and the social handles — all in one frame.",
+    width: 360,
+    height: 640,
+  },
+  {
+    src: "/proposals/kuphub/current/ibn-el-nady-12aug.jpg",
+    alt: "KUPHUB's Ibn El Nady post: the Smouha Sporting Club crest on a blue stadium background with a 50% badge and three drinks",
+    date: "12 August",
+    note: "The club partnership, in the club's blue rather than KUPHUB's green.",
+    width: 360,
+    height: 640,
+  },
+  {
+    src: "/proposals/kuphub/current/bogo-19jul.jpg",
+    alt: "KUPHUB's buy-one-get-one post: large BUY 1 GET 1 type over coffee and dessert photography",
+    date: "19 July",
+    note: "A strong offer, set in a different type system from the one before it.",
+    width: 360,
+    height: 640,
+  },
+  {
+    src: "/proposals/kuphub/current/match-mix-10aug.jpg",
+    alt: "KUPHUB's Match & Mix post showing seven iced-tea flavours and a three-for-two offer",
+    date: "10 August",
+    note: "Seven flavours and a price rule, competing for the same space.",
+    width: 360,
+    height: 640,
+  },
+  {
+    src: "/proposals/kuphub/current/away-27aug.jpg",
+    alt: "KUPHUB's 'we'll be away' post: a single green cup photographed against a plain wall",
+    date: "27 August",
+    note: "The quietest frame on the feed, and the one that looks most like a brand.",
+    width: 360,
+    height: 640,
+  },
+  {
+    src: "/proposals/kuphub/current/club-juice-18sep.jpg",
+    alt: "KUPHUB's Smouha club juice post with fruit imagery and a Good Drinks Better Games headline",
+    date: "18 September",
+    note: "A third visual world again, for the same club, five weeks later.",
+    width: 360,
+    height: 640,
+  },
+];
+
+export const linkupCurrent: CurrentPost[] = [
+  {
+    src: "/proposals/linkup/current/post-a.jpg",
+    alt: "LinkUp's custom-print post: a photo-studio scene with a blank cup on a plinth, lead times and a row of sample cups",
+    date: "Custom print",
+    note: "Under the LINKUP COVERING mark. Real information — one-cup minimum, 4/8/14-day lead times — inside a generated studio scene.",
+    width: 414,
+    height: 414,
+  },
+  {
+    src: "/proposals/linkup/current/post-b.jpg",
+    alt: "LinkUp's reusable cup range post showing PP and rice-husk collections against a leafy background",
+    date: "Reusable range",
+    note: "Under a different mark again — LINKUP ECO SOLUTIONS, in green.",
+    width: 414,
+    height: 414,
+  },
+  {
+    src: "/proposals/linkup/current/post-c.jpg",
+    alt: "A LinkUp product post showing a branded reusable cup",
+    date: "Product",
+    note: "Good product photography, with no system around it.",
+    width: 414,
+    height: 414,
+  },
+  {
+    src: "/proposals/linkup/current/post-d.jpg",
+    alt: "A LinkUp post showing branded cups for a client",
+    date: "Client work",
+    note: "The strongest asset they have — other people's brands on their cups.",
+    width: 414,
+    height: 414,
+  },
+];
+
+/* ------------------------------------------------------------------ */
+/*  Campaigns                                                          */
+/* ------------------------------------------------------------------ */
+
+export type Campaign = {
+  id: string;
+  name: string;
+  arabic?: string;
+  /** One line: what it is. */
+  line: string;
+  /** Why it is possible — always something both businesses already have. */
+  because: string;
+  /** What would actually be made. */
+  outputs: string[];
+  season: string;
+  /** Which businesses it runs across. */
+  brands: BrandKey[];
+};
+
+/**
+ * Campaigns, not posts.
+ *
+ * Every one of these is built out of something the two businesses already
+ * own — the club partnership, the rice-husk range, the four branches, the
+ * no-minimum print. None of it needs a new product or a new partner to start.
+ *
+ * The first is the one to lead with: it is the only idea on this page that
+ * only works *because* the same owner has both companies.
+ */
+export const campaigns: Campaign[] = [
+  {
+    id: "one-cup",
+    name: "One Cup",
+    arabic: "كوباية واحدة",
+    line: "Smouha members drink from a reusable KUPHUB cup that LinkUp makes. Bring it back, it gets refilled cheaper.",
+    because:
+      "LinkUp already manufactures reusable PP and rice-husk cups with no minimum order. KUPHUB already has a club partnership and a branch inside the ground. Nobody has to buy anything new to run this.",
+    outputs: [
+      "A club-edition cup — LinkUp's rice husk, KUPHUB's print",
+      "Refill pricing for anyone carrying one",
+      "Launch film shot at Green Corner",
+      "In-ground signage and a members' card",
+      "A counter: cups saved, published monthly",
+    ],
+    season: "Launch with the season",
+    brands: ["kuphub", "linkup"],
+  },
+  {
+    id: "morning",
+    name: "Business Morning",
+    arabic: "ابدأ يومك صح",
+    line: "The offer that already runs, given a fixed frame, a fixed slot and a reason to be there.",
+    because:
+      "It is already the most repeated post on the feed. It has never had a look it keeps.",
+    outputs: [
+      "One template, filled in weekly",
+      "A takeaway sleeve for the 7–9am window",
+      "Office-building drops around Smouha",
+    ],
+    season: "Weekdays, all year",
+    brands: ["kuphub"],
+  },
+  {
+    id: "roasters",
+    name: "Kup Roasters",
+    line: "The coffee itself, treated as the product — origin, roast, the people making it.",
+    because:
+      "They already call themselves Coffee Roasters on half their artwork. The story exists and has never been told.",
+    outputs: [
+      "A short film per branch",
+      "Bean cards customers can take",
+      "The barista series",
+    ],
+    season: "Quarterly",
+    brands: ["kuphub"],
+  },
+  {
+    id: "your-brand",
+    name: "Your Brand, Our Passion",
+    line: "LinkUp's own line, run as a campaign: one customer's cup, start to finish, every month.",
+    because:
+      "It is already written on their artwork, and their best asset is other people's brands on their cups.",
+    outputs: [
+      "A monthly customer story",
+      "The mockup service, shown as a service",
+      "A sample pack a buyer can request in one tap",
+    ],
+    season: "Monthly",
+    brands: ["linkup"],
+  },
+];
+
+/** A month of content, as the calendar would actually be built. */
+export const contentMonth = [
+  { week: "Week 1", kuphub: "Product — the Turkish, shot properly", linkup: "Customer story" },
+  { week: "Week 2", kuphub: "Offer — Business Morning", linkup: "Spec explainer — PP vs rice husk" },
+  { week: "Week 3", kuphub: "Place — a branch film", linkup: "Behind the mould — IML printing" },
+  { week: "Week 4", kuphub: "People — the baristas", linkup: "Sustainability — the counter" },
+] as const;
