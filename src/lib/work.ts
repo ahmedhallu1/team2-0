@@ -69,8 +69,9 @@ export type Project = {
 };
 
 /**
- * Real work, newest and most illustrative first. The first entry is rendered
- * as the featured case study on /work and on the home page.
+ * Real, shipped work, newest and most illustrative first. The first entry is
+ * rendered as the featured case study on /work and on the home page. Concept
+ * demos live in lib/demos.ts and are never listed here.
  */
 export const projects: Project[] = [
   {

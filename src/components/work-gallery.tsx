@@ -60,10 +60,10 @@ export function WorkGallery() {
               "text-base leading-relaxed text-pretty text-muted lg:col-span-5 lg:text-lg",
             )}
           >
-            Not mockups — live products, platforms and brand experiences that
-            are running today. Each one below explains what it is, what it does
-            and why it earns its place in the business that owns it. This is a
-            selection of our work, not the whole archive.
+            Live products, platforms and brand experiences that are running
+            today. Each one below explains what it is, what it does and why it
+            earns its place in the business that owns it. Concept demos are
+            kept separate, further down, and labelled as demos.
           </Rise>
         </div>
 
