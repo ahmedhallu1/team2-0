@@ -1192,6 +1192,60 @@ dialog.lightbox[open]::backdrop {
     /* Defaults to KUPHUB's world; zones below override. */
     --kup-ink: #7cc79a;
     --link-ink: #e9a13b;
+
+    /* The chrome's scroll-progress fill. */
+    --progress: linear-gradient(90deg, #8fd4ac, #e9a13b);
+  }
+
+  /**
+   * GeoArabia — their navy, sampled from the mark (#183054), taken down to a
+   * night-survey ground. The accent is the cyan of the contour rings on their
+   * own cover image; the brand has no second colour, and inventing one would
+   * be us talking, not them.
+   */
+  .proposal--geo {
+    --geo-navy: #183054;
+    --geo-silver: #c7cdd6;
+    --geo-cyan: #5ccbe0;
+    --progress: linear-gradient(90deg, #9fb8dc, #5ccbe0);
+  }
+  .proposal [data-zone="geo"] {
+    --bg: #07101f;
+    --surface: #0d1a30;
+    --surface-2: #0a1528;
+    --surface-3: #13233f;
+    --line: rgba(233, 238, 246, 0.12);
+    --line-2: rgba(233, 238, 246, 0.24);
+    --ink: #eef2f8;
+    --muted: rgba(238, 242, 248, 0.7);
+    --faint: rgba(238, 242, 248, 0.54);
+    --accent: #5ccbe0;
+    --on-accent: #04121c;
+    --brand: #9fc0e8;
+    --ring: #5ccbe0;
+    --ambient: 0.7;
+  }
+  /**
+   * The same navy on paper — the logo as it is actually printed. Used where the
+   * page stops arguing and starts quoting: the prices. Faint and muted are held
+   * at alphas that clear AA on this ground, not at the dark zone's values.
+   */
+  .proposal [data-zone="geo-paper"] {
+    --bg: #f2f4f8;
+    --surface: #ffffff;
+    --surface-2: #e8ecf2;
+    --surface-3: #dde3ec;
+    --line: rgba(24, 48, 84, 0.13);
+    --line-2: rgba(24, 48, 84, 0.26);
+    --ink: #13254a;
+    --muted: rgba(19, 37, 74, 0.76);
+    --faint: rgba(19, 37, 74, 0.66);
+    --accent: #183054;
+    --on-accent: #ffffff;
+    --brand: #0b6f86;
+    --ring: #0b6f86;
+    --ambient: 0.4;
+    color-scheme: light;
   }
 
   /**
@@ -1400,10 +1454,38 @@ dialog.lightbox[open]::backdrop {
     }
   }
 
+  /**
+   * The scanner pass over GeoArabia's contour field. One element, transform
+   * only, running on the compositor; the field itself never repaints.
+   */
+  .geo-scan {
+    position: absolute;
+    inset-inline: 0;
+    top: 0;
+    height: 28%;
+    background: linear-gradient(
+      to bottom,
+      transparent,
+      color-mix(in srgb, var(--accent) 7%, transparent) 85%,
+      color-mix(in srgb, var(--accent) 45%, transparent) 99.5%,
+      transparent
+    );
+    translate: 0 -100%;
+    animation: geo-scan 9s cubic-bezier(0.45, 0, 0.55, 1) 1.2s infinite;
+    will-change: translate;
+  }
+  @keyframes geo-scan {
+    0% { translate: 0 -100%; }
+    70%, 100% { translate: 0 360%; }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .proposal [data-scrub] {
       transform: none !important;
       opacity: 1 !important;
+    }
+    .geo-scan {
+      display: none;
     }
   }
 
@@ -1422,6 +1504,10 @@ html.proposal-route body {
   background: #061a0e;
   color-scheme: dark;
 }
+html.proposal-route--geo,
+html.proposal-route--geo body {
+  background: #07101f;
+}
 
 /**
  * The word that carries the whole idea, in the two brands' own colours:
@@ -1432,12 +1518,23 @@ html.proposal-route body {
  * their specificity — so the `@layer components` version of this override was
  * losing silently, and the last word on the page was still arguing the
  * document belongs to us rather than to them.
+ *
+ * `:root` is there for specificity. The site's light-theme variant is
+ * `:root:not(.dark) .text-gradient-brand` — three classes' worth — which beat a
+ * two-class override, so anyone opening the proposal on a phone in light mode
+ * got 2.0's violet and lime back. Three classes, declared later, wins.
  */
-.proposal .text-gradient-brand {
+:root .proposal .text-gradient-brand {
   background: linear-gradient(100deg, #8fd4ac 0%, #c9c47e 42%, #e9a13b 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+}
+/* GeoArabia: silver-blue into the contour cyan. */
+:root .proposal.proposal--geo .text-gradient-brand {
+  background: linear-gradient(100deg, #c7d6ee 0%, #9fc0e8 40%, #5ccbe0 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
 }
 
 /* ------------------------------------------------------------------ */

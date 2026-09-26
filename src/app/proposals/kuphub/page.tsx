@@ -71,7 +71,7 @@ export default function KuphubProposalPage() {
           chrome lives inside it so the fixed bar is dressed in the same
           palette as the document beneath it. */}
       <div className="proposal">
-        <ProposalChrome sections={sections} />
+        <ProposalChrome sections={sections} client="KUPHUB × LinkUp" />
         <Opening />
         <div id="cup">
           <CupScene />

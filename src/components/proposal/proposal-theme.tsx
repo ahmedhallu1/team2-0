@@ -13,12 +13,15 @@ import { useEffect } from "react";
  *
  * Removed on unmount, so navigating back to the site restores its own theme.
  */
-export function ProposalTheme() {
+export function ProposalTheme({ ground }: { ground?: string } = {}) {
   useEffect(() => {
     const root = document.documentElement;
-    root.classList.add("proposal-route");
-    return () => root.classList.remove("proposal-route");
-  }, []);
+    // `ground` names a second class for proposals that aren't on KUPHUB's
+    // forest — see `html.proposal-route--*` in globals.css.
+    const classes = ["proposal-route", ...(ground ? [`proposal-route--${ground}`] : [])];
+    root.classList.add(...classes);
+    return () => root.classList.remove(...classes);
+  }, [ground]);
 
   return null;
 }

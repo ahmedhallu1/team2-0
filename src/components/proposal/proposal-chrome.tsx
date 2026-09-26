@@ -16,7 +16,17 @@ import { clsx } from "@/lib/clsx";
  * a transform-only fill for everyone else, so the scroll indicator costs one
  * compositor property and never lays out.
  */
-export function ProposalChrome({ sections }: { sections: { id: string; label: string }[] }) {
+export function ProposalChrome({
+  sections,
+  client,
+  zone = "both",
+}: {
+  sections: { id: string; label: string }[];
+  /** Who the document is for — the prefix of the chapter read-out. */
+  client: string;
+  /** Which palette dresses the bar. See the zones in globals.css. */
+  zone?: string;
+}) {
   const fillRef = useRef<HTMLSpanElement>(null);
   const [current, setCurrent] = useState(sections[0]?.label ?? "");
   const [lifted, setLifted] = useState(false);
@@ -66,7 +76,7 @@ export function ProposalChrome({ sections }: { sections: { id: string; label: st
 
   return (
     <header
-      data-zone="both"
+      data-zone={zone}
       className={clsx(
         "proposal-chrome fixed inset-x-0 top-0 z-50 transition-colors duration-500",
         lifted && "border-b border-line bg-bg/80 backdrop-blur-xl",
@@ -84,7 +94,7 @@ export function ProposalChrome({ sections }: { sections: { id: string; label: st
         <span aria-hidden className="hidden h-4 w-px bg-line-2 sm:block" />
 
         <p className="min-w-0 flex-1 truncate text-[11px] font-medium tracking-[0.2em] text-faint uppercase">
-          <span className="hidden sm:inline">KUPHUB × LinkUp · </span>
+          <span className="hidden sm:inline">{client} · </span>
           <span className="text-muted">{current}</span>
         </p>
 
@@ -112,7 +122,7 @@ export function ProposalChrome({ sections }: { sections: { id: string; label: st
         <span
           ref={fillRef}
           className="block h-px w-full origin-left"
-          style={{ transform: "scaleX(0)", background: "linear-gradient(90deg,#8fd4ac,#e9a13b)" }}
+          style={{ transform: "scaleX(0)", background: "var(--progress)" }}
         />
       </span>
     </header>
