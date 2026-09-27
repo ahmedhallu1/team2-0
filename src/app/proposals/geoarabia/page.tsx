@@ -23,7 +23,7 @@ import { GeoClosing } from "@/components/proposal/geoarabia/geo-closing";
 export const metadata: Metadata = {
   title: "GeoArabia — a proposal",
   description:
-    "A private proposal from 2.0 for GeoArabia: website, SEO and GEO, social media, WhatsApp automation and campaigns, with prices.",
+    "A private proposal from 2.0 for GeoArabia: SEO and GEO, social media, WhatsApp automation and campaigns, with prices.",
   robots: { index: false, follow: false, nocache: true },
   openGraph: {
     title: "GeoArabia — a proposal by 2.0",

@@ -2,17 +2,17 @@
  * Everything the GeoArabia proposal says about the business, and what it costs.
  *
  * Same house rule as the KUPHUB file: the facts about GeoArabia were read off
- * the public record on 27 September 2026 — a direct request to geoarabia.sa,
- * the public Facebook page, and a web search for the services they sell — and
+ * the public record on 27 September 2026 — their own site and its robots.txt,
+ * sitemap and canonical tags, DNS for their domains, the public Facebook page,
+ * and a web search for the services they sell — and
  * the source is named next to each one. There are no invented followers,
  * rankings, projects or clients. Concept work (the AI answer, the WhatsApp
  * thread, the article list) is kept in its own shapes and is always labelled
  * as a concept on screen.
  *
- * Prices are ours, in Egyptian pounds, with one deliberate exception: the
- * social retainer is quoted in US dollars, as agreed. Totals therefore keep the
- * two currencies apart rather than converting at a rate that will be wrong by
- * the time anyone reads it.
+ * Prices are ours, all in Egyptian pounds. The social retainer was briefed as
+ * $500 and is quoted at 26,000 EGP (51.9 EGP to the dollar on 26 September
+ * 2026, rounded up to a clean figure).
  */
 
 /* ------------------------------------------------------------------ */
@@ -25,12 +25,14 @@ export const geoarabia = {
   city: "Riyadh",
   district: "Ar Rayan",
   phone: "+966 55 650 9600",
+  /** The four service lines, as their own site names them. */
   services: [
-    "Topographic survey",
-    "3D laser scanning",
-    "Scan-to-BIM",
-    "3D modelling",
+    "Geospatial surveying & mapping",
+    "Scan to BIM",
+    "Hydrology & water resources",
+    "Drone (UAS) & ROV surveys",
   ],
+  site: "geoarabia-ntvijbcu.manus.space",
   /** Who signs the purchase order. From the brief, not from their channels. */
   buyers: [
     { name: "Engineering consultancies", arabic: "المكاتب الاستشارية" },
@@ -44,20 +46,26 @@ export const geoarabia = {
 /*  What we see                                                       */
 /* ------------------------------------------------------------------ */
 
-/** The domain check, exactly as the server answered it. */
+/**
+ * The domain check. The site is real and good; the problem is where it lives.
+ * It is served from a temporary builder address, while every signal it gives a
+ * search engine — canonical tag, hreflang, sitemap, robots.txt — names
+ * geoarabia.com.sa as the real home, and that domain has no web server behind
+ * it at all. A crawler is told to index an address that doesn't answer.
+ */
 export const domainProbe = [
   {
-    host: "geoarabia.sa",
-    status: "Index of /",
-    note: "An empty server folder. One entry, cgi-bin/, last changed 24 March 2026.",
-    where: "The address the brief gives for the company.",
-    bad: true,
+    host: "geoarabia-ntvijbcu.manus.space",
+    status: "200",
+    note: "The site itself — English and Arabic, services, portfolio, FAQ. Served from a temporary builder subdomain.",
+    where: "The address the site actually loads from.",
+    bad: false,
   },
   {
     host: "geoarabia.com.sa",
-    status: "No site",
-    note: "Mail runs here — it is the address on the Facebook page — but nothing answers on the web.",
-    where: "Info@geoarabia.com.sa, Facebook intro.",
+    status: "No answer",
+    note: "Where the site's canonical tag, hreflang, sitemap and robots.txt all say the real site is. No web server is set up for it.",
+    where: "Mail works here — Info@geoarabia.com.sa. The web doesn't.",
     bad: true,
   },
 ] as const;
@@ -95,17 +103,17 @@ export const observations: Observation[] = [
   },
   {
     id: "entity",
-    title: "Two names for one company",
-    seen: "The website address is geoarabia.sa. The email address is @geoarabia.com.sa. Search engines and AI assistants both check that a business's details agree before they trust them.",
-    opportunity: "One domain, one name, one phone number, everywhere. It costs nothing, and GEO depends on it.",
-    source: "Facebook intro · DNS records",
+    title: "Three addresses for one company",
+    seen: "The site loads on manus.space, names geoarabia.com.sa as home, and geoarabia.sa shows an empty server folder. Search engines and AI assistants both check that a business's details agree before they trust it.",
+    opportunity: "One domain, one name, one phone number, everywhere. It costs almost nothing, and GEO depends on it.",
+    source: "Site source · DNS records · Facebook intro",
   },
   {
     id: "brand",
-    title: "The brand is already right",
-    seen: "A clean navy mark, and a cover that is a relief map: contour lines and terrain, the actual language of the work.",
-    opportunity: "Nothing to rebrand. We build the system out from what is already there — which is why this page is in their navy, not ours.",
-    source: "Facebook profile and cover",
+    title: "The site already makes the case",
+    seen: "Four service lines, an equipment list, 3D models you can rotate, an instant quote calculator, an Arabic version and eight FAQ answers. The navy brand carries through all of it.",
+    opportunity: "Nothing to rebuild. SEO and GEO build on top of it — those eight FAQ answers are the first thing AI assistants can quote.",
+    source: "geoarabia-ntvijbcu.manus.space",
   },
 ];
 
@@ -174,9 +182,9 @@ export const campaigns: Campaign[] = [
     name: "Measured before it's built",
     when: "November 2026",
     duration: "4 weeks",
-    line: "The site launch — shown as what the firm does: a point cloud turning into a model.",
-    because: "A launch is the one moment anyone pays attention to a new website. This one opens with the work itself, not an announcement.",
-    outputs: ["Launch carousel: scan → point cloud → BIM", "6 LinkedIn posts", "“Send us your site plan” WhatsApp entry point", "Google Business Profile live"],
+    line: "The first month of content, built from the work itself: a point cloud turning into a model.",
+    because: "The site finally lives at its own address, and the channels need a reason to follow them. The opening series shows the work instead of announcing it.",
+    outputs: ["Carousel series: scan → point cloud → BIM", "6 LinkedIn posts", "“Send us your site plan” WhatsApp entry point", "Google Business Profile live"],
   },
   {
     id: "cityscape",
@@ -206,12 +214,12 @@ export const timeline = [
   {
     month: "Oct",
     title: "Discover & build",
-    body: "Digital audit, market study, the three main Riyadh competitors agreed with you, keyword map in both languages. Site design, social templates and the WhatsApp flows drafted.",
+    body: "The site connected to geoarabia.com.sa and the other domains redirected to it. Technical audit, market study, the three main Riyadh competitors agreed with you, keyword map in both languages. Social templates and WhatsApp flows drafted.",
   },
   {
     month: "Nov",
-    title: "Launch",
-    body: "geoarabia.sa live with its first eight articles. Google Business Profile verified, WhatsApp bot answering. Launch and Cityscape campaigns.",
+    title: "Go live",
+    body: "The first eight articles published. Google Business Profile verified, WhatsApp bot answering. The opening content series and the Cityscape campaign.",
   },
   {
     month: "Dec",
@@ -239,15 +247,12 @@ export const timeline = [
 /*  Investment                                                        */
 /* ------------------------------------------------------------------ */
 
-export type Currency = "EGP" | "USD";
-
 export type Offer = {
   id: string;
   name: string;
   /** One-line promise, shown under the name. */
   line: string;
   price: number;
-  currency: Currency;
   cadence: "once" | "month" | "percent";
   /** Shown on the tile instead of a computed price, when there is one. */
   priceNote?: string;
@@ -261,30 +266,10 @@ export type Offer = {
 
 export const offers: Offer[] = [
   {
-    id: "site",
-    name: "Website",
-    line: "geoarabia.sa, built properly, in Arabic and English.",
-    price: 45000,
-    currency: "EGP",
-    cadence: "once",
-    includes: [
-      "Home, About, Projects, Contact",
-      "A page for each of the four services",
-      "Blog ready for the SEO articles",
-      "Schema, speed and Core Web Vitals done right",
-      "WhatsApp button and enquiry form",
-      "First year of hosting and SSL",
-    ],
-    recommended: true,
-    required: true,
-    group: "build",
-  },
-  {
     id: "wa-setup",
     name: "WhatsApp automation",
     line: "A bot that qualifies the enquiry before an engineer picks up.",
     price: 15000,
-    currency: "EGP",
     cadence: "once",
     includes: [
       "WhatsApp Business API number",
@@ -302,9 +287,8 @@ export const offers: Offer[] = [
     name: "Company profile",
     line: "The PDF that goes into every tender and every first email.",
     price: 12000,
-    currency: "EGP",
     cadence: "once",
-    includes: ["12–16 pages, Arabic and English", "Services, equipment, process", "Built from the same system as the site"],
+    includes: ["12–16 pages, Arabic and English", "Services, equipment, process", "Matches the site and the social system"],
     recommended: false,
     group: "build",
   },
@@ -313,10 +297,10 @@ export const offers: Offer[] = [
     name: "SEO + GEO",
     line: "Found on Google, and cited by the AI assistants buyers now ask first.",
     price: 10000,
-    currency: "EGP",
     cadence: "month",
     includes: [
-      "4 written articles a month, Arabic and English",
+      "Site connected to geoarabia.com.sa; canonical, sitemap and hreflang put right",
+      "4 written articles a month, Arabic and English, on your site",
       "Keyword map for Riyadh, in both languages",
       "On-page and technical SEO",
       "Google Business Profile, kept active",
@@ -333,8 +317,7 @@ export const offers: Offer[] = [
     id: "social",
     name: "Social media",
     line: "LinkedIn, Facebook and Instagram, planned a month ahead.",
-    price: 500,
-    currency: "USD",
+    price: 26000,
     cadence: "month",
     includes: [
       "Monthly content plan",
@@ -351,7 +334,6 @@ export const offers: Offer[] = [
     name: "WhatsApp care",
     line: "Flows updated as the services and questions change.",
     price: 2500,
-    currency: "EGP",
     cadence: "month",
     includes: ["New answers from the articles", "Monthly lead summary", "Meta's conversation fees billed at cost"],
     recommended: true,
@@ -362,7 +344,6 @@ export const offers: Offer[] = [
     name: "Reels",
     line: "Four short edits a month from your own site footage.",
     price: 6000,
-    currency: "EGP",
     cadence: "month",
     includes: ["Scanner on site, point cloud, finished model", "Captions in Arabic and English", "Cut for Reels, LinkedIn and Stories"],
     recommended: false,
@@ -373,7 +354,6 @@ export const offers: Offer[] = [
     name: "Media buying",
     line: "LinkedIn, Meta and Google Search, aimed at the four buyer types.",
     price: 5000,
-    currency: "EGP",
     cadence: "percent",
     priceNote: "15% of ad spend · min 5,000 EGP / month",
     includes: ["Audience build by job title and industry", "Campaign setup and weekly optimisation", "Ad spend paid to the platforms directly"],
@@ -389,5 +369,5 @@ export const terms = [
   "One-off work: 50% to start, 50% at launch.",
   "Monthly retainers are billed in advance. Three-month minimum.",
   "Ad spend, Meta's WhatsApp fees and domain renewals are paid at cost, never marked up.",
-  "Prices valid until 27 October 2026.",
+  "All prices in Egyptian pounds, valid until 27 October 2026.",
 ] as const;

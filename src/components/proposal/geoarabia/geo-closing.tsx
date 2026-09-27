@@ -22,7 +22,7 @@ const needs = [
   "Photos and scans from past projects",
   "The three competitors you watch in Riyadh",
   "Your company profile, if one exists",
-  "Access to the domain and the Facebook page",
+  "Access to the domain, the site and the Facebook page",
 ];
 
 export function GeoClosing() {
@@ -52,7 +52,8 @@ export function GeoClosing() {
             className="mx-auto mt-8 max-w-xl text-base leading-relaxed text-pretty text-muted"
           >
             Pick what starts in October and we&apos;ll send the agreement the
-            same week. The site goes live in November, in time for Cityscape.
+            same week. The domain is connected in October, and the first
+            articles are live in November, in time for Cityscape.
           </Rise>
 
           <Rise delay={0.14} className="mt-10 w-full max-w-2xl">

@@ -8,7 +8,6 @@ import {
   commitmentDiscount,
   offers,
   terms,
-  type Currency,
   type Offer,
 } from "@/lib/proposals/geoarabia";
 import { proposalY, shell } from "@/lib/layout";
@@ -22,11 +21,8 @@ import { clsx } from "@/lib/clsx";
  * It is a builder rather than a table because the room will ask "and without
  * the WhatsApp?" and the answer should appear, not be worked out on a phone.
  * Each item is a native checkbox (focusable, announced, Space to toggle), the
- * totals sit in a live region, and the two items the plan can't stand without
- * — the site and the SEO — are locked on.
- *
- * Currencies are never mixed into one figure. The social retainer is quoted in
- * dollars and everything else in pounds, so the totals read "EGP + USD".
+ * totals sit in a live region, and the one item the plan can't stand without
+ * — the SEO — is locked on. Everything is in Egyptian pounds.
  */
 
 const GROUPS: { id: Offer["group"]; title: string; note: string }[] = [
@@ -35,18 +31,11 @@ const GROUPS: { id: Offer["group"]; title: string; note: string }[] = [
   { id: "add", title: "Add when ready", note: "Switch on any month" },
 ];
 
-const fmt = (n: number, c: Currency) =>
-  c === "USD" ? `$${n.toLocaleString("en-US")}` : `${n.toLocaleString("en-US")} EGP`;
+const fmt = (n: number) => (n ? `${n.toLocaleString("en-US")} EGP` : "—");
 
 function priceLabel(o: Offer) {
   if (o.priceNote) return o.priceNote;
-  return o.cadence === "month" ? `${fmt(o.price, o.currency)} / month` : fmt(o.price, o.currency);
-}
-
-/** "12,500 EGP + $500", dropping whichever side is zero. */
-function mixed(egp: number, usd: number) {
-  const parts = [egp ? fmt(egp, "EGP") : "", usd ? fmt(usd, "USD") : ""].filter(Boolean);
-  return parts.length ? parts.join(" + ") : "—";
+  return o.cadence === "month" ? `${fmt(o.price)} / month` : fmt(o.price);
 }
 
 function OfferTile({
@@ -137,15 +126,14 @@ export function GeoInvestment() {
     });
 
   const totals = useMemo(() => {
-    const t = { onceEGP: 0, monthEGP: 0, monthUSD: 0, ads: false };
+    const t = { once: 0, month: 0, ads: false };
     for (const o of offers) {
       if (!picked.has(o.id)) continue;
-      if (o.cadence === "once") t.onceEGP += o.price;
-      else if (o.cadence === "percent") {
-        t.monthEGP += o.price;
-        t.ads = true;
-      } else if (o.currency === "USD") t.monthUSD += o.price;
-      else t.monthEGP += o.price;
+      if (o.cadence === "once") t.once += o.price;
+      else {
+        t.month += o.price;
+        if (o.cadence === "percent") t.ads = true;
+      }
     }
     return t;
   }, [picked]);
@@ -154,11 +142,8 @@ export function GeoInvestment() {
   // which is a percentage of someone else's spend.
   const discounted = (n: number) => Math.round(n * (1 - commitmentDiscount));
   const adsFloor = totals.ads ? offers.find((o) => o.cadence === "percent")!.price : 0;
-  const monthEGP = committed
-    ? discounted(totals.monthEGP - adsFloor) + adsFloor
-    : totals.monthEGP;
-  const monthUSD = committed ? discounted(totals.monthUSD) : totals.monthUSD;
-  const sixMonths = { egp: totals.onceEGP + monthEGP * 6, usd: monthUSD * 6 };
+  const month = committed ? discounted(totals.month - adsFloor) + adsFloor : totals.month;
+  const sixMonths = totals.once + month * 6;
 
   return (
     <section
@@ -173,7 +158,7 @@ export function GeoInvestment() {
           label="Investment"
           headingId="investment-heading"
           lines={["What it costs,", "item by item."]}
-          lede="The recommended start is already switched on. Tick anything on or off and the totals update. The website and the SEO stay on, because the plan doesn't work without them."
+          lede="The recommended start is already switched on. Tick anything on or off and the totals update. SEO + GEO stays on, because the plan doesn't work without it."
         />
 
         <div className="mt-12 grid gap-8 lg:grid-cols-12 lg:items-start">
@@ -215,17 +200,17 @@ export function GeoInvestment() {
                   <div>
                     <dt className="text-xs text-white/65">Once, to build</dt>
                     <dd className="mt-1 font-display text-2xl font-extrabold tracking-tight tabular-nums">
-                      {mixed(totals.onceEGP, 0)}
+                      {fmt(totals.once)}
                     </dd>
                   </div>
                   <div>
                     <dt className="text-xs text-white/65">Every month</dt>
                     <dd className="mt-1 font-display text-2xl font-extrabold tracking-tight tabular-nums">
-                      {mixed(monthEGP, monthUSD)}
+                      {fmt(month)}
                     </dd>
-                    {committed && (totals.monthEGP || totals.monthUSD) ? (
+                    {committed && totals.month ? (
                       <dd className="mt-1 text-xs text-white/55 tabular-nums">
-                        was {mixed(totals.monthEGP, totals.monthUSD)}
+                        was {fmt(totals.month)}
                       </dd>
                     ) : null}
                     {totals.ads ? (
@@ -235,7 +220,7 @@ export function GeoInvestment() {
                   <div className="border-t border-white/15 pt-5">
                     <dt className="text-xs text-white/65">First six months, all in</dt>
                     <dd className="mt-1 font-display text-lg font-extrabold tracking-tight text-[#8fe0ef] tabular-nums">
-                      {mixed(sixMonths.egp, sixMonths.usd)}
+                      {fmt(sixMonths)}
                     </dd>
                   </div>
                 </dl>

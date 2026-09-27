@@ -84,11 +84,11 @@ export function GeoPlan() {
           {/* 1 — Found */}
           <Layer
             n="01"
-            label="Found · Website + SEO + GEO"
+            label="Found · SEO + GEO"
             title="A page for every question a buyer asks."
-            body="A proper bilingual site on geoarabia.sa, then four articles a month written as answers to the questions consultants and contractors actually type. The same pages are built so that ChatGPT, Gemini and Google's AI Overviews can read and cite them. That is GEO."
+            body="Your site stays as it is. First we put it on its own domain, so search engines can index it. Then come four articles a month, each answering a question consultants and contractors actually type. The same pages are written so ChatGPT, Gemini and Google's AI Overviews can read and cite them. That is GEO."
             points={[
-              "A service page for each of the four services, in both languages",
+              "The site on geoarabia.com.sa, with every search signal pointing there",
               "Four articles a month, Arabic first, English alongside",
               "Google Business Profile in Ar Rayan, so GeoArabia shows up on the map",
               "The same name, domain and phone number everywhere",
@@ -132,7 +132,7 @@ export function GeoPlan() {
                 <div className="mt-auto flex flex-wrap gap-1.5 pt-4">
                   <span className="inline-flex items-center gap-1 rounded-full border border-accent/60 px-2.5 py-1 text-[11px] text-ink">
                     <Search size={10} aria-hidden className="text-accent" />
-                    geoarabia.sa
+                    geoarabia.com.sa
                   </span>
                   <span className="rounded-full border border-line px-2.5 py-1 text-[11px] text-faint">
                     + 3 sources

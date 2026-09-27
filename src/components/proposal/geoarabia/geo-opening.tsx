@@ -51,8 +51,8 @@ export function GeoOpening() {
           >
             GeoArabia scans buildings, surveys land and turns both into models
             engineers can build from. The people who buy that search for it
-            first — on Google, on LinkedIn, and now in AI assistants — and
-            today there is nothing there for them to find.
+            first — on Google, on LinkedIn, and now in AI assistants. The site
+            is already built. Search just can&apos;t find its way to it.
             <span className="mt-3 block text-ink">
               This is the plan to change that, and what it costs.
             </span>
