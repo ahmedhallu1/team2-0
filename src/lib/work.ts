@@ -3,8 +3,7 @@ import {
   Armchair,
   CalendarHeart,
   Dumbbell,
-  Globe2,
-  ScanSearch,
+    ScanSearch,
   Users,
 } from "lucide-react";
 
@@ -75,9 +74,9 @@ export type Project = {
 };
 
 /**
- * Shipped work, newest and most illustrative first, then concept demos
- * (flagged `concept`, always last). The first entry is rendered as the
- * featured case study on /work and on the home page.
+ * The portfolio, in the order it is shown. Concept demos are flagged
+ * `concept`: labelled on the page and left out of the projects-shipped count.
+ * The first entry is the featured case study on /work and on the home page.
  */
 export const projects: Project[] = [
   {
@@ -157,6 +156,42 @@ export const projects: Project[] = [
     asideHeight: 799,
   },
   {
+    slug: "interiors-concept",
+    name: "Interior studio website",
+    client: "Concept demo for interior & architecture studios",
+    category: "Concept demo",
+    year: "2026",
+    tagline:
+      "A complete website for an interior studio — with a 3D room that builds itself as you scroll.",
+    summary:
+      "A working website for a fictional interior studio: portfolio, case studies, journal and a consultation flow, with motion throughout — title bands that wipe in and drift apart, smooth scrolling, cards that tilt toward the pointer. As you scroll, a 3D room assembles itself through seven stages of the design process, and on the Process page visitors can restyle it, relight it and walk around it. A studio can put its own name, logo and colours on the whole site in the browser.",
+    impact:
+      "It lets a studio see — and click through — what its own website could be before committing to anything, and every enquiry from it comes straight to us.",
+    highlights: [
+      "Scroll-built 3D room: seven stages, one camera flight",
+      "Brand Studio: your name, logo and palette, live",
+      "Customizer: style, time of day, finishes, furniture",
+      "Fast and accessible: loads in under a second on 4G",
+    ],
+    facts: [
+      { label: "3D build stages", value: "7" },
+      { label: "Palettes", value: "4 + custom" },
+      { label: "Frame rate", value: "60 fps" },
+      { label: "Browser tests", value: "105" },
+    ],
+    tags: ["Websites & Platforms"],
+    icon: Armchair,
+    tint: "#a86c33",
+    concept: true,
+    href: "https://interiors.elevate2point0.com",
+    hrefLabel: "Open the demo",
+    image: "/work/interiors-concept.jpg",
+    imageAlt:
+      "The interior studio website demo: “Spaces with gravity” in huge type, cut with image bands, over a vaulted desert living room",
+    imageWidth: 1600,
+    imageHeight: 1000,
+  },
+  {
     slug: "sodio",
     name: "Sodio",
     client: "AIESEC in Alexandria",
@@ -188,39 +223,6 @@ export const projects: Project[] = [
     image: "/work/sodio.jpg",
     imageAlt:
       "The Sodio sign-in screen — the Sodio mark and wordmark over a deep navy field, with Google and password sign-in",
-    imageWidth: 1600,
-    imageHeight: 1000,
-  },
-  {
-    slug: "elect-i-global",
-    name: "ELECT-I Global",
-    category: "B2B marketplace",
-    year: "2026",
-    tagline:
-      "A wholesale sourcing platform where buyers quote, order and ship 9,000+ products from one place.",
-    summary:
-      "We built the whole trading business online: a searchable catalogue of 9,056 live SKUs from 14 suppliers across 11 countries, a quotation-to-delivery flow that generates the paperwork at each step, and paid merchant tiers that unlock wholesale bands, a prepaid wallet and ordering on a customer's behalf. Elite merchants get a signed REST API and webhooks, so an order placed on their own storefront becomes an ELECT-I order automatically.",
-    impact:
-      "Everything a trading business needs to sell at scale sits in one place: published wholesale pricing instead of quoting one buyer at a time, subscription tiers that turn customers into recurring revenue, and an API so the biggest accounts can order without anyone lifting a finger.",
-    highlights: [
-      "9,056-SKU catalogue with live wholesale pricing",
-      "Quotation → pro forma → payment → consolidated shipping",
-      "Three membership tiers with wholesale bands and a prepaid wallet",
-      "Public API with HMAC-signed, idempotent orders and webhooks",
-    ],
-    facts: [
-      { label: "Live SKUs", value: "9,056" },
-      { label: "Suppliers", value: "14" },
-      { label: "Countries", value: "11" },
-      { label: "Membership tiers", value: "3" },
-    ],
-    tags: ["Websites & Platforms", "Brand & Content"],
-    icon: Globe2,
-    tint: "#38808f",
-    href: "https://elect-i-global.com",
-    image: "/work/elect-i-global.jpg",
-    imageAlt:
-      "The ELECT-I Global homepage — 'Global Wholesale Starts Here' with a product search bar over a dark globe illustration",
     imageWidth: 1600,
     imageHeight: 1000,
   },
@@ -292,42 +294,6 @@ export const projects: Project[] = [
     logo: "/work/world-fit.png",
     logoWidth: 600,
     logoHeight: 198,
-  },
-  {
-    slug: "interiors-concept",
-    name: "Interior studio website",
-    client: "Concept demo for interior & architecture studios",
-    category: "Concept demo",
-    year: "2026",
-    tagline:
-      "A complete website for an interior studio — with a 3D room that builds itself as you scroll.",
-    summary:
-      "A working website for a fictional interior studio: portfolio, case studies, journal and a consultation flow, with motion throughout — title bands that wipe in and drift apart, smooth scrolling, cards that tilt toward the pointer. As you scroll, a 3D room assembles itself through seven stages of the design process, and on the Process page visitors can restyle it, relight it and walk around it. A studio can put its own name, logo and colours on the whole site in the browser.",
-    impact:
-      "It lets a studio see — and click through — what its own website could be before committing to anything, and every enquiry from it comes straight to us.",
-    highlights: [
-      "Scroll-built 3D room: seven stages, one camera flight",
-      "Brand Studio: your name, logo and palette, live",
-      "Customizer: style, time of day, finishes, furniture",
-      "Fast and accessible: loads in under a second on 4G",
-    ],
-    facts: [
-      { label: "3D build stages", value: "7" },
-      { label: "Palettes", value: "4 + custom" },
-      { label: "Frame rate", value: "60 fps" },
-      { label: "Browser tests", value: "105" },
-    ],
-    tags: ["Websites & Platforms"],
-    icon: Armchair,
-    tint: "#a86c33",
-    concept: true,
-    href: "https://interiors.elevate2point0.com",
-    hrefLabel: "Open the demo",
-    image: "/work/interiors-concept.jpg",
-    imageAlt:
-      "The interior studio website demo: “Spaces with gravity” in huge type, cut with image bands, over a vaulted desert living room",
-    imageWidth: 1600,
-    imageHeight: 1000,
   },
 ];
 

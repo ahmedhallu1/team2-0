@@ -92,10 +92,9 @@ export function AboutSection() {
               </p>
               <p>
                 Today we help companies promote, sell and expand — and when the
-                thing a client needs doesn&apos;t exist yet, we build it. A
-                wholesale marketplace, a CRM, an AI screening tool, a luxury
-                event and the site people register through: all of it ours, all
-                of it live. One partner, six services — so you can focus on the
+                thing a client needs doesn&apos;t exist yet, we build it. A CRM,
+                an AI screening tool, a luxury event and the site people
+                register through: all of it ours, all of it live. One partner, six services — so you can focus on the
                 business while we elevate the vision.
               </p>
               <p className="border-l-2 border-line-2 pl-4 text-sm text-faint">

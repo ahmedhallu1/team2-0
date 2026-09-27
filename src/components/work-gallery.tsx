@@ -15,8 +15,8 @@ import { clsx } from "@/lib/clsx";
 /** Headline numbers above the case studies. */
 const stats = [
   { value: `${totalProjects}`, label: "Projects shipped" },
-  { value: "4", label: "Live products & platforms" },
-  { value: "9k+", label: "SKUs on one marketplace" },
+  { value: "3", label: "Live products & platforms" },
+  { value: "3", label: "Sites run for one gym group" },
   { value: "8", label: "Brands on one event" },
 ];
 
@@ -62,8 +62,9 @@ export function WorkGallery() {
           >
             Live products, platforms and brand experiences that are running
             today. Each one below explains what it is, what it does and why it
-            earns its place in the business that owns it. The last is a concept
-            demo we built for interior studios — labelled as one.
+            earns its place in the business that owns it. The interior studio
+            website is a concept demo we built for a whole industry — labelled
+            as one.
           </Rise>
         </div>
 

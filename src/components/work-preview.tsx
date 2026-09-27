@@ -45,9 +45,10 @@ export function WorkPreview() {
             delay={0.08}
             className="text-base leading-relaxed text-pretty text-muted lg:col-span-5"
           >
-            Marketplaces, internal systems, brand experiences — {totalProjects}{" "}
+            Internal systems, brand experiences and websites — {totalProjects}{" "}
             projects that are live and doing a job for the businesses that own
-            them. A selection, not everything we&apos;ve built.
+            them, plus a concept demo. A selection, not everything we&apos;ve
+            built.
           </Rise>
         </div>
 
