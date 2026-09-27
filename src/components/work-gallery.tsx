@@ -62,8 +62,8 @@ export function WorkGallery() {
           >
             Live products, platforms and brand experiences that are running
             today. Each one below explains what it is, what it does and why it
-            earns its place in the business that owns it. Concept demos are
-            kept separate, further down, and labelled as demos.
+            earns its place in the business that owns it. The last is a concept
+            demo we built for interior studios — labelled as one.
           </Rise>
         </div>
 
@@ -133,6 +133,9 @@ export function WorkGallery() {
 
                         <div className="mt-5 flex flex-wrap items-center gap-x-3 gap-y-2 text-xs">
                           <span className={chip}>{project.category}</span>
+                          {project.concept && (
+                            <span className={chip}>Not a client project</span>
+                          )}
                           <span className="text-faint">{project.year}</span>
                         </div>
 

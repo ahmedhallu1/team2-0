@@ -1,5 +1,6 @@
 import type { LucideIcon } from "lucide-react";
 import {
+  Armchair,
   CalendarHeart,
   Dumbbell,
   Globe2,
@@ -62,6 +63,11 @@ export type Project = {
   asideAlt?: string;
   asideWidth?: number;
   asideHeight?: number;
+  /**
+   * A concept demo we built to show a whole industry what its site could be —
+   * not client work. Labelled on the page and left out of "projects shipped".
+   */
+  concept?: boolean;
   /** Centred logo used when there's no screenshot. */
   logo?: string;
   logoWidth?: number;
@@ -69,9 +75,9 @@ export type Project = {
 };
 
 /**
- * Real, shipped work, newest and most illustrative first. The first entry is
- * rendered as the featured case study on /work and on the home page. Concept
- * demos live in lib/demos.ts and are never listed here.
+ * Shipped work, newest and most illustrative first, then concept demos
+ * (flagged `concept`, always last). The first entry is rendered as the
+ * featured case study on /work and on the home page.
  */
 export const projects: Project[] = [
   {
@@ -287,8 +293,45 @@ export const projects: Project[] = [
     logoWidth: 600,
     logoHeight: 198,
   },
+  {
+    slug: "interiors-concept",
+    name: "Interior studio website",
+    client: "Concept demo for interior & architecture studios",
+    category: "Concept demo",
+    year: "2026",
+    tagline:
+      "A complete website for an interior studio — with a 3D room that builds itself as you scroll.",
+    summary:
+      "A working website for a fictional interior studio: portfolio, case studies, journal and a consultation flow, with motion throughout — title bands that wipe in and drift apart, smooth scrolling, cards that tilt toward the pointer. As you scroll, a 3D room assembles itself through seven stages of the design process, and on the Process page visitors can restyle it, relight it and walk around it. A studio can put its own name, logo and colours on the whole site in the browser.",
+    impact:
+      "It lets a studio see — and click through — what its own website could be before committing to anything, and every enquiry from it comes straight to us.",
+    highlights: [
+      "Scroll-built 3D room: seven stages, one camera flight",
+      "Brand Studio: your name, logo and palette, live",
+      "Customizer: style, time of day, finishes, furniture",
+      "Fast and accessible: loads in under a second on 4G",
+    ],
+    facts: [
+      { label: "3D build stages", value: "7" },
+      { label: "Palettes", value: "4 + custom" },
+      { label: "Frame rate", value: "60 fps" },
+      { label: "Browser tests", value: "105" },
+    ],
+    tags: ["Websites & Platforms"],
+    icon: Armchair,
+    tint: "#a86c33",
+    concept: true,
+    href: "https://interiors.elevate2point0.com",
+    hrefLabel: "Open the demo",
+    image: "/work/interiors-concept.jpg",
+    imageAlt:
+      "The interior studio website demo: “Spaces with gravity” in huge type, cut with image bands, over a vaulted desert living room",
+    imageWidth: 1600,
+    imageHeight: 1000,
+  },
 ];
 
 export const featuredProject = projects[0];
 export const otherProjects = projects.slice(1);
-export const totalProjects = projects.length;
+/** Real, shipped work only — concept demos are not counted. */
+export const totalProjects = projects.filter((p) => !p.concept).length;
