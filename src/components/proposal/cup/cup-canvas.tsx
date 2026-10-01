@@ -21,10 +21,13 @@ export function CupCanvas({
   className,
   /** Redraw even when nothing changed — used while steam is drifting. */
   live = true,
+  /** Ceiling on the backing store's pixel ratio. See `resize` below. */
+  maxDpr = 1.5,
 }: {
   stateRef: React.RefObject<CupState>;
   className?: string;
   live?: boolean;
+  maxDpr?: number;
 }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -109,7 +112,7 @@ export function CupCanvas({
       // 1.5× rather than the device's full ratio. The cup is soft-shaded with
       // no fine detail, so the extra pixels bought nothing and every one of
       // them is fill cost on a phone.
-      renderer.resize(rect.width, rect.height, Math.min(window.devicePixelRatio || 1, 1.5));
+      renderer.resize(rect.width, rect.height, Math.min(window.devicePixelRatio || 1, maxDpr));
       paint();
     };
 
@@ -151,7 +154,7 @@ export function CupCanvas({
       ro.disconnect();
       io.disconnect();
     };
-  }, [stateRef, live]);
+  }, [stateRef, live, maxDpr]);
 
   return (
     <div ref={wrapRef} className={clsx("relative", className)} data-cup-canvas>

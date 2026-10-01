@@ -11,7 +11,7 @@ process, about and a working contact form that sends inquiries over Gmail
 - **Next.js 16** (App Router) + **React 19**
 - **Tailwind CSS v4** — the four-layer "Controlled Ascent" token system
   (black / lime `#C6FF34` / purple `#7E3BED`, plus motion tokens) lives in
-  [`src/app/globals.css`](src/app/globals.css)
+  [`src/app/(site)/globals.css`](<src/app/(site)/globals.css>)
 - **GSAP + ScrollTrigger** (`@gsap/react`) — scroll choreography and the brand
   loader. Motion tokens are mirrored in [`src/lib/motion/tokens.ts`](src/lib/motion/tokens.ts)
   so timelines and CSS transitions agree
