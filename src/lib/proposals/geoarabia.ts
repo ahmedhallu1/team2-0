@@ -117,6 +117,102 @@ export const observations: Observation[] = [
   },
 ];
 
+/**
+ * The three competitors GeoArabia named, with the positioning and social
+ * direction from the client's own content-strategy deck (LinkedIn and the
+ * official websites were the channels reviewed). Quoted, not graded.
+ */
+export const competitors = [
+  {
+    name: "FalconViz",
+    host: "falconviz.com",
+    focus: "Drone surveying, 3D mapping, LiDAR, photogrammetry, construction monitoring.",
+    social: "Strong visual use of drone, 3D and LiDAR, shown in project applications.",
+  },
+  {
+    name: "Terra Drone Arabia",
+    host: "terra-drone.com.sa",
+    focus: "Drone and geospatial solutions — surveying, LiDAR, GIS, 3D modelling, inspection.",
+    social: "Broad geospatial and drone positioning, frequent technical topics, case-led content.",
+  },
+  {
+    name: "GeoReference",
+    host: "geo.sa",
+    focus: "Land surveying, GIS, engineering surveys, mapping, aerial photography, 3D modelling.",
+    social: "Reviewed on LinkedIn and the official website.",
+  },
+] as const;
+
+/* ------------------------------------------------------------------ */
+/*  The content — from the agreed content-strategy deck               */
+/* ------------------------------------------------------------------ */
+
+/** The one line everything else hangs off. */
+export const positioning =
+  "A professional geospatial partner for surveying, mapping and data-driven project work.";
+
+export const strategy = [
+  {
+    label: "Approach",
+    body: "Service-led posts, education, technical subjects and project-focused communication, in a steady mix.",
+  },
+  {
+    label: "Focus",
+    body: "Infrastructure, construction, engineering, urban development and real estate — the sectors that buy.",
+  },
+  {
+    label: "Conversion",
+    body: "Clear service presentation, strong project visuals and a direct way to get in touch on every post.",
+  },
+] as const;
+
+export const contentPillars = [
+  { name: "Brand", body: "Who GeoArabia is — capabilities, expertise, positioning." },
+  { name: "Education", body: "Geospatial concepts, surveying technology and practical use cases." },
+  { name: "Services", body: "Each core service and exactly what it delivers." },
+  { name: "Project value", body: "How accurate spatial data supports construction, infrastructure and development." },
+  { name: "Conversion", body: "Selected services, project needs and direct, contact-led posts." },
+] as const;
+
+/** The first ten posts, in order, with the direction each one takes. */
+export const firstTen = [
+  { title: "What is GeoArabia?", pillar: "Brand", direction: "Brand introduction, services, capabilities" },
+  { title: "Aerial surveying", pillar: "Education · Services", direction: "From aerial capture to accurate project data" },
+  { title: "Topographic survey", pillar: "Services", direction: "Terrain, elevation and site information before execution" },
+  { title: "From reality to data", pillar: "Education", direction: "How field information becomes usable geospatial data" },
+  { title: "GIS", pillar: "Services", direction: "Connecting location, data and analysis" },
+  { title: "Construction progress monitoring", pillar: "Project value", direction: "Visual project tracking and site documentation" },
+  { title: "3D modelling", pillar: "Services", direction: "Turning real-world sites into digital 3D models" },
+  { title: "Drone mapping", pillar: "Education · Services", direction: "Aerial imagery converted into mapping outputs" },
+  { title: "Infrastructure & urban planning", pillar: "Project value", direction: "Spatial data supporting development decisions" },
+  { title: "Your project. Your data. Better decisions.", pillar: "Conversion", direction: "A direct, service-led closing post" },
+] as const;
+
+export const creativeDirection = [
+  {
+    label: "Visual language",
+    body: "Technical, clean and spatial: aerial imagery, project photography, maps, coordinates, topographic lines and 3D outputs.",
+  },
+  {
+    label: "Design",
+    body: "Strong typography, generous spacing, and one GeoArabia system across Instagram, Facebook and LinkedIn.",
+  },
+  {
+    label: "Treatment",
+    body: "Lead with the visual or the question. Short copy — the project, service or data output carries the post.",
+  },
+] as const;
+
+/** What we need from GeoArabia before the first post goes out. */
+export const requiredAssets = [
+  "Project photos",
+  "Aerial footage",
+  "Existing reels and video",
+  "Raw footage",
+  "3D and GIS outputs",
+  "Project details",
+] as const;
+
 /* ------------------------------------------------------------------ */
 /*  The plan — concept work                                           */
 /* ------------------------------------------------------------------ */
@@ -214,7 +310,7 @@ export const timeline = [
   {
     month: "Oct",
     title: "Discover & build",
-    body: "The site connected to geoarabia.com.sa and the other domains redirected to it. Technical audit, market study, the three main Riyadh competitors agreed with you, keyword map in both languages. Social templates and WhatsApp flows drafted.",
+    body: "The site connected to geoarabia.com.sa and the other domains redirected to it. Technical audit, market study, FalconViz, Terra Drone Arabia and GeoReference put under watch, keyword map in both languages. Social templates and WhatsApp flows drafted.",
   },
   {
     month: "Nov",
@@ -320,8 +416,8 @@ export const offers: Offer[] = [
     price: 26000,
     cadence: "month",
     includes: [
-      "Monthly content plan",
-      "12 designed posts a month — carousels, project visuals",
+      "Monthly content plan across the five pillars",
+      "12 designed posts a month — the first ten already mapped",
       "LinkedIn company page set up in Arabic and English",
       "Replies to comments and messages on working days",
       "Monthly report",

@@ -6,6 +6,7 @@ import { Magnetic } from "@/components/fx/magnetic";
 import { WhatsAppIcon } from "@/components/whatsapp-icon";
 import { ContourField } from "@/components/proposal/geoarabia/contour-field";
 import { contactEmail, phones } from "@/lib/contact";
+import { requiredAssets } from "@/lib/proposals/geoarabia";
 import { actionGhost, actionPrimary, eyebrow } from "@/lib/ui";
 import { shell } from "@/lib/layout";
 import { clsx } from "@/lib/clsx";
@@ -13,16 +14,14 @@ import { clsx } from "@/lib/clsx";
 /**
  * The close. The prices are already on the table one section up, so all this
  * asks for is a decision on what starts in October, and the one thing we need
- * from GeoArabia to start: their own material. Every concept above is drawn
- * from scans, models and sites we haven't seen yet.
+ * from GeoArabia to start: their own material — the asset list from the
+ * content-strategy deck, plus access. Every post above is made from it.
  *
  * No portfolio strip, by request — the page is about them.
  */
 const needs = [
-  "Photos and scans from past projects",
-  "The three competitors you watch in Riyadh",
-  "Your company profile, if one exists",
-  "Access to the domain, the site and the Facebook page",
+  ...requiredAssets,
+  "Access to the domain, the site and the social pages",
 ];
 
 export function GeoClosing() {
@@ -37,7 +36,7 @@ export function GeoClosing() {
 
       <div className={clsx(shell, "relative")}>
         <div className="flex flex-col items-center text-center">
-          <p className={eyebrow}>05 — Next</p>
+          <p className={eyebrow}>06 — Next</p>
 
           <AscentHeading
             as="h2"
@@ -56,13 +55,20 @@ export function GeoClosing() {
             articles are live in November, in time for Cityscape.
           </Rise>
 
-          <Rise delay={0.14} className="mt-10 w-full max-w-2xl">
+          <Rise delay={0.14} className="mt-10 w-full max-w-3xl">
             <h3 className="text-[11px] font-semibold tracking-[0.22em] text-faint uppercase">
               What we need from you to start
             </h3>
-            <ul className="mt-4 grid gap-px overflow-hidden rounded-xl border border-line bg-line text-left sm:grid-cols-2">
+            <ul className="mt-4 grid gap-px overflow-hidden rounded-xl border border-line bg-line text-left sm:grid-cols-2 lg:grid-cols-3">
               {needs.map((n, i) => (
-                <li key={n} className="flex items-baseline gap-3 bg-surface p-4 text-sm text-ink">
+                <li
+                  key={n}
+                  className={clsx(
+                    "flex items-baseline gap-3 bg-surface p-4 text-sm text-ink",
+                    // Access is the odd one out — give it the full row.
+                    i === needs.length - 1 && "sm:col-span-2 lg:col-span-3",
+                  )}
+                >
                   <span className="font-display text-xs font-bold text-accent tabular-nums">
                     {String(i + 1).padStart(2, "0")}
                   </span>
