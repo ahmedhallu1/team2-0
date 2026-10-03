@@ -3,6 +3,7 @@ import { ProposalChrome } from "@/components/proposal/proposal-chrome";
 import { ProposalTheme } from "@/components/proposal/proposal-theme";
 import { GeoOpening } from "@/components/proposal/geoarabia/geo-opening";
 import { GeoAudit } from "@/components/proposal/geoarabia/geo-audit";
+import { GeoCompetitors } from "@/components/proposal/geoarabia/geo-competitors";
 import { GeoPlan } from "@/components/proposal/geoarabia/geo-plan";
 import { GeoContent } from "@/components/proposal/geoarabia/geo-content";
 import { GeoCampaigns } from "@/components/proposal/geoarabia/geo-campaigns";
@@ -17,8 +18,8 @@ import { GeoClosing } from "@/components/proposal/geoarabia/geo-closing";
  * client's colours rather than ours — here GeoArabia's navy, and the contour
  * cyan from their own cover image.
  *
- * Deliberately shorter: seven chapters, no portfolio of other clients' work.
- * The one addition is the priced builder in chapter five, on the page's only
+ * Deliberately shorter: eight chapters, no portfolio of other clients' work.
+ * The one addition is the priced builder in chapter six, on the page's only
  * light ground.
  */
 export const metadata: Metadata = {
@@ -36,6 +37,7 @@ export const metadata: Metadata = {
 const sections = [
   { id: "opening", label: "The brief" },
   { id: "audit", label: "What we see" },
+  { id: "competitors", label: "Competitive review" },
   { id: "plan", label: "The plan" },
   { id: "content", label: "The content" },
   { id: "campaigns", label: "Campaigns" },
@@ -51,6 +53,7 @@ export default function GeoArabiaProposalPage() {
         <ProposalChrome sections={sections} client="GeoArabia" zone="geo" />
         <GeoOpening />
         <GeoAudit />
+        <GeoCompetitors />
         <GeoPlan />
         <GeoContent />
         <GeoCampaigns />

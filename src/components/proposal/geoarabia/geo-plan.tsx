@@ -73,7 +73,7 @@ export function GeoPlan() {
     >
       <div className={shell}>
         <SectionHead
-          n="02"
+          n="03"
           label="The plan"
           headingId="plan-heading"
           lines={["Found. Trusted.", "Contacted."]}

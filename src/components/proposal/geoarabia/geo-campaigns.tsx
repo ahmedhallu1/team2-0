@@ -27,7 +27,7 @@ export function GeoCampaigns() {
     >
       <div className={shell}>
         <SectionHead
-          n="04"
+          n="05"
           label="Campaigns & timeline"
           headingId="campaigns-heading"
           lines={["Six months,", "four campaigns."]}

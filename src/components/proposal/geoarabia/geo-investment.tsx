@@ -154,7 +154,7 @@ export function GeoInvestment() {
     >
       <div className={shell}>
         <SectionHead
-          n="05"
+          n="06"
           label="Investment"
           headingId="investment-heading"
           lines={["What it costs,", "item by item."]}

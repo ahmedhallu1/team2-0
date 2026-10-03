@@ -42,7 +42,7 @@ export function GeoContent() {
     >
       <div className={shell}>
         <SectionHead
-          n="03"
+          n="04"
           label="The content"
           headingId="content-heading"
           lines={["Five pillars.", "Ten posts to start."]}

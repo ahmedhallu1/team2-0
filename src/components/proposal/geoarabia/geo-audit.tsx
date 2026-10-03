@@ -1,7 +1,7 @@
 import { Globe, Search, TriangleAlert } from "lucide-react";
 import { SectionHead } from "@/components/proposal/section-head";
 import { Rise, RiseGroup } from "@/components/motion/reveal";
-import { competitors, domainProbe, observations, searchToday } from "@/lib/proposals/geoarabia";
+import { domainProbe, observations, searchToday } from "@/lib/proposals/geoarabia";
 import { proposalY, shell } from "@/lib/layout";
 import { clsx } from "@/lib/clsx";
 
@@ -115,36 +115,6 @@ export function GeoAudit() {
           </Rise>
         </div>
 
-        {/* The three competitors GeoArabia named, as the strategy deck
-            describes them. Their positioning, quoted — not ranked. */}
-        <Rise className="mt-4 rounded-xl border border-line bg-surface p-6 sm:p-7 lg:mt-5">
-          <div className="flex flex-wrap items-baseline justify-between gap-3">
-            <h3 className="font-display text-xl leading-tight font-extrabold tracking-tight text-ink sm:text-2xl">
-              <span className="text-faint tabular-nums">03</span>{" "}The three you&apos;re measured against
-            </h3>
-            <p className="text-xs text-faint">Reviewed on LinkedIn and their websites</p>
-          </div>
-          <ul className="mt-6 grid gap-px overflow-hidden rounded-lg border border-line bg-line md:grid-cols-3">
-            {competitors.map((c) => (
-              <li key={c.name} className="flex flex-col bg-surface-2 p-5">
-                <p className="font-display text-lg font-extrabold tracking-tight text-ink">{c.name}</p>
-                <p className="font-mono text-[11px] text-faint">{c.host}</p>
-                <p className="mt-3 mb-4 text-sm leading-relaxed text-muted">{c.focus}</p>
-                <p className="mt-auto border-t border-line pt-3 text-xs leading-relaxed text-ink">
-                  {c.social}
-                </p>
-              </li>
-            ))}
-          </ul>
-          <p className="mt-5 text-sm leading-relaxed text-ink">
-            All three lead with the drone, the scanner and the finished model.
-            GeoArabia can tell that story too — its own site lists DJI, FARO,
-            Leica and NavVis kit, plus hydrology and underwater ROV work that
-            none of the three lead with. What it doesn&apos;t have yet is the
-            content showing it.
-          </p>
-        </Rise>
-
         <RiseGroup
           as="ul"
           className="mt-4 grid gap-4 md:grid-cols-3 lg:mt-5 lg:gap-5"
@@ -155,7 +125,7 @@ export function GeoAudit() {
               className="flex flex-col rounded-xl border border-line bg-surface p-6 transition-colors duration-500 hover:border-line-2"
             >
               <span className="font-display text-xs font-bold text-faint tabular-nums">
-                {String(i + 4).padStart(2, "0")}
+                {String(i + 3).padStart(2, "0")}
               </span>
               <h3 className="mt-3 font-display text-lg leading-tight font-extrabold tracking-tight text-ink">
                 {item.title}

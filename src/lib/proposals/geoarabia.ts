@@ -117,29 +117,52 @@ export const observations: Observation[] = [
   },
 ];
 
+/* ------------------------------------------------------------------ */
+/*  Competitive review — from the agreed content-strategy deck        */
+/* ------------------------------------------------------------------ */
+
 /**
- * The three competitors GeoArabia named, with the positioning and social
- * direction from the client's own content-strategy deck (LinkedIn and the
- * official websites were the channels reviewed). Quoted, not graded.
+ * The deck's two review slides, kept as two tables, word for word where the
+ * deck gives words. Channels reviewed: LinkedIn and the official websites.
+ * Nothing is added that the deck doesn't say — GeoReference has no row in the
+ * social review because the deck gives it none.
  */
 export const competitors = [
   {
     name: "FalconViz",
     host: "falconviz.com",
     focus: "Drone surveying, 3D mapping, LiDAR, photogrammetry, construction monitoring.",
-    social: "Strong visual use of drone, 3D and LiDAR, shown in project applications.",
   },
   {
     name: "Terra Drone Arabia",
     host: "terra-drone.com.sa",
-    focus: "Drone and geospatial solutions — surveying, LiDAR, GIS, 3D modelling, inspection.",
-    social: "Broad geospatial and drone positioning, frequent technical topics, case-led content.",
+    focus: "Drone & geospatial solutions, surveying, LiDAR, GIS, 3D modeling and inspection.",
   },
   {
     name: "GeoReference",
     host: "geo.sa",
-    focus: "Land surveying, GIS, engineering surveys, mapping, aerial photography, 3D modelling.",
-    social: "Reviewed on LinkedIn and the official website.",
+    focus: "Land surveying, GIS, engineering surveys, mapping, aerial photography and 3D modeling.",
+  },
+] as const;
+
+export const socialReview = [
+  {
+    brand: "GeoArabia",
+    channel: "LinkedIn",
+    direction: "B2B positioning, services, technical expertise, projects.",
+    self: true,
+  },
+  {
+    brand: "FalconViz",
+    channel: "LinkedIn / Website",
+    direction: "Strong visual use of drone, 3D, LiDAR and project applications.",
+    self: false,
+  },
+  {
+    brand: "Terra Drone Arabia",
+    channel: "LinkedIn / Website",
+    direction: "Broad geospatial + drone positioning with frequent technical topics and case-led content.",
+    self: false,
   },
 ] as const;
 

@@ -36,7 +36,7 @@ export function GeoClosing() {
 
       <div className={clsx(shell, "relative")}>
         <div className="flex flex-col items-center text-center">
-          <p className={eyebrow}>06 — Next</p>
+          <p className={eyebrow}>07 — Next</p>
 
           <AscentHeading
             as="h2"
