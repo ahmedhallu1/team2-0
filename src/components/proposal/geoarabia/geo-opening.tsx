@@ -31,7 +31,7 @@ export function GeoOpening() {
 
       <div className={shell}>
         <p className={clsx(eyebrow, "enter-rise")} style={{ ["--enter-i" as string]: 0 }}>
-          Prepared by 2.0 for GeoArabia · September 2026
+          Prepared by RMZtech for GeoArabia · October 2026
         </p>
 
         <h1

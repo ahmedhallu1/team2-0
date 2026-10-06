@@ -1,12 +1,12 @@
-import Link from "next/link";
-import { ArrowUpRight, Mail } from "lucide-react";
+import { ArrowUpRight, Mail, Phone } from "lucide-react";
 import { AscentHeading } from "@/components/motion/ascent-heading";
 import { Rise } from "@/components/motion/reveal";
 import { Magnetic } from "@/components/fx/magnetic";
 import { WhatsAppIcon } from "@/components/whatsapp-icon";
 import { ContourField } from "@/components/proposal/geoarabia/contour-field";
-import { contactEmail, phones } from "@/lib/contact";
 import { requiredAssets } from "@/lib/proposals/geoarabia";
+import { rmz } from "@/lib/proposals/rmz";
+import { RmzLogo } from "@/components/proposal/rmz-logo";
 import { actionGhost, actionPrimary, eyebrow } from "@/lib/ui";
 import { shell } from "@/lib/layout";
 import { clsx } from "@/lib/clsx";
@@ -84,7 +84,7 @@ export function GeoClosing() {
           >
             <Magnetic>
               <a
-                href={phones[0].whatsappHref}
+                href={rmz.whatsappHref}
                 target="_blank"
                 rel="noreferrer"
                 className={actionPrimary}
@@ -94,24 +94,39 @@ export function GeoClosing() {
               </a>
             </Magnetic>
             <Magnetic>
-              <Link href="/contact" className={actionGhost}>
-                Book a call
-                <ArrowUpRight
-                  size={17}
-                  aria-hidden
-                  className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-                />
-              </Link>
+              <a href={`tel:${rmz.phone.e164}`} className={actionGhost}>
+                <Phone size={16} aria-hidden />
+                Call {rmz.phone.display}
+              </a>
             </Magnetic>
           </Rise>
 
-          <Rise delay={0.22} className="mt-8">
+          <Rise
+            delay={0.22}
+            className="mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-1"
+          >
             <a
-              href={`mailto:${contactEmail}?subject=${encodeURIComponent("GeoArabia — next step")}`}
+              href={`mailto:${rmz.email}?subject=${encodeURIComponent("GeoArabia — next step")}`}
               className="inline-flex items-center gap-2 py-2.5 text-sm text-muted transition-colors hover:text-ink"
             >
               <Mail size={15} aria-hidden className="text-brand" />
-              {contactEmail}
+              {rmz.email}
+            </a>
+            <a
+              href={rmz.linkedin}
+              target="_blank"
+              rel="noreferrer"
+              className="group inline-flex items-center gap-1.5 py-2.5 text-sm text-muted transition-colors hover:text-ink"
+            >
+              RMZtech on LinkedIn
+              <ArrowUpRight size={14} aria-hidden className="text-brand" />
+            </a>
+          </Rise>
+
+          {/* Who it is from — the presenting agency's lockup, once, at the end. */}
+          <Rise delay={0.26} className="mt-12">
+            <a href={rmz.site} target="_blank" rel="noreferrer" aria-label="RMZtech — The Platform">
+              <RmzLogo className="text-xl" />
             </a>
           </Rise>
         </div>
@@ -119,8 +134,8 @@ export function GeoClosing() {
         <footer className="mt-20 border-t border-line pt-8">
           <div className="flex flex-col gap-4 text-xs text-faint sm:flex-row sm:items-center sm:justify-between">
             <p>
-              Prepared by <span className="font-semibold text-muted">2.0</span> for
-              GeoArabia · September 2026 · Private, not indexed.
+              Prepared by <span className="font-semibold text-muted">RMZtech</span> for
+              GeoArabia · October 2026 · Private, not indexed.
             </p>
             <p>
               Concept work is speculative and made for this proposal. Search

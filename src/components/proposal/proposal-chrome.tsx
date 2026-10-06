@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { BrandLogo } from "@/components/brand-logo";
@@ -20,12 +20,19 @@ export function ProposalChrome({
   sections,
   client,
   zone = "both",
+  logo,
 }: {
   sections: { id: string; label: string }[];
   /** Who the document is for — the prefix of the chapter read-out. */
   client: string;
   /** Which palette dresses the bar. See the zones in globals.css. */
   zone?: string;
+  /**
+   * Who the document is from, when it isn't 2.0. Replaces the logo and the
+   * link home with the presenting agency's own — a white-label proposal must
+   * not lead anywhere back to us.
+   */
+  logo?: { node: ReactNode; href: string; label: string };
 }) {
   const fillRef = useRef<HTMLSpanElement>(null);
   const [current, setCurrent] = useState(sections[0]?.label ?? "");
@@ -83,13 +90,25 @@ export function ProposalChrome({
       )}
     >
       <div className="mx-auto flex w-full max-w-[90rem] items-center gap-4 px-5 py-3 sm:px-8">
-        <Link
-          href="/"
-          className="flex shrink-0 items-center rounded-md transition-opacity hover:opacity-80"
-          aria-label="2.0 — back to the site"
-        >
-          <BrandLogo className="h-6 sm:h-7" priority />
-        </Link>
+        {logo ? (
+          <a
+            href={logo.href}
+            target="_blank"
+            rel="noreferrer"
+            className="flex shrink-0 items-center rounded-md transition-opacity hover:opacity-80"
+            aria-label={logo.label}
+          >
+            {logo.node}
+          </a>
+        ) : (
+          <Link
+            href="/"
+            className="flex shrink-0 items-center rounded-md transition-opacity hover:opacity-80"
+            aria-label="2.0 — back to the site"
+          >
+            <BrandLogo className="h-6 sm:h-7" priority />
+          </Link>
+        )}
 
         <span aria-hidden className="hidden h-4 w-px bg-line-2 sm:block" />
 
