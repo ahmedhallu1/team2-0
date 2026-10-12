@@ -160,7 +160,22 @@ export function SiteFooter() {
           <p className="text-xs text-faint">
             © {year} 2.0. All rights reserved.
           </p>
-          <p className="text-xs text-faint">Built for growth, end to end.</p>
+          <p className="flex items-center gap-4 text-xs text-faint">
+            <Link
+              href="/privacy"
+              prefetch={false}
+              className="transition-colors hover:text-brand"
+            >
+              Privacy
+            </Link>
+            <Link
+              href="/data-deletion"
+              prefetch={false}
+              className="transition-colors hover:text-brand"
+            >
+              Data deletion
+            </Link>
+          </p>
         </div>
       </div>
     </footer>
