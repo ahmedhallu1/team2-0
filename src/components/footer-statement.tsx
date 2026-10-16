@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import { gsap, useGSAP, prefersReducedMotion } from "@/lib/motion/gsap";
+import { gsap, useNearGSAP } from "@/lib/motion/gsap";
 
 /**
  * The footer's closing statement: the promise set oversized and cropped by the
@@ -12,10 +12,8 @@ import { gsap, useGSAP, prefersReducedMotion } from "@/lib/motion/gsap";
 export function FooterStatement() {
   const ref = useRef<HTMLDivElement>(null);
 
-  useGSAP(
-    () => {
-      const el = ref.current;
-      if (!el || prefersReducedMotion()) return;
+  useNearGSAP(
+    (el) => {
       const type = el.querySelector("[data-statement]");
       gsap.fromTo(
         type,

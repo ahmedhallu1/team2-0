@@ -3,6 +3,7 @@ import { Inter, Bricolage_Grotesque } from "next/font/google";
 import "../(site)/globals.css";
 import { MotionRuntime } from "@/components/fx/motion-runtime";
 import { rmz } from "@/lib/proposals/rmz";
+import { armMotionFallback } from "@/lib/motion/fallback";
 
 /**
  * The root layout for proposals presented under RMZtech's name.
@@ -33,7 +34,7 @@ const bricolage = Bricolage_Grotesque({
 });
 
 /** Marks the document as scripted before paint, so entrances can start hidden. */
-const bootScript = `document.documentElement.classList.add("js")`;
+const bootScript = `${armMotionFallback}document.documentElement.classList.add("js");`;
 
 /** Where the page is served from, so the share image resolves to an absolute URL. */
 const siteUrl = new URL(process.env.NEXT_PUBLIC_SITE_URL?.trim() || "https://elevate2point0.com");

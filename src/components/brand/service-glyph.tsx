@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, type ReactNode } from "react";
-import { gsap, useGSAP, prefersReducedMotion } from "@/lib/motion/gsap";
+import { gsap, useNearGSAP } from "@/lib/motion/gsap";
 import { DUR, EASE, STAGGER } from "@/lib/motion/tokens";
 import { clsx } from "@/lib/clsx";
 
@@ -35,10 +35,11 @@ export function ServiceGlyph({
 }) {
   const ref = useRef<HTMLDivElement>(null);
 
-  useGSAP(
-    () => {
-      const el = ref.current;
-      if (!el || prefersReducedMotion()) return;
+  // Built on approach: every glyph's svgOrigin set measures its groups, and a
+  // page of five glyphs doing that at hydration was the largest single cost
+  // in the services stack's first long task.
+  useNearGSAP(
+    (el) => {
       const q = (sel: string) => gsap.utils.toArray<SVGElement>(sel, el);
 
       // Every group rotates or scales about the glyph's centre. Set that once

@@ -99,26 +99,41 @@ export function ProcessSection({
         fill.style.strokeDasharray = `${length}`;
 
         // Record how far along the rail each stage sits, so "passed" is exact
-        // in either orientation instead of a distance guess.
+        // in either orientation instead of a distance guess. The rail is
+        // walked once and every stage scored against each sample —
+        // getPointAtLength is the expensive call, so it runs 241 times per
+        // measure rather than 241 per stage.
         const SAMPLES = 240;
-        points.forEach((point, index) => {
-          let best = Infinity;
-          let at = 0;
-          for (let s = 0; s <= SAMPLES; s += 1) {
-            const l = (length * s) / SAMPLES;
-            const c = fill.getPointAtLength(l);
+        const best = points.map(() => Infinity);
+        const at = points.map(() => 0);
+        for (let s = 0; s <= SAMPLES; s += 1) {
+          const l = (length * s) / SAMPLES;
+          const c = fill.getPointAtLength(l);
+          points.forEach((point, index) => {
             const dist = (c.x - point.x) ** 2 + (c.y - point.y) ** 2;
-            if (dist < best) {
-              best = dist;
-              at = l;
+            if (dist < best[index]) {
+              best[index] = dist;
+              at[index] = l;
             }
-          }
-          nodes[index].dataset.at = String(at);
+          });
+        }
+        nodes.forEach((node, index) => {
+          node.dataset.at = String(at[index]);
         });
       };
 
       measure();
-      const observer = new ResizeObserver(measure);
+      // The observer reports the size it starts with, which measure() has
+      // just handled — only re-measure when the box actually changes.
+      let lastSize = "";
+      const observer = new ResizeObserver(([entry]) => {
+        const { width, height } = entry.contentRect;
+        const size = `${Math.round(width)}x${Math.round(height)}`;
+        if (size === lastSize) return;
+        const first = lastSize === "";
+        lastSize = size;
+        if (!first) measure();
+      });
       observer.observe(root);
 
       if (prefersReducedMotion()) {

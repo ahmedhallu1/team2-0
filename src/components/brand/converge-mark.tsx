@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import { gsap, useGSAP, prefersReducedMotion } from "@/lib/motion/gsap";
+import { gsap, useNearGSAP } from "@/lib/motion/gsap";
 import { DUR, EASE, STAGGER } from "@/lib/motion/tokens";
 import { clsx } from "@/lib/clsx";
 
@@ -26,10 +26,8 @@ const NODES = Array.from({ length: 5 }, (_, i) => {
 export function ConvergeMark({ className }: { className?: string }) {
   const ref = useRef<HTMLDivElement>(null);
 
-  useGSAP(
-    () => {
-      const el = ref.current;
-      if (!el || prefersReducedMotion()) return;
+  useNearGSAP(
+    (el) => {
 
       const spokes = gsap.utils.toArray<SVGLineElement>("[data-spoke]", el);
       const nodes = gsap.utils.toArray<SVGCircleElement>("[data-node]", el);

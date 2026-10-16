@@ -6,6 +6,7 @@ import { ArrowRight, ArrowUpRight, Check } from "lucide-react";
 import {
   gsap,
   useGSAP,
+  useNearGSAP,
   ScrollTrigger,
   prefersReducedMotion,
 } from "@/lib/motion/gsap";
@@ -80,11 +81,8 @@ export function ServicesSection() {
    * This runs at every width — on a phone there is no sticky index to watch, so
    * without it the page was five static blocks of text.
    */
-  useGSAP(
-    () => {
-      const root = ref.current;
-      if (!root || prefersReducedMotion()) return;
-
+  useNearGSAP(
+    (root) => {
       gsap.utils.toArray<HTMLElement>("[data-act]", root).forEach((act) => {
         const rule = act.querySelector("[data-act-rule]");
         const line = act.querySelector(".line-mask__inner");

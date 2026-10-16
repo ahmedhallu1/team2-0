@@ -8,6 +8,7 @@ import { RouteCurtain } from "@/components/fx/route-curtain";
 import { MotionRuntime } from "@/components/fx/motion-runtime";
 import { Preloader } from "@/components/preloader";
 import { contactPhonesE164, instagramUrl } from "@/lib/contact";
+import { armMotionFallback } from "@/lib/motion/fallback";
 
 const inter = Inter({
   variable: "--font-body",
@@ -25,9 +26,10 @@ const bricolage = Bricolage_Grotesque({
  * Runs before paint. Applies the saved theme (or OS default) with no flash,
  * and decides in the same tick whether the brand intro plays at all: repeat
  * loads within a session and reduced-motion visitors get `intro-skip`, so the
- * loader is never painted for them even for one frame.
+ * loader is never painted for them even for one frame. It also arms the
+ * motion safety net (see lib/motion/fallback.ts).
  */
-const bootScript = `(function(){try{var e=document.documentElement;e.classList.add("js");var t=localStorage.getItem("theme");if(t==="light")e.classList.add("light");else if(t==="dark")e.classList.add("dark");var s=false;try{s=sessionStorage.getItem("intro")==="1"}catch(_){}if(!s&&window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches)s=true;if(s)e.classList.add("intro-skip","intro-done");}catch(_){}})();`;
+const bootScript = `${armMotionFallback}(function(){try{var e=document.documentElement;e.classList.add("js");var t=localStorage.getItem("theme");if(t==="light")e.classList.add("light");else if(t==="dark")e.classList.add("dark");var s=false;try{s=sessionStorage.getItem("intro")==="1"}catch(_){}if(!s&&window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches)s=true;if(s)e.classList.add("intro-skip","intro-done");}catch(_){}})();`;
 
 function resolveSiteUrl(): URL {
   const raw = process.env.NEXT_PUBLIC_SITE_URL?.trim();

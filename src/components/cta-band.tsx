@@ -3,7 +3,7 @@
 import { useRef } from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { gsap, useGSAP, prefersReducedMotion } from "@/lib/motion/gsap";
+import { gsap, useNearGSAP } from "@/lib/motion/gsap";
 import { DUR, EASE, STAGGER } from "@/lib/motion/tokens";
 import { Magnetic } from "@/components/fx/magnetic";
 import { shell } from "@/lib/layout";
@@ -25,10 +25,8 @@ export function CtaBand({
 }) {
   const ref = useRef<HTMLElement>(null);
 
-  useGSAP(
-    () => {
-      const el = ref.current;
-      if (!el || prefersReducedMotion()) return;
+  useNearGSAP(
+    (el) => {
       const mask = el.querySelector(".brand-mask");
       const items = el.querySelectorAll("[data-cta-item]");
 

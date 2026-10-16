@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, type CSSProperties } from "react";
-import { gsap, useGSAP, prefersReducedMotion } from "@/lib/motion/gsap";
+import { gsap, useNearGSAP } from "@/lib/motion/gsap";
 import { DUR, EASE, RISE, STAGGER, TRIGGER_START } from "@/lib/motion/tokens";
 import { clsx } from "@/lib/clsx";
 
@@ -33,10 +33,8 @@ export function StatBand({
 }) {
   const ref = useRef<HTMLDListElement>(null);
 
-  useGSAP(
-    () => {
-      const el = ref.current;
-      if (!el || prefersReducedMotion()) return;
+  useNearGSAP(
+    (el) => {
 
       const columns = gsap.utils.toArray<HTMLElement>("[data-stat]", el);
       const rules = columns.map((c) => c.querySelector(".stat-rule"));

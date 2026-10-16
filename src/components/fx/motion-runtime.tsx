@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { ScrollTrigger, refreshWhenSettled } from "@/lib/motion/gsap";
+import { disarmMotionFallback } from "@/lib/motion/fallback";
 
 /**
  * The app-shell housekeeping that keeps scroll choreography honest:
@@ -12,24 +13,16 @@ import { ScrollTrigger, refreshWhenSettled } from "@/lib/motion/gsap";
  *  2. Lands deep links (`/work#sodio`) accurately — the browser's own jump
  *     happens before images reserve their space, so we correct it once things
  *     settle, and only if the visitor hasn't taken over scrolling themselves.
- *  3. Guarantees content can never stay hidden: if scripting fails after the
- *     `.js` class lands, `.motion-fallback` forces every entrance state open.
+ *  3. Disarms the motion safety net. The boot script armed it before any
+ *     bundle ran; reaching this effect proves scripting works, and letting it
+ *     fire would freeze every below-the-fold reveal (lib/motion/fallback.ts).
  */
 export function MotionRuntime() {
   const pathname = usePathname();
 
   useEffect(() => {
-    const disposeRefresh = refreshWhenSettled();
-
-    const guard = window.setTimeout(
-      () => document.documentElement.classList.add("motion-fallback"),
-      4000,
-    );
-
-    return () => {
-      disposeRefresh();
-      clearTimeout(guard);
-    };
+    disarmMotionFallback();
+    return refreshWhenSettled();
   }, []);
 
   // Deep-link correction, re-run per route so hash links keep working.

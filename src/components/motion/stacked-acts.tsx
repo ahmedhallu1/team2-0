@@ -1,7 +1,12 @@
 "use client";
 
 import { useRef, type ReactNode } from "react";
-import { gsap, useGSAP, prefersReducedMotion } from "@/lib/motion/gsap";
+import {
+  gsap,
+  useGSAP,
+  prefersReducedMotion,
+  whenNear,
+} from "@/lib/motion/gsap";
 import { DUR, EASE, STAGGER } from "@/lib/motion/tokens";
 import { clsx } from "@/lib/clsx";
 
@@ -38,9 +43,9 @@ export function StackedActs({
   const ref = useRef<HTMLOListElement>(null);
 
   useGSAP(
-    () => {
+    (_context, contextSafe) => {
       const root = ref.current;
-      if (!root) return;
+      if (!root || !contextSafe) return;
 
       const cards = gsap.utils.toArray<HTMLElement>(
         ":scope > .svc-stack__card",
@@ -64,101 +69,114 @@ export function StackedActs({
 
       if (prefersReducedMotion()) return () => observer.disconnect();
 
-      const mm = gsap.matchMedia();
+      // Everything below is built on approach (see whenNear): eighteen
+      // from-tweens measured at hydration were most of the home page's
+      // longest task. contextSafe keeps them reverting with this hook.
+      const build = contextSafe(() => {
+        const mm = gsap.matchMedia();
 
-      /**
-       * Desktop exit. Cards pinned in one containing block necessarily run out
-       * of room in reverse order, so left alone the bottom card slides up over
-       * the headers above it and the stack comes apart on its way out. Carrying
-       * them up together over that same window means the assembled stack leaves
-       * as the one object it spent the whole section becoming.
-       */
-      mm.add("(min-width: 1024px)", () => {
-        const last = cards[cards.length - 1];
-        gsap.to(cards, {
-          y: () =>
-            -(parseFloat(getComputedStyle(last).top) +
-              last.getBoundingClientRect().height +
-              64),
-          ease: "none",
-          scrollTrigger: {
-            trigger: root,
-            start: "bottom bottom-=140",
-            end: "bottom bottom-=560",
-            scrub: 0.4,
-            invalidateOnRefresh: true,
-          },
+        /**
+         * Desktop exit. Cards pinned in one containing block necessarily run out
+         * of room in reverse order, so left alone the bottom card slides up over
+         * the headers above it and the stack comes apart on its way out. Carrying
+         * them up together over that same window means the assembled stack leaves
+         * as the one object it spent the whole section becoming.
+         */
+        mm.add("(min-width: 1024px)", () => {
+          const last = cards[cards.length - 1];
+          gsap.to(cards, {
+            y: () =>
+              -(
+                parseFloat(getComputedStyle(last).top) +
+                last.getBoundingClientRect().height +
+                64
+              ),
+            ease: "none",
+            scrollTrigger: {
+              trigger: root,
+              start: "bottom bottom-=140",
+              end: "bottom bottom-=560",
+              scrub: 0.4,
+              invalidateOnRefresh: true,
+            },
+          });
         });
-      });
 
-      // Phones: no stack, so the cards carry the motion themselves.
-      mm.add("(max-width: 1023.98px)", () => {
+        // Phones: no stack, so the cards carry the motion themselves.
+        mm.add("(max-width: 1023.98px)", () => {
+          cards.forEach((card) => {
+            const panel = card.querySelector("[data-act-panel]");
+            if (!panel) return;
+            gsap
+              .timeline({
+                scrollTrigger: {
+                  trigger: card,
+                  start: "top bottom",
+                  end: "bottom top",
+                  scrub: 0.6,
+                },
+              })
+              .fromTo(
+                panel,
+                { y: 86, scale: 0.9 },
+                { y: 0, scale: 1, ease: "power2.out", duration: 1 },
+              )
+              .to(panel, { duration: 0.5 })
+              .to(panel, {
+                y: -34,
+                scale: 0.95,
+                ease: "power2.in",
+                duration: 1,
+              });
+          });
+        });
+
+        // The contents animate in their own right, once, as each act lands.
         cards.forEach((card) => {
-          const panel = card.querySelector("[data-act-panel]");
-          if (!panel) return;
+          const head = card.querySelector("[data-act-head]");
+          const body = card.querySelector("[data-act-body]");
+          if (!head || !body) return;
+
           gsap
             .timeline({
-              scrollTrigger: {
-                trigger: card,
-                start: "top bottom",
-                end: "bottom top",
-                scrub: 0.6,
-              },
+              scrollTrigger: { trigger: card, start: "top 88%", once: true },
             })
-            .fromTo(
-              panel,
-              { y: 86, scale: 0.9 },
-              { y: 0, scale: 1, ease: "power2.out", duration: 1 },
-            )
-            .to(panel, { duration: 0.5 })
-            .to(panel, { y: -34, scale: 0.95, ease: "power2.in", duration: 1 });
-        });
-      });
-
-      // The contents animate in their own right, once, as each act lands.
-      cards.forEach((card) => {
-        const head = card.querySelector("[data-act-head]");
-        const body = card.querySelector("[data-act-body]");
-        if (!head || !body) return;
-
-        gsap
-          .timeline({
-            scrollTrigger: { trigger: card, start: "top 88%", once: true },
-          })
-          .from(head.children, {
-            x: -18,
-            opacity: 0,
-            duration: DUR.base,
-            ease: EASE.ascent,
-            stagger: STAGGER.base,
-          })
-          .from(
-            body.children,
-            {
-              y: 26,
+            .from(head.children, {
+              x: -18,
               opacity: 0,
               duration: DUR.base,
               ease: EASE.ascent,
               stagger: STAGGER.base,
-            },
-            0.16,
-          )
-          .from(
-            card.querySelectorAll("[data-act-item]"),
-            {
-              y: 12,
-              opacity: 0,
-              duration: DUR.fast,
-              ease: EASE.ascent,
-              stagger: STAGGER.tight,
-            },
-            0.3,
-          );
+            })
+            .from(
+              body.children,
+              {
+                y: 26,
+                opacity: 0,
+                duration: DUR.base,
+                ease: EASE.ascent,
+                stagger: STAGGER.base,
+              },
+              0.16,
+            )
+            .from(
+              card.querySelectorAll("[data-act-item]"),
+              {
+                y: 12,
+                opacity: 0,
+                duration: DUR.fast,
+                ease: EASE.ascent,
+                stagger: STAGGER.tight,
+              },
+              0.3,
+            );
+        });
       });
+      const cancel = whenNear(root, build);
 
       return () => {
         observer.disconnect();
-        mm.revert();
+        cancel();
       };
     },
     { scope: ref },

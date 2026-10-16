@@ -6,7 +6,7 @@ import {
   type ElementType,
   type ReactNode,
 } from "react";
-import { gsap, useGSAP, prefersReducedMotion } from "@/lib/motion/gsap";
+import { gsap, useNearGSAP } from "@/lib/motion/gsap";
 import { DUR, EASE, RISE, STAGGER, TRIGGER_START } from "@/lib/motion/tokens";
 import { clsx } from "@/lib/clsx";
 
@@ -56,10 +56,9 @@ export function Rise({
   const Tag = (as ?? "div") as ElementType;
   const ref = useRef<HTMLElement>(null);
 
-  useGSAP(
-    () => {
-      const el = ref.current;
-      if (!el || eager || prefersReducedMotion()) return;
+  useNearGSAP(
+    (el) => {
+      if (eager) return;
       gsap.fromTo(
         el,
         { opacity: 0, y: RISE[distance] },
@@ -69,6 +68,10 @@ export function Rise({
           duration: DUR.slow,
           ease: EASE.ascent,
           delay,
+          // CSS already paints this exact start state (see riseVar), so GSAP
+          // needn't apply it at load — an eager from-render reads computed
+          // style per element and thrashes layout during hydration.
+          immediateRender: false,
           scrollTrigger: { trigger: el, start: TRIGGER_START, once: true },
         },
       );
@@ -123,10 +126,9 @@ export function RiseGroup({
   const Tag = (as ?? "div") as ElementType;
   const ref = useRef<HTMLElement>(null);
 
-  useGSAP(
-    () => {
-      const el = ref.current;
-      if (!el || eager || prefersReducedMotion()) return;
+  useNearGSAP(
+    (el) => {
+      if (eager) return;
       gsap.fromTo(
         Array.from(el.children),
         { opacity: 0, y: RISE[distance] },
@@ -137,6 +139,7 @@ export function RiseGroup({
           ease: EASE.ascent,
           delay,
           stagger,
+          immediateRender: false, // start state is in CSS — see Rise
           scrollTrigger: { trigger: el, start: TRIGGER_START, once: true },
         },
       );
@@ -178,10 +181,8 @@ export function Curtain({
 }) {
   const ref = useRef<HTMLDivElement>(null);
 
-  useGSAP(
-    () => {
-      const el = ref.current;
-      if (!el || prefersReducedMotion()) return;
+  useNearGSAP(
+    (el) => {
       const media = el.querySelector(".curtain__media");
       const tl = gsap.timeline({
         delay,
@@ -197,13 +198,19 @@ export function Curtain({
           clipPath: "inset(0% 0% 0% 0%)",
           duration: DUR.scene,
           ease: EASE.ascent,
+          immediateRender: false, // start state is in CSS — see Rise
         },
       );
       if (media) {
         tl.fromTo(
           media,
           { scale: 1.07 },
-          { scale: 1, duration: DUR.scene + 0.3, ease: EASE.ascent },
+          {
+            scale: 1,
+            duration: DUR.scene + 0.3,
+            ease: EASE.ascent,
+            immediateRender: false,
+          },
           0,
         );
       }

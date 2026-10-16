@@ -1,6 +1,11 @@
 "use client";
 
-import { gsap, useGSAP, prefersReducedMotion } from "@/lib/motion/gsap";
+import {
+  gsap,
+  useGSAP,
+  prefersReducedMotion,
+  whenNear,
+} from "@/lib/motion/gsap";
 
 /**
  * Scroll-linked motion for the case-study chapters on small screens.
@@ -22,63 +27,76 @@ export function ChapterMotion() {
     if (prefersReducedMotion()) return;
 
     const mm = gsap.matchMedia();
-    mm.add("(max-width: 1023.98px)", () => {
+    mm.add("(max-width: 1023.98px)", (_context, contextSafe) => {
+      if (!contextSafe) return;
+      // Each chapter's scrub is built on approach (see whenNear), not at
+      // hydration. contextSafe files it under this query, so it still
+      // reverts when the query stops matching; so do the pending builds.
+      const cancels: Array<() => void> = [];
       document.querySelectorAll<HTMLElement>("[data-chapter]").forEach((ch) => {
-        const grid = ch.querySelector("[data-chapter-grid]");
-        const number = ch.querySelector("[data-chapter-number]");
-        const glow = ch.querySelector("[data-chapter-glow]");
+        cancels.push(
+          whenNear(
+            ch,
+            contextSafe(() => {
+              const grid = ch.querySelector("[data-chapter-grid]");
+              const number = ch.querySelector("[data-chapter-number]");
+              const glow = ch.querySelector("[data-chapter-glow]");
 
-        if (grid) {
-          gsap.fromTo(
-            grid,
-            { y: 54 },
-            {
-              y: 0,
-              ease: "none",
-              scrollTrigger: {
-                trigger: ch,
-                start: "top bottom",
-                end: "top 40%",
-                scrub: 0.6,
-              },
-            },
-          );
-        }
-        if (number) {
-          gsap.fromTo(
-            number,
-            { x: -34, opacity: 0 },
-            {
-              x: 0,
-              opacity: 1,
-              ease: "none",
-              scrollTrigger: {
-                trigger: ch,
-                start: "top 92%",
-                end: "top 58%",
-                scrub: 0.5,
-              },
-            },
-          );
-        }
-        if (glow) {
-          gsap.fromTo(
-            glow,
-            { scale: 0.5, opacity: 0 },
-            {
-              scale: 1,
-              opacity: 1,
-              ease: "none",
-              scrollTrigger: {
-                trigger: ch,
-                start: "top bottom",
-                end: "center 60%",
-                scrub: 0.8,
-              },
-            },
-          );
-        }
+              if (grid) {
+                gsap.fromTo(
+                  grid,
+                  { y: 54 },
+                  {
+                    y: 0,
+                    ease: "none",
+                    scrollTrigger: {
+                      trigger: ch,
+                      start: "top bottom",
+                      end: "top 40%",
+                      scrub: 0.6,
+                    },
+                  },
+                );
+              }
+              if (number) {
+                gsap.fromTo(
+                  number,
+                  { x: -34, opacity: 0 },
+                  {
+                    x: 0,
+                    opacity: 1,
+                    ease: "none",
+                    scrollTrigger: {
+                      trigger: ch,
+                      start: "top 92%",
+                      end: "top 58%",
+                      scrub: 0.5,
+                    },
+                  },
+                );
+              }
+              if (glow) {
+                gsap.fromTo(
+                  glow,
+                  { scale: 0.5, opacity: 0 },
+                  {
+                    scale: 1,
+                    opacity: 1,
+                    ease: "none",
+                    scrollTrigger: {
+                      trigger: ch,
+                      start: "top bottom",
+                      end: "center 60%",
+                      scrub: 0.8,
+                    },
+                  },
+                );
+              }
+            }) as () => void,
+          ),
+        );
       });
+      return () => cancels.forEach((cancel) => cancel());
     });
     return () => mm.revert();
   }, []);

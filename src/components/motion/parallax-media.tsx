@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, type ReactNode } from "react";
-import { gsap, useGSAP } from "@/lib/motion/gsap";
+import { gsap, useGSAP, whenNear } from "@/lib/motion/gsap";
 import { clsx } from "@/lib/clsx";
 
 /**
@@ -24,47 +24,52 @@ export function ParallaxMedia({
   const ref = useRef<HTMLDivElement>(null);
 
   useGSAP(
-    () => {
+    (_context, contextSafe) => {
       const el = ref.current;
-      if (!el) return;
+      if (!el || !contextSafe) return;
       const inner = el.querySelector("[data-parallax]");
       if (!inner) return;
 
-      const mm = gsap.matchMedia();
-      mm.add(
-        {
-          wide: "(min-width: 1024px) and (prefers-reduced-motion: no-preference)",
-          narrow:
-            "(max-width: 1023.98px) and (prefers-reduced-motion: no-preference)",
-        },
-        (context) => {
-          const amount = context.conditions?.wide
-            ? amountProp
-            : amountProp * 0.6;
-          // Grow the media only while it actually travels, so every other
-          // context frames the artwork exactly as authored.
-          const bleed = amount + 2;
-          gsap.set(inner, {
-            top: `-${bleed}%`,
-            height: `${100 + bleed * 2}%`,
-          });
-          gsap.fromTo(
-            inner,
-            { yPercent: -amount },
+      // Built on approach (see whenNear), not at hydration.
+      return whenNear(
+        el,
+        contextSafe(() => {
+          const mm = gsap.matchMedia();
+          mm.add(
             {
-              yPercent: amount,
-              ease: "none",
-              scrollTrigger: {
-                trigger: el,
-                start: "top bottom",
-                end: "bottom top",
-                scrub: 0.5,
-              },
+              wide: "(min-width: 1024px) and (prefers-reduced-motion: no-preference)",
+              narrow:
+                "(max-width: 1023.98px) and (prefers-reduced-motion: no-preference)",
+            },
+            (context) => {
+              const amount = context.conditions?.wide
+                ? amountProp
+                : amountProp * 0.6;
+              // Grow the media only while it actually travels, so every other
+              // context frames the artwork exactly as authored.
+              const bleed = amount + 2;
+              gsap.set(inner, {
+                top: `-${bleed}%`,
+                height: `${100 + bleed * 2}%`,
+              });
+              gsap.fromTo(
+                inner,
+                { yPercent: -amount },
+                {
+                  yPercent: amount,
+                  ease: "none",
+                  scrollTrigger: {
+                    trigger: el,
+                    start: "top bottom",
+                    end: "bottom top",
+                    scrub: 0.5,
+                  },
+                },
+              );
             },
           );
-        },
+        }),
       );
-      return () => mm.revert();
     },
     { scope: ref, dependencies: [amountProp] },
   );

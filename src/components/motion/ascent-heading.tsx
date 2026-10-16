@@ -7,7 +7,7 @@ import {
   type ElementType,
   type ReactNode,
 } from "react";
-import { gsap, useGSAP, prefersReducedMotion } from "@/lib/motion/gsap";
+import { gsap, useNearGSAP } from "@/lib/motion/gsap";
 import { DUR, EASE, STAGGER, TRIGGER_START } from "@/lib/motion/tokens";
 import { clsx } from "@/lib/clsx";
 
@@ -43,10 +43,9 @@ export function AscentHeading({
   const Tag = (as ?? "h2") as ElementType;
   const ref = useRef<HTMLElement>(null);
 
-  useGSAP(
-    () => {
-      const el = ref.current;
-      if (!el || eager || prefersReducedMotion()) return;
+  useNearGSAP(
+    (el) => {
+      if (eager) return;
       const inner = el.querySelectorAll<HTMLElement>(".line-mask__inner");
       gsap.fromTo(
         inner,
@@ -60,6 +59,8 @@ export function AscentHeading({
           ease: EASE.ascent,
           delay,
           stagger: STAGGER.base,
+          // `.js .line-mask__inner` already paints the 115% start state.
+          immediateRender: false,
           scrollTrigger: { trigger: el, start: TRIGGER_START, once: true },
           onComplete: () => gsap.set(inner, { willChange: "auto" }),
         },
