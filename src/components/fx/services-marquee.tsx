@@ -133,8 +133,9 @@ export function ServicesMarquee() {
       className="relative border-y border-line bg-surface/40 py-7 sm:py-9"
     >
       {/* Both copies always render so there is no hydration divergence; under
-          reduced motion CSS drops the duplicate and lets the band scroll. */}
-      <div className="marquee">
+          reduced motion CSS drops the duplicate and lets the band scroll —
+          so it is focusable, or keyboard users could never scroll it. */}
+      <div className="marquee rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent" tabIndex={0}>
         <div data-marquee-row className="flex">
           <Row />
           <Row hidden />

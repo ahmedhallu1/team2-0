@@ -1222,6 +1222,9 @@ dialog.lightbox[open]::backdrop {
     --accent: #5ccbe0;
     --on-accent: #04121c;
     --brand: #9fc0e8;
+    /* Every dark zone pins this; left to the site theme, a light-mode
+       visitor got the light-ground violet on a dark card (2.4:1). */
+    --violet-ink: var(--violet-300);
     --ring: #5ccbe0;
     --ambient: 0.7;
   }
@@ -1267,6 +1270,7 @@ dialog.lightbox[open]::backdrop {
     --on-accent: #1a1105;
     --brand: #dda86a;
     --ring: #dda86a;
+    --violet-ink: var(--violet-300);
     --kup-ink: #8fd4ac;
     --ambient: 0.75;
   }
@@ -1286,6 +1290,7 @@ dialog.lightbox[open]::backdrop {
     --on-accent: #1a1105;
     --brand: #e9a13b;
     --ring: #e9a13b;
+    --violet-ink: var(--violet-300);
     --link-ink: #f0b45c;
     --ambient: 0.7;
   }
@@ -1304,6 +1309,7 @@ dialog.lightbox[open]::backdrop {
     --accent: #c88c46;
     --on-accent: #1a1105;
     --brand: #dda86a;
+    --violet-ink: var(--violet-300);
     --ring: #dda86a;
     --ambient: 0.7;
   }

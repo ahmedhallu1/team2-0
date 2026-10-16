@@ -39,6 +39,8 @@ export const metadata: Metadata = {
   description:
     "Premium koffee and kup to go, at four addresses in Alexandria. See the board, build your cup, find your branch — and order ahead in the KUPHUB app on iPhone and Android.",
   applicationName: "KUPHUB",
+  // Not app/manifest.ts — that one is 2.0's. See kuphub/site.webmanifest.
+  manifest: "/kuphub/site.webmanifest",
   alternates: { canonical: "/" },
   /**
    * Not indexed while it lives on our subdomain. It's built to move to

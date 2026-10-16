@@ -39,7 +39,9 @@ export function SiteHeader() {
   const placed = useRef(false);
 
   const isActive = (href: string) =>
-    href === "/" ? pathname === "/" : pathname.startsWith(href);
+    href === "/"
+      ? pathname === "/"
+      : pathname === href || pathname.startsWith(`${href}/`);
 
   // Compact the dock once the page has left the top.
   useEffect(() => {
@@ -152,7 +154,8 @@ export function SiteHeader() {
     { dependencies: [open] },
   );
 
-  // Lock the page, close on Escape, and hand focus back to the toggle.
+  // Lock the page, close on Escape, keep Tab inside the sheet (and its close
+  // button), and hand focus back to the toggle.
   useEffect(() => {
     if (!open) return;
     document.body.style.overflow = "hidden";
@@ -162,7 +165,25 @@ export function SiteHeader() {
       if (event.key === "Escape") {
         setOpen(false);
         toggleRef.current?.focus();
+        return;
       }
+      if (event.key !== "Tab") return;
+      const toggle = toggleRef.current;
+      const items = Array.from(
+        sheetRef.current?.querySelectorAll<HTMLElement>("a[href], button") ?? [],
+      );
+      const ring = toggle ? [toggle, ...items] : items;
+      if (ring.length === 0) return;
+      const index = ring.indexOf(document.activeElement as HTMLElement);
+      const next = event.shiftKey
+        ? index <= 0
+          ? ring[ring.length - 1]
+          : ring[index - 1]
+        : index === -1 || index === ring.length - 1
+          ? ring[0]
+          : ring[index + 1];
+      event.preventDefault();
+      next.focus();
     };
     window.addEventListener("keydown", onKey);
     return () => {
@@ -246,6 +267,8 @@ export function SiteHeader() {
         ref={sheetRef}
         data-open={open ? "true" : "false"}
         inert={!open}
+        role="dialog"
+        aria-modal="true"
         aria-label="Site menu"
         className="nav-sheet md:hidden"
       >

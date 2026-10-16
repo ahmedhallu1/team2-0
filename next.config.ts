@@ -52,7 +52,17 @@ const nextConfig: NextConfig = {
         { source: "/", has: kuphubHost, destination: "/kuphub" },
         { source: "/app", has: kuphubHost, destination: "/kuphub/app" },
       ],
-      afterFiles: [],
+      // Anything else on KUPHUB's host that no file or route claims goes to
+      // KUPHUB's own catch-all and 404, not 2.0's. afterFiles runs after
+      // static routes (assets, /api, robots…) but before dynamic ones, which
+      // is what keeps it ahead of (site)/[...missing].
+      afterFiles: [
+        {
+          source: "/:path((?!kuphub(?:/|$)|_next/).+)",
+          has: kuphubHost,
+          destination: "/kuphub/:path",
+        },
+      ],
       fallback: [],
     };
   },

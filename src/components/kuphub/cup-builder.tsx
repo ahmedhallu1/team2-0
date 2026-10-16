@@ -153,7 +153,7 @@ export function CupBuilder() {
                             +
                           </span>
                           {o.label}
-                          <span className={clsx("tabular-nums", on ? "text-bean/70" : "text-cream/45")}>+{o.price}</span>
+                          <span className={clsx("tabular-nums", on ? "text-bean/85" : "text-cream/60")}>+{o.price}</span>
                         </span>
                       </label>
                     );

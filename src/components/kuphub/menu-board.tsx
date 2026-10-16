@@ -43,7 +43,7 @@ export function MenuBoard() {
         <div className="lg:col-span-4">
           <p className="kup-reveal flex items-center gap-3 text-xs font-semibold tracking-[0.24em] text-forest uppercase">
             The board
-            <span lang="ar" dir="rtl" className="font-medium tracking-normal text-ink/45 normal-case">
+            <span lang="ar" dir="rtl" className="font-medium tracking-normal text-ink/65 normal-case">
               المنيو
             </span>
           </p>
@@ -97,7 +97,7 @@ export function MenuBoard() {
                   <span
                     lang="ar"
                     dir="rtl"
-                    className={clsx("hidden text-sm lg:inline", on ? "text-cream/70" : "text-ink/40")}
+                    className={clsx("hidden text-sm lg:inline", on ? "text-cream/70" : "text-ink/60")}
                   >
                     {g.arabic}
                   </span>

@@ -1,8 +1,5 @@
 import type { MetadataRoute } from "next";
-
-const base = (
-  process.env.NEXT_PUBLIC_SITE_URL || "https://team2-0.vercel.app"
-).replace(/\/$/, "");
+import { siteOrigin as base } from "@/lib/site";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();

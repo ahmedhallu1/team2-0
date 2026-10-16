@@ -47,9 +47,28 @@ export async function POST(req: Request) {
 
   let body: Body;
   try {
-    body = (await req.json()) as Body;
+    const parsed: unknown = await req.json();
+    // `null`, an array or a bare string is valid JSON but not a request.
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) throw new Error();
+    body = parsed as Body;
   } catch {
     return NextResponse.json({ ok: false, error: "Invalid JSON." }, { status: 400 });
+  }
+  if (
+    (body.to !== undefined && typeof body.to !== "string") ||
+    (body.text !== undefined && typeof body.text !== "string") ||
+    (body.template !== undefined &&
+      (typeof body.template !== "object" ||
+        body.template === null ||
+        (body.template.name !== undefined && typeof body.template.name !== "string") ||
+        (body.template.params !== undefined &&
+          (!Array.isArray(body.template.params) ||
+            !body.template.params.every((p) => typeof p === "string")))))
+  ) {
+    return NextResponse.json(
+      { ok: false, error: "`to`, `text` and template fields must be strings." },
+      { status: 400 },
+    );
   }
 
   const to = normalizeRecipient(body.to ?? "");

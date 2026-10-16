@@ -25,7 +25,7 @@ export function Branches() {
           <div className="lg:col-span-7">
             <p className="kup-reveal flex items-center gap-3 text-xs font-semibold tracking-[0.24em] text-forest uppercase">
               Find us
-              <span lang="ar" dir="rtl" className="font-medium tracking-normal text-ink/45 normal-case">
+              <span lang="ar" dir="rtl" className="font-medium tracking-normal text-ink/65 normal-case">
                 فروعنا في إسكندرية
               </span>
             </p>
@@ -127,7 +127,7 @@ export function Branches() {
                 );
               })}
             </svg>
-            <p className="absolute bottom-4 left-5 text-[0.7rem] font-semibold tracking-[0.18em] text-ink/45 uppercase">
+            <p className="absolute bottom-4 left-5 text-[0.7rem] font-semibold tracking-[0.18em] text-ink/65 uppercase">
               Alexandria · not to scale
             </p>
           </div>
@@ -162,7 +162,7 @@ export function Branches() {
                     <div className="min-w-0 flex-1">
                       <h3 className="text-lg font-black tracking-[-0.02em]">{b.name}</h3>
                       <p className={clsx("text-sm", on ? "text-cream/75" : "text-ink/60")}>{b.detail}</p>
-                      <p lang="ar" dir="rtl" className={clsx("mt-1 text-sm text-right", on ? "text-cream/60" : "text-ink/45")}>
+                      <p lang="ar" dir="rtl" className={clsx("mt-1 text-sm text-right", on ? "text-cream/75" : "text-ink/65")}>
                         {b.arabic}
                       </p>
                     </div>

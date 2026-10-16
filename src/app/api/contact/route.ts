@@ -1,18 +1,19 @@
 import { NextResponse } from "next/server";
+import { parseInquiry } from "@/lib/inquiry";
+import { clientKey, createRateLimiter, isSameOrigin } from "@/lib/request-guard";
 
 export const runtime = "nodejs";
 
-type Payload = {
-  name?: string;
-  email?: string;
-  company?: string;
-  phone?: string;
-  service?: string;
-  message?: string;
-  website?: string; // honeypot
-};
+/** A real inquiry is a few KB at most; anything far past that isn't one. */
+const MAX_BODY_BYTES = 32 * 1024;
 
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+/**
+ * Each accepted inquiry sends two emails, one of them to an address the
+ * visitor typed — so the endpoint is worth abusing as a mail relay. Five
+ * valid submissions per address per ten minutes is generous for a person and
+ * useless for a script.
+ */
+const allowSubmission = createRateLimiter({ limit: 5, windowMs: 10 * 60 * 1000 });
 
 const BRAND_NAME = "2.0 — Elevate your vision";
 
@@ -92,9 +93,21 @@ async function getAccessToken(): Promise<string> {
 }
 
 export async function POST(req: Request) {
-  let data: Payload;
+  // Only this site's own pages may post here from a browser.
+  if (!isSameOrigin(req.headers)) {
+    return NextResponse.json({ ok: false, error: "Forbidden." }, { status: 403 });
+  }
+
+  let body: unknown;
   try {
-    data = (await req.json()) as Payload;
+    const raw = await req.text();
+    if (raw.length > MAX_BODY_BYTES) {
+      return NextResponse.json(
+        { ok: false, error: "Your message is a little too long." },
+        { status: 413 },
+      );
+    }
+    body = JSON.parse(raw);
   } catch {
     return NextResponse.json(
       { ok: false, error: "Invalid request." },
@@ -102,34 +115,29 @@ export async function POST(req: Request) {
     );
   }
 
+  const parsed = parseInquiry(body);
   // Honeypot: silently accept (and drop) anything that fills the hidden field.
-  if (data.website && data.website.trim() !== "") {
+  if (parsed.ok && "spam" in parsed) {
     return NextResponse.json({ ok: true });
   }
-
-  const name = (data.name ?? "").trim();
-  const email = (data.email ?? "").trim();
-  const message = (data.message ?? "").trim();
-  const company = (data.company ?? "").trim();
-  const phone = (data.phone ?? "").trim();
-  const service = (data.service ?? "").trim();
-
-  if (!name || !email || !message) {
+  if (!parsed.ok) {
     return NextResponse.json(
-      { ok: false, error: "Please fill in your name, email and message." },
+      { ok: false, error: parsed.error, fields: parsed.fields },
       { status: 400 },
     );
   }
-  if (!EMAIL_RE.test(email)) {
+  const { name, email, company, phone, service, message } = parsed.inquiry;
+
+  // Counted only once a submission would actually send mail, so a visitor
+  // fixing a typo never spends their allowance.
+  if (!allowSubmission(clientKey(req.headers))) {
     return NextResponse.json(
-      { ok: false, error: "Please enter a valid email address." },
-      { status: 400 },
-    );
-  }
-  if (message.length > 5000) {
-    return NextResponse.json(
-      { ok: false, error: "Your message is a little too long." },
-      { status: 400 },
+      {
+        ok: false,
+        error:
+          "That's a lot of messages in a short time. Please wait a few minutes, or email us directly.",
+      },
+      { status: 429, headers: { "Retry-After": "600" } },
     );
   }
 

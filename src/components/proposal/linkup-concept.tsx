@@ -174,7 +174,7 @@ export function LinkUpConcept() {
         </div>
 
         {/* The site: a catalogue with a quote path at the end of it */}
-        <div className="mt-16 grid gap-10 lg:grid-cols-12 lg:gap-14">
+        <div className="mt-16 grid grid-cols-1 gap-10 lg:grid-cols-12 lg:gap-14">
           <div className="lg:col-span-4">
             <h3 className="font-display text-[clamp(1.5rem,3.2vw,2.2rem)] leading-[1.02] font-extrabold tracking-[-0.02em] text-ink">
               linkupegypt.com

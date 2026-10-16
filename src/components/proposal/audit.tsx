@@ -229,7 +229,10 @@ export function Audit() {
         <Rise>
           <ul
             ref={ref}
-            className="no-scrollbar mt-6 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-1 sm:grid sm:snap-none sm:grid-cols-2 sm:overflow-visible lg:grid-cols-4 lg:gap-5"
+            // Swipeable on phones: focusable so the keyboard can scroll it too.
+            tabIndex={0}
+            aria-label="Audit findings"
+            className="no-scrollbar mt-6 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-1 sm:grid sm:snap-none sm:grid-cols-2 sm:overflow-visible lg:grid-cols-4 lg:gap-5 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
           >
             {observations
               .filter((o) => o.id !== "domains")

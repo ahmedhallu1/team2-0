@@ -85,7 +85,13 @@ export function FeedConcept() {
           <p className="mb-5 text-[11px] font-semibold tracking-[0.28em] text-brand uppercase">
             The same month, designed as one system
           </p>
-          <div className="feed-scroll no-scrollbar sm:grid sm:grid-cols-3 sm:gap-2.5 lg:gap-3">
+          {/* Swipeable on phones: focusable so the keyboard can scroll it too. */}
+          <div
+            role="region"
+            aria-label="The redesigned feed"
+            tabIndex={0}
+            className="feed-scroll no-scrollbar sm:grid sm:grid-cols-3 sm:gap-2.5 lg:gap-3 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
+          >
             {kuphubFeed.map((post) => (
               <ConceptTile key={post.id} post={post} />
             ))}

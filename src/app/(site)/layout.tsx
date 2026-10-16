@@ -9,6 +9,7 @@ import { MotionRuntime } from "@/components/fx/motion-runtime";
 import { Preloader } from "@/components/preloader";
 import { contactPhonesE164, instagramUrl } from "@/lib/contact";
 import { armMotionFallback } from "@/lib/motion/fallback";
+import { absoluteUrl, siteUrl } from "@/lib/site";
 
 const inter = Inter({
   variable: "--font-body",
@@ -31,20 +32,6 @@ const bricolage = Bricolage_Grotesque({
  */
 const bootScript = `${armMotionFallback}(function(){try{var e=document.documentElement;e.classList.add("js");var t=localStorage.getItem("theme");if(t==="light")e.classList.add("light");else if(t==="dark")e.classList.add("dark");var s=false;try{s=sessionStorage.getItem("intro")==="1"}catch(_){}if(!s&&window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches)s=true;if(s)e.classList.add("intro-skip","intro-done");}catch(_){}})();`;
 
-function resolveSiteUrl(): URL {
-  const raw = process.env.NEXT_PUBLIC_SITE_URL?.trim();
-  if (raw) {
-    try {
-      return new URL(raw);
-    } catch {
-      // fall through to default if the env value is malformed
-    }
-  }
-  return new URL("https://elevate2point0.com");
-}
-
-const siteUrl = resolveSiteUrl();
-
 export const metadata: Metadata = {
   metadataBase: siteUrl,
   title: {
@@ -66,7 +53,8 @@ export const metadata: Metadata = {
   creator: "2.0",
   publisher: "2.0",
   applicationName: "2.0",
-  alternates: { canonical: "/" },
+  // No site-wide canonical: inherited, it would point every page that forgot
+  // its own — the 404 included — at the home page. Each page declares its own.
   robots: {
     index: true,
     follow: true,
@@ -106,8 +94,8 @@ const jsonLd = {
   description:
     "B2B growth partner offering brand and content, custom websites and platforms, growth marketing, lead generation and events.",
   url: siteUrl.toString(),
-  logo: new URL("/brand/2.0logo.png", siteUrl).toString(),
-  image: new URL("/brand/2.0logo.png", siteUrl).toString(),
+  logo: absoluteUrl("/brand/2.0logo.png"),
+  image: absoluteUrl("/brand/2.0logo.png"),
   email: "contact@elevate2point0.com",
   telephone: contactPhonesE164,
   sameAs: [instagramUrl],

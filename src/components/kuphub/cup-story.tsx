@@ -396,7 +396,7 @@ export function CupStory() {
                     className="self-end lg:self-center"
                   >
                     <p className="mb-4 font-mono text-xs tracking-[0.3em] text-caramel-300">
-                      {beat.n} <span className="text-cream/30">/ 04</span>
+                      {beat.n} <span className="text-cream/55">/ 04</span>
                     </p>
                     <h2 className="text-[clamp(2.9rem,7.4vw,6.6rem)] leading-[0.88] font-black tracking-[-0.05em] text-cream">
                       {beat.lead}{" "}

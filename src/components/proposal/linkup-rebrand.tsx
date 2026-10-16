@@ -233,7 +233,12 @@ function LinkUpCurrentStrip() {
       <p className="text-[11px] font-semibold tracking-[0.28em] text-faint uppercase">
         The four, in the wild
       </p>
-      <ul className="no-scrollbar mt-5 flex snap-x snap-mandatory gap-3 overflow-x-auto pb-1 sm:grid sm:grid-cols-4 sm:overflow-visible">
+      <ul
+        // Swipeable on phones: focusable so the keyboard can scroll it too.
+        tabIndex={0}
+        aria-label="LinkUp's four current marks, in use"
+        className="no-scrollbar mt-5 flex snap-x snap-mandatory gap-3 overflow-x-auto pb-1 sm:grid sm:grid-cols-4 sm:overflow-visible focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
+      >
         {[
           { src: "/proposals/linkup/current/post-a.jpg", alt: "LinkUp's custom-print post under the COVERING mark", note: "COVERING" },
           { src: "/proposals/linkup/current/post-b.jpg", alt: "LinkUp's reusable range post under the ECO SOLUTIONS mark", note: "ECO SOLUTIONS" },

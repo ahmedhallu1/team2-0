@@ -50,7 +50,12 @@ export function CurrentFeed({
         {label}
       </p>
 
-      <ul className="no-scrollbar mt-5 flex snap-x snap-mandatory gap-3 overflow-x-auto pb-1 sm:grid sm:grid-cols-3 sm:overflow-visible lg:grid-cols-6">
+      <ul
+        // Swipeable on phones: focusable so the keyboard can scroll it too.
+        tabIndex={0}
+        aria-label={label}
+        className="no-scrollbar mt-5 flex snap-x snap-mandatory gap-3 overflow-x-auto pb-1 sm:grid sm:grid-cols-3 sm:overflow-visible lg:grid-cols-6 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
+      >
         {posts.map((post) => (
           <li
             key={post.src}

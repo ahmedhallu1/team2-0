@@ -52,7 +52,7 @@ export function MatchMix() {
         <div className="lg:col-span-7">
           <p className="kup-reveal flex items-center gap-3 text-xs font-semibold tracking-[0.24em] text-forest uppercase">
             Iced tea, seven ways
-            <span lang="ar" dir="rtl" className="font-medium tracking-normal text-ink/45 normal-case">
+            <span lang="ar" dir="rtl" className="font-medium tracking-normal text-ink/65 normal-case">
               اختار 3 نكهات وادفع تمن 2
             </span>
           </p>
@@ -106,7 +106,7 @@ export function MatchMix() {
                   </span>
                   <span className="min-w-0">
                     <span className="block truncate text-sm font-bold">{f.name}</span>
-                    <span lang="ar" dir="rtl" className={clsx("block text-xs", on ? "text-cream/60" : "text-ink/50")}>
+                    <span lang="ar" dir="rtl" className={clsx("block text-xs", on ? "text-cream/75" : "text-ink/65")}>
                       {f.arabic}
                     </span>
                   </span>
@@ -117,7 +117,7 @@ export function MatchMix() {
               type="button"
               onClick={() => setPicked([])}
               disabled={!picked.length}
-              className="kup-pill rounded-2xl border border-dashed border-ink/20 px-4 text-sm font-semibold text-ink/55 hover:border-ink/40 hover:text-ink disabled:pointer-events-none disabled:opacity-40"
+              className="kup-pill rounded-2xl border border-dashed border-ink/20 px-4 text-sm font-semibold text-ink/65 hover:border-ink/40 hover:text-ink disabled:pointer-events-none disabled:opacity-40"
             >
               Pour it out
             </button>

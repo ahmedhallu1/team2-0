@@ -42,7 +42,12 @@ export function GeoCompetitors() {
           <h3 className="font-display text-xl font-extrabold tracking-tight text-ink sm:text-2xl">
             Positioning
           </h3>
-          <div className="no-scrollbar mt-5 overflow-x-auto rounded-xl border border-line">
+          <div
+            role="region"
+            aria-label="Positioning comparison"
+            tabIndex={0}
+            className="no-scrollbar mt-5 overflow-x-auto rounded-xl border border-line focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
+          >
             <table className="w-full min-w-[40rem] border-collapse">
               <caption className="sr-only">
                 Competitors, their positioning and focus, and their websites
@@ -91,7 +96,12 @@ export function GeoCompetitors() {
           <h3 className="font-display text-xl font-extrabold tracking-tight text-ink sm:text-2xl">
             Social media
           </h3>
-          <div className="no-scrollbar mt-5 overflow-x-auto rounded-xl border border-line">
+          <div
+            role="region"
+            aria-label="Social media comparison"
+            tabIndex={0}
+            className="no-scrollbar mt-5 overflow-x-auto rounded-xl border border-line focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
+          >
             <table className="w-full min-w-[40rem] border-collapse">
               <caption className="sr-only">
                 Each brand&apos;s social channels and current content direction

@@ -94,7 +94,7 @@ export function AppShowcase() {
                     className="group relative w-full py-4 text-left"
                   >
                     <span className="flex items-baseline gap-4">
-                      <span className={clsx("font-mono text-xs tabular-nums transition-colors", on ? "text-caramel" : "text-cream/30")}>
+                      <span className={clsx("font-mono text-xs tabular-nums transition-colors", on ? "text-caramel" : "text-cream/55")}>
                         {String(i + 1).padStart(2, "0")}
                       </span>
                       <span
@@ -202,7 +202,7 @@ export function AppShowcase() {
                 className="kup-float absolute -right-[30%] bottom-[18%] hidden rounded-2xl bg-caramel px-4 py-3 text-bean shadow-2xl sm:block"
                 style={{ ["--d" as string]: "-3.2s" }}
               >
-                <p className="text-[0.62rem] font-bold tracking-[0.16em] uppercase opacity-70">KUPHUB Wallet</p>
+                <p className="text-[0.62rem] font-bold tracking-[0.16em] uppercase opacity-85">KUPHUB Wallet</p>
                 <p className="mt-0.5 text-sm font-black">Pay in a tap</p>
               </div>
 

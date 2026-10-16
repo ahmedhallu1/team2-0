@@ -4,6 +4,7 @@ import "../(site)/globals.css";
 import { MotionRuntime } from "@/components/fx/motion-runtime";
 import { rmz } from "@/lib/proposals/rmz";
 import { armMotionFallback } from "@/lib/motion/fallback";
+import { siteUrl } from "@/lib/site";
 
 /**
  * The root layout for proposals presented under RMZtech's name.
@@ -36,13 +37,13 @@ const bricolage = Bricolage_Grotesque({
 /** Marks the document as scripted before paint, so entrances can start hidden. */
 const bootScript = `${armMotionFallback}document.documentElement.classList.add("js");`;
 
-/** Where the page is served from, so the share image resolves to an absolute URL. */
-const siteUrl = new URL(process.env.NEXT_PUBLIC_SITE_URL?.trim() || "https://elevate2point0.com");
-
 export const metadata: Metadata = {
+  // Where the page is served from, so the share image resolves absolutely.
   metadataBase: siteUrl,
   title: { default: rmz.name, template: `%s · ${rmz.name}` },
   applicationName: rmz.name,
+  // app/manifest.ts is 2.0's, and would install this page as "2.0".
+  manifest: null,
   authors: [{ name: rmz.name, url: rmz.site }],
   creator: rmz.name,
   publisher: rmz.name,
